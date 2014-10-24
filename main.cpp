@@ -2,7 +2,6 @@
 #include <fstream>
 #include "konstants.h"
 #include <limits>
-#include <vector>
 //#define STR(x) #x << '=' << x
 
 using namespace std;
@@ -17,25 +16,49 @@ void setup()
     K = new konstants();
 }
 
-fstream& createNewFile(string newFileName){
+string& createNewFile(string newFileName){
     string newFileDir = K->dirFile;
     newFileDir.append(newFileName);
-    cout << newFileDir << endl;
-    ofstream database (newFileDir.c_str() , ios::trunc);
+    //cout << newFileDir << endl;
+    return &newFileDir;
+}
+
+char& toChar(int *registerSize){
+    int i = 5;
+    string s;
+    stringstream out;
+    out << registerSize;
+    s = out.str();
+    return &s;
+}
+
+void createTable(int *registerSize, int &ColumnSizes[]){
+    cout << "**** Insert name for new table ***" << endl;
+    cin >> newFileName;
+    ofstream database ((*createNewFile(newFileName)).c_str() , ios::trunc); //append database name to path and creates it there.
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
     else
         cout << "****Database could not be created***" << endl;
-    return &database;
+
+    if(registerSize >= 999)
+        cout << "Error: Register size beyond max size" << endl;
+    else
+    {
+        database.seekp(3 , ios::beg);
+        database << *(toChar(&registerSize));
+    }
+
+    for (int &i : )
+    {
+
+    }
+    database.seekp(*getDataInit(&newFileName)); //Place char pointer on the data start pointer.
 }
 
- void createTable(string &ColumnNames, int &ColumnSizes){
-     cout << "****Name for new table***" << endl;
-     cin >> newFileName;
-     ofstream* database = createNewFile(newFileName);
-     for_each
+int& getDataInit(string *newFileName){
 
- }
+}
 
 void updateField(){
     ofstream file (K->dirFile.c_str() , ios::app);
