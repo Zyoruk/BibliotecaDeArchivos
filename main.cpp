@@ -83,12 +83,18 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
         database << *add;
     }
 
+    //sets seek on the end, gets the address then turns it to char
+    //to insert on the beginning.
     database.seekp(0, ios::end);
     int meta = database.tellp();
-    string metadata = *(intToChar(&meta));
-    const char *p = metadata.c_str();
-    while (*p != '\0')
-        database.put( *p++ );
+    if (meta <= 3){
+        string metadata = *(intToChar(&meta));
+        const char *p = metadata.c_str();
+        while (*p != '\0')
+            database.put( *p++ );
+    }else{
+
+    }
 
     database.close();
 }
