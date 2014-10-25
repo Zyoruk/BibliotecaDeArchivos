@@ -17,7 +17,7 @@ void setup()
 }
 
 string& createNewFile(string newFileName){
-    string newFileDir = K->dirFile;
+    string newFileDir = K->DIRFILE;
     newFileDir.append(newFileName);
     //cout << newFileDir << endl;
     return &newFileDir;
@@ -26,7 +26,7 @@ string& createNewFile(string newFileName){
 string& toChar(int *toChar){
     string s;
     stringstream out;
-    out << toChar;
+    out << *toChar;
     s = out.str();    
     return &s;
 }
@@ -45,6 +45,17 @@ void checkSize(string* add, int count){
     add = tmp;
 }
 
+string& intToChar(int *metadata){
+    int ch;
+    string tmp;
+    while (metadata != 0){
+        ch = metadata % 10;
+        metadata = metadata / 10;
+        tmp.append(*(toChar(ch)));
+    }
+    return &tmp;
+}
+
 
 void createTable(int *registerSize, int* columnSizes, int *columns){
     cout << "**** Insert name for new table ***" << endl;
@@ -55,23 +66,31 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
     else
         cout << "****Database could not be created***" << endl;
 
-    if(registerSize >= 999)
+    if(registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
-        database.seekp(3 , ios::beg);
+        database.seekp(K->METADATA_SIZE_ADDRESS , ios::beg);
         string* add = toChar(&registerSize);]
-        checkSize(add,4);
+        checkSize(add,K->DEFAULT_REGISTER_SIZE);
         database << *add;
     }
 
     for (int i = 0 ; i < columns ; i++)
     {
         add = toChar(columnSizes[i]);
-        checkColSize(add,3);
+        checkColSize(add,K->DEFAULT_COLUMN_SIZE);
         database << *add;
     }
-    database.seekp(*getDataInit(&newFileName)); //Place char pointer on the data start pointer.
+
+    database.seekp(0, ios::end);
+    int meta = database.tellp();
+    string metadata = *(intToChar(&meta));
+    const char *p = metadata.c_str();
+    while (*p != '\0')
+        database.put( *p++ );
+
+    database.close();
 }
 
 int& getDataInit(string *newFileName){
@@ -79,7 +98,7 @@ int& getDataInit(string *newFileName){
 }
 
 void updateField(){
-    ofstream file (K->dirFile.c_str() , ios::app);
+    ofstream file (K->DIRFILE.c_str() , ios::app);
     if(data.size() <= 64){
 
     }
@@ -87,7 +106,7 @@ void updateField(){
 }
 
 void readField(){
-    ifstream file (K->dirFile.c_str());
+    ifstream file (K->DIRFILE.c_str());
     char character;
 
     int row = (6 - 1) * 128;
