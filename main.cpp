@@ -2,8 +2,9 @@
 #include <fstream>
 #include "konstants.h"
 #include <limits>
-#include <vector>
 #include <cstdlib>
+#include "array/array.h"
+
 //#define STR(x) #x << '=' << x
 
 using namespace std;
@@ -17,23 +18,75 @@ void setup()
     K = new konstants();
 }
 
-fstream& createNewFile(string newFileName){
-    string newFileDir = K->dirFile;
-    newFileDir.append(newFileName);
-    cout << newFileDir << endl;
-    ofstream database (newFileDir.c_str() , ios::trunc);
+string* createNewFile(string newFileName){
+    string* newFileDir;
+    *newFileDir = K->dirFile;
+    newFileDir->append(newFileName);
+    //cout << newFileDir << endl;
+    return newFileDir;
+}
+
+string& toChar(int *toChar){
+    string s;
+    stringstream out;
+    out << toChar;
+    s = out.str();    
+    return &s;
+}
+
+void checkSize(string* add, int count){
+    string hola = "0";
+    string tmp;
+
+    for (int a = 1 ; a < count ; a++){
+        if((tmp.length() + add->length()) == count){
+            break;
+        }
+        tmp.append(hola);
+    }
+    tmp.append(*add);
+    *add = tmp;
+}
+
+
+void createTable(int *registerSize, int* columnSizes, int *columns){
+    cout << "**** Insert name for new table ***" << endl;
+    cin >> newFileName;
+
+    ofstream database ((*createNewFile(newFileName)).c_str() , ios::trunc);
+    //append database name to path and creates it there.
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
     else
         cout << "****Database could not be created***" << endl;
-    return &database;
-}
 
+    if(registerSize >= 999)
+        cout << "Error: Register size beyond max size" << endl;
+    else
+    {
+        database.seekp(3 , ios::beg);
+        string* add = toChar(&registerSize);]
+        checkSize(add,4);
+        database << *add;
+    }
+
+    for (int i = 0 ; i < columns ; i++)
+    {
+        add = toChar(columnSizes[i]);
+        checkColSize(add,3);
+        database << *add;
+    }
+    //Place char pointer on the data start pointer.
+    database.seekp(*getDataInit(&newFileName));
+}
  void createTable(string &ColumnNames, int &ColumnSizes){
      cout << "****Name for new table***" << endl;
      cin >> newFileName;
      ofstream* database = createNewFile(newFileName);
  }
+int& getDataInit(string *newFileName){
+
+}
 
 void updateField(){
     ofstream file (K->dirFile.c_str() , ios::app);
@@ -43,47 +96,80 @@ void updateField(){
     file.close();
 }
 
-int& stringToInt(string* pStr){
-    int i = atoi(pStr);
-    return &i;
+int* stringToInt(string* pStr){
+    int* i;
+    *i= atoi(pStr->c_str());
+    return i;
 }
 
-string& charCallocToString(char* pCharCalloc){
-    string stringToReturn = "";
+string* charCallocToString(char* pCharCalloc){
+    string* stringToReturn ;
+    *stringToReturn = "";
     for (int i = NULL; i <= K->THREE_BYTES;i++){
-        stringToReturn.append(*(pCharCalloc + i));
+        stringToReturn->append(((const char*)(pCharCalloc + i)));
     }
-    return &stringToReturn;
+    return stringToReturn;
 }
 
-int& getRegisterSize(ifstream* pFile){
-    pFile->seekg(K->FOUR_BYTES);
-    char* charString = calloc(3 ,1);
-    pFile->read(charString, K->THREE_BYTES);
+int* getRegisterSize(ifstream* pFile){
+    pFile->seekg(K->THREE_BYTES);
+    char* charString = (char*)calloc(4 ,1);
+    pFile->read(charString, K->HEADER_FILE_SIZE);
     string* regSizeString = charCallocToString(charString);
-    int* regSize  = stringToInt(regSizeString);
+    int* regSize;
+    *regSize = *stringToInt(regSizeString);
     return regSize;
 }
 
-int& columnSize(ifstream* pFile , int pColumnInt){
-    pFile->seekg((K->FOUR_BYTES + K->THREE_BYTES) + ((pColumnInt - K->ONE_BYTE) * K->THREE_BYTES)); //Move the seek to the beginning of the column.
-    char* charString = calloc(K->THREE_BYTES, K->ONE_BYTE);
+int* getMetaDataSize(ifstream* pFile){
+    pFile->seekg(NULL);
+    char* charString = (char*)calloc(3 ,1);
+    pFile->read(charString, K->THREE_BYTES);
+    string* MDSizeString = charCallocToString(charString);
+    int* MDSizeInt  = stringToInt(MDSizeString);
+    return MDSizeInt;
+}
+
+int* getRegisterQuantity(ifstream* pFile){
+    pFile->seekg(0 , ios::end);
+    int fileSize = pFile->tellg();
+    int registerSize = *getRegisterSize(pFile);
+    int* regQty ;
+    *regQty = (fileSize - (*getMetaDataSize(pFile)))/registerSize;
+    return regQty;
+}
+
+//array<string>& getAllDataFromColumn(ifstream* pFile, int pColumn){
+//    int* regQtt = getRegisterQuantity(pFile , pColumn);
+//    array<string>* columnData(*regQtt);
+//    for (int row = NULL; row <= regQtt; i++){
+//        string* stringToAppend = readField(pFile, row, pColumn);
+//        columnData[row] = *stringToAppend;
+//    }
+//    return columnData;
+//}
+
+int* columnSize(ifstream* pFile , int pColumnInt){
+    //Move the seek to the beginning of the column.
+    pFile->seekg((K->HEADER_FILE_SIZE + K->THREE_BYTES) +
+                 ((pColumnInt - K->ONE_BYTE) * K->THREE_BYTES));
+    char* charString = (char*)calloc(K->THREE_BYTES, K->ONE_BYTE);
     pFile->read(charString , K->THREE_BYTES);
     string cSize = K->EMPTY_STRING;
     // build the string;
-    for (int i = 0; i <= 3;i++){
-        cSize.append(*(charString + i));
+    for (int i = NULL; i <= K->THREE_BYTES ; i++){
+        cSize.append(((const char*)charString + i));
     }
     int* cSizeInt = stringToInt(&cSize);
     return cSizeInt;
 }
 
-int& sizeUntilColumn(int pColumn){
-    int sizeToReturn = NULL;
+int* sizeUntilColumn(ifstream* pFile, int pColumn){
+    int* sizeToReturn = NULL;
     for (int i = NULL; i < pColumn; i++){
-        sizeToReturn = (sizeToReturn)+ *columnSize(i);
+        *sizeToReturn = (*sizeToReturn)+ *columnSize(pFile, i);
     }
-    return &sizeToReturn;
+    return sizeToReturn;
 }
 
 string& readField(string* pFile , int pRow , int Column){
@@ -94,7 +180,7 @@ string& readField(string* pFile , int pRow , int Column){
 
 
     //Move seek to the row
-    file.seekg((*getRegisterSize())*pRow);
+    file.seekg((getRegisterSize(&file))*pRow);
 
     //move seek to the beginning of the column
     int sizeToColumn = *sizeUntilColumn(Column);
