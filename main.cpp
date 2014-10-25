@@ -18,10 +18,16 @@ void setup()
     K = new konstants();
 }
 
+<<<<<<< HEAD
 string* createNewFile(string newFileName){
     string* newFileDir;
     *newFileDir = K->dirFile;
     newFileDir->append(newFileName);
+=======
+string& createNewFile(string newFileName){
+    string newFileDir = K->DIRFILE;
+    newFileDir.append(newFileName);
+>>>>>>> 4ea8fc7c17537ef8f014ff3ace7e10b318c039c1
     //cout << newFileDir << endl;
     return newFileDir;
 }
@@ -29,7 +35,7 @@ string* createNewFile(string newFileName){
 string& toChar(int *toChar){
     string s;
     stringstream out;
-    out << toChar;
+    out << *toChar;
     s = out.str();    
     return &s;
 }
@@ -48,6 +54,17 @@ void checkSize(string* add, int count){
     *add = tmp;
 }
 
+string& intToChar(int *metadata){
+    int ch;
+    string tmp;
+    while (metadata != 0){
+        ch = metadata % 10;
+        metadata = metadata / 10;
+        tmp.append(*(toChar(ch)));
+    }
+    return &tmp;
+}
+
 
 void createTable(int *registerSize, int* columnSizes, int *columns){
     cout << "**** Insert name for new table ***" << endl;
@@ -60,24 +77,42 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
     else
         cout << "****Database could not be created***" << endl;
 
-    if(registerSize >= 999)
+    if(registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
-        database.seekp(3 , ios::beg);
+        database.seekp(K->METADATA_SIZE_ADDRESS , ios::beg);
         string* add = toChar(&registerSize);]
-        checkSize(add,4);
+        checkSize(add,K->DEFAULT_REGISTER_SIZE);
         database << *add;
     }
 
     for (int i = 0 ; i < columns ; i++)
     {
         add = toChar(columnSizes[i]);
-        checkColSize(add,3);
+        checkColSize(add,K->DEFAULT_COLUMN_SIZE);
         database << *add;
     }
+<<<<<<< HEAD
     //Place char pointer on the data start pointer.
     database.seekp(*getDataInit(&newFileName));
+=======
+
+    //sets seek on the end, gets the address then turns it to char
+    //to insert on the beginning.
+    database.seekp(0, ios::end);
+    int meta = database.tellp();
+    if (meta <= 3){
+        string metadata = *(intToChar(&meta));
+        const char *p = metadata.c_str();
+        while (*p != '\0')
+            database.put( *p++ );
+    }else{
+
+    }
+
+    database.close();
+>>>>>>> 4ea8fc7c17537ef8f014ff3ace7e10b318c039c1
 }
  void createTable(string &ColumnNames, int &ColumnSizes){
      cout << "****Name for new table***" << endl;
@@ -89,18 +124,24 @@ int& getDataInit(string *newFileName){
 }
 
 void updateField(){
-    ofstream file (K->dirFile.c_str() , ios::app);
+    ofstream file (K->DIRFILE.c_str() , ios::app);
     if(data.size() <= 64){
 
     }
     file.close();
 }
 
+<<<<<<< HEAD
 int* stringToInt(string* pStr){
     int* i;
     *i= atoi(pStr->c_str());
     return i;
 }
+=======
+void readField(){
+    ifstream file (K->DIRFILE.c_str());
+    char character;
+>>>>>>> 4ea8fc7c17537ef8f014ff3ace7e10b318c039c1
 
 string* charCallocToString(char* pCharCalloc){
     string* stringToReturn ;
