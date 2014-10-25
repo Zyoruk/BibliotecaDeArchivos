@@ -23,16 +23,30 @@ string& createNewFile(string newFileName){
     return &newFileDir;
 }
 
-char& toChar(int *registerSize){
-    int i = 5;
+string& toChar(int *toChar){
     string s;
     stringstream out;
-    out << registerSize;
-    s = out.str();
+    out << toChar;
+    s = out.str();    
     return &s;
 }
 
-void createTable(int *registerSize, int &ColumnSizes[]){
+void checkSize(string* add, int count){
+    string hola = "0";
+    string tmp;
+
+    for (int a = 1 ; a < count ; a++){
+        if((tmp.length() + *add.length()) == count){
+            break;
+        }
+        tmp.append(hola);
+    }
+    tmp.append(*add);
+    add = tmp;
+}
+
+
+void createTable(int *registerSize, int* columnSizes, int *columns){
     cout << "**** Insert name for new table ***" << endl;
     cin >> newFileName;
     ofstream database ((*createNewFile(newFileName)).c_str() , ios::trunc); //append database name to path and creates it there.
@@ -46,12 +60,16 @@ void createTable(int *registerSize, int &ColumnSizes[]){
     else
     {
         database.seekp(3 , ios::beg);
-        database << *(toChar(&registerSize));
+        string* add = toChar(&registerSize);]
+        checkSize(add,4);
+        database << *add;
     }
 
-    for (int &i : )
+    for (int i = 0 ; i < columns ; i++)
     {
-
+        add = toChar(columnSizes[i]);
+        checkColSize(add,3);
+        database << *add;
     }
     database.seekp(*getDataInit(&newFileName)); //Place char pointer on the data start pointer.
 }
