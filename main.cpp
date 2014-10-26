@@ -14,16 +14,10 @@ konstants* K;
 int option;
 string data;
 string newFileName;
+
 void setup()
 {
     K = new konstants();
-}
-string* createNewFile(string newFileName){
-    string* newFileDir ;
-    *newFileDir = K->DIRFILE;
-    newFileDir->append(newFileName);
-    //cout << newFileDir << endl;
-    return newFileDir;
 }
 
 string* toChar(int *toChar){
@@ -59,13 +53,20 @@ string* intToChar(int *metadata){
     return tmp;
 }
 
+string createNewFile(string newFileName){
+    string newFileDir ;
+    newFileDir = K->DIRFILE;
+    newFileDir->append(newFileName);
+    //cout << newFileDir << endl;
+    return newFileDir;
+}
 
 void createTable(int *registerSize, array<int>* columnSizes){
     cout << "**** Insert name for new table ***" << endl;
     string newFileName;
     cin >> newFileName;
     string* add;
-    ofstream database ((*createNewFile(newFileName)).c_str() , ios::trunc);
+    ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
     //append database name to path and creates it there.
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
