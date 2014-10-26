@@ -62,6 +62,7 @@ string* intToChar(int *metadata){
 
 void createTable(int *registerSize, array<int>* columnSizes){
     cout << "**** Insert name for new table ***" << endl;
+    string newFileName;
     cin >> newFileName;
     string* add;
     ofstream database ((*createNewFile(newFileName)).c_str() , ios::trunc);
