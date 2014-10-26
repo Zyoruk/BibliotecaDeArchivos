@@ -51,7 +51,7 @@ int main()
 		cout << ios::end << " " << ios::beg << " " <<  sizeofregister << endl;
 		//int sizeoffile = ios::end - ios::beg;
 		char * puntero_buffer_lectura = (char *) calloc(20,4);
-                for(int i = 0; i< (sizeoffile/sizeofregister); i++)
+        for(int i = 0; i< (sizeoffile/sizeofregister); i++)
 		{
 			fs.read(puntero_buffer_lectura, sizeofregister);
 			cout<< "Nombre en el registro " << i << " " << (puntero_buffer_lectura+8) << endl;
