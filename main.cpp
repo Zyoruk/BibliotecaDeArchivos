@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include "konstants.h"
 #include <limits>
 #include <cstdlib>
+#include <sstream>
+#include "konstants.h"
 #include "array/array.h"
 
 //#define STR(x) #x << '=' << x
@@ -59,10 +60,10 @@ string* intToChar(int *metadata){
 }
 
 
-void createTable(int *registerSize, int* columnSizes, int *columns){
+void createTable(int *registerSize, array<int>* columnSizes){
     cout << "**** Insert name for new table ***" << endl;
     cin >> newFileName;
-
+    string* add;
     ofstream database ((*createNewFile(newFileName)).c_str() , ios::trunc);
     //append database name to path and creates it there.
     if(database.is_open())
@@ -74,22 +75,20 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
         cout << "Error: Register size beyond max size" << endl;
     else
     {
-        database.seekp(K->METADATA_SIZE_ADDRESS , ios::beg);
-        string* add = toChar(&registerSize);]
+        database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
+        add = toChar(registerSize);
         checkSize(add,K->DEFAULT_REGISTER_SIZE);
         database << *add;
     }
 
-    for (int i = 0 ; i < columns ; i++)
+    array<int> tempArr = *columnSizes;
+    for (int i = 0 ; i < tempArr.getLeght() ; i++)
     {
-        add = toChar(columnSizes[i]);
-        checkColSize(add,K->DEFAULT_COLUMN_SIZE);
+        int integerElem = tempArr[i];
+        add = toChar(&integerElem);
+        checkSize(add,K->DEFAULT_COLUMN_SIZE);
         database << *add;
     }
-    //Place char pointer on the data start pointer.
-    database.seekp(*getDataInit(&newFileName));
-
-
     //sets seek on the end, gets the address then turns it to char
     //to insert on the beginning.
     database.seekp(0, ios::end);
@@ -100,27 +99,19 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
         while (*p != '\0')
             database.put( *p++ );
     }else{
-
+        cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...";
     }
 
     database.close();
 }
- void createTable(string &ColumnNames, int &ColumnSizes){
-     cout << "****Name for new table***" << endl;
-     cin >> newFileName;
-     ofstream* database = createNewFile(newFileName);
- }
-int& getDataInit(string *newFileName){
 
-}
+//void updateField(){
+//    ofstream file (K->DIRFILE.c_str() , ios::app);
+//    if(data.size() <= 64){
 
-void updateField(){
-    ofstream file (K->DIRFILE.c_str() , ios::app);
-    if(data.size() <= 64){
-
-    }
-    file.close();
-}
+//    }
+//    file.close();
+//}
 
 int* stringToInt(string* pStr){
     int* i;
@@ -134,16 +125,16 @@ void readField(){
 string* charCallocToString(char* pCharCalloc){
     string* stringToReturn ;
     *stringToReturn = "";
-    for (int i = NULL; i <= K->THREE_BYTES;i++){
+    for (int i = NULL; i <= K->DEFAULT_COLUMN_SIZE;i++){
         stringToReturn->append(((const char*)(pCharCalloc + i)));
     }
     return stringToReturn;
 }
 
 int* getRegisterSize(ifstream* pFile){
-    pFile->seekg(K->THREE_BYTES);
+    pFile->seekg(K->DEFAULT_COLUMN_SIZE);
     char* charString = (char*)calloc(4 ,1);
-    pFile->read(charString, K->HEADER_FILE_SIZE);
+    pFile->read(charString, K->REGISTER_SIZE_ADDRESS);
     string* regSizeString = charCallocToString(charString);
     int* regSize;
     *regSize = *stringToInt(regSizeString);
@@ -153,7 +144,7 @@ int* getRegisterSize(ifstream* pFile){
 int* getMetaDataSize(ifstream* pFile){
     pFile->seekg(NULL);
     char* charString = (char*)calloc(3 ,1);
-    pFile->read(charString, K->THREE_BYTES);
+    pFile->read(charString, K->DEFAULT_COLUMN_SIZE);
     string* MDSizeString = charCallocToString(charString);
     int* MDSizeInt  = stringToInt(MDSizeString);
     return MDSizeInt;
@@ -180,13 +171,13 @@ int* getRegisterQuantity(ifstream* pFile){
 
 int* columnSize(ifstream* pFile , int pColumnInt){
     //Move the seek to the beginning of the column.
-    pFile->seekg((K->HEADER_FILE_SIZE + K->THREE_BYTES) +
-                 ((pColumnInt - K->ONE_BYTE) * K->THREE_BYTES));
-    char* charString = (char*)calloc(K->THREE_BYTES, K->ONE_BYTE);
-    pFile->read(charString , K->THREE_BYTES);
+    pFile->seekg((K->REGISTER_SIZE_ADDRESS + K->DEFAULT_COLUMN_SIZE) +
+                 ((pColumnInt - K->ONE_BYTE) * K->DEFAULT_COLUMN_SIZE));
+    char* charString = (char*)calloc(K->DEFAULT_COLUMN_SIZE, K->ONE_BYTE);
+    pFile->read(charString , K->DEFAULT_COLUMN_SIZE);
     string cSize = K->EMPTY_STRING;
     // build the string;
-    for (int i = NULL; i <= K->THREE_BYTES ; i++){
+    for (int i = NULL; i <= K->DEFAULT_COLUMN_SIZE ; i++){
         cSize.append(((const char*)charString + i));
     }
     int* cSizeInt = stringToInt(&cSize);
@@ -201,24 +192,24 @@ int* sizeUntilColumn(ifstream* pFile, int pColumn){
     return sizeToReturn;
 }
 
-string& readField(string* pFile , int pRow , int Column){
+string* readField(string* pFile , int pRow , int Column){
     //Relative route + the name of the file
-    string fileToRead = K->dirFile;
-    fileToRead.append(pFile);
-    ifstream file (fileToRead.c_str());
+    string standardDir = K->DIRFILE;
+    standardDir.append(*pFile);
+    ifstream file (standardDir.c_str());
 
 
     //Move seek to the row
-    file.seekg((getRegisterSize(&file))*pRow);
+    file.seekg((*getRegisterSize(&file))*pRow);
 
     //move seek to the beginning of the column
-    int sizeToColumn = *sizeUntilColumn(Column);
+    int sizeToColumn = *sizeUntilColumn(&file , Column);
     file.seekg(sizeToColumn);
 
     //Read the info
-    int cSize = *columnSize(Column);
+    int cSize = *columnSize(&file , Column);
 
-    char* infoInsideColumn = calloc(cSize, sizeof(char));
+    char* infoInsideColumn = (char*)calloc(cSize, sizeof(char));
     file.read(infoInsideColumn , cSize);
 
     //build the stringto return
@@ -226,32 +217,24 @@ string& readField(string* pFile , int pRow , int Column){
     return stringToReturn;
 }
 
+void interfax(){
+    cout << "*** Bienvenido a FSQL Server ***" << endl;
+    cout << "ftjf" << endl;
+    int regSize;
+    regSize = 320;
+    array<int> columnSais (5);
+    columnSais[0] = 64;
+    columnSais[1] = 64;
+    columnSais[2] = 128;
+    columnSais[3] = 64;
+    columnSais[4] = 32;
+    createTable(&regSize ,&columnSais);
+
+}
+
 int main()
 {
-//    setup();
-//    cout << "****Field operations***" << endl;
-//    cout << "****1. Edit ****" << endl;
-//    cout << "****2. Read ****" << endl;
-
-//    cin >> option;
-//    switch (option) {
-//        case 1:
-//        {
-//            updateField();
-//            break;
-//        }
-//        case 2:
-//        {
-//            readField();
-//            break;
-//        }
-//        default:
-//        {
-//            cout << "The cat said miau...\n";
-//            break;
-//}
-//    }
-
+    interfax();
     return 0;
 }
 
