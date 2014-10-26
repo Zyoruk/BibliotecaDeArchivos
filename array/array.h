@@ -36,7 +36,6 @@ array<K>::array(int pLenght){
 
 template<typename K>
 array<K>::~array(){
-    free(this->_arrayBuffer);
 }
 
 template <typename K>

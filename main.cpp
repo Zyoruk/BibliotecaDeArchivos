@@ -20,11 +20,11 @@ void setup()
     K = new konstants();
 }
 
-string* toChar(int *toChar){
-    string* s;
+string toChar(int toChar){
+    string s;
     stringstream out;
-    out << *toChar;
-    *s = out.str();
+    out << toChar;
+    s = out.str();
     return s;
 }
 
@@ -42,13 +42,13 @@ void checkSize(string* add, int count){
     *add = tmp;
 }
 
-string* intToChar(int *metadata){
+string intToChar(int metadata){
     int ch;
-    string* tmp;
-    while (*metadata != 0){
-        ch = *metadata % 10;
-        *metadata = *metadata / 10;
-        tmp->append(*(toChar(&ch)));
+    string tmp ;
+    while (metadata != 0){
+        ch = metadata % 10;
+        metadata = metadata / 10;
+        tmp.append(toChar(ch));
     }
     return tmp;
 }
@@ -56,52 +56,61 @@ string* intToChar(int *metadata){
 string createNewFile(string newFileName){
     string newFileDir ;
     newFileDir = K->DIRFILE;
-    newFileDir->append(newFileName);
+    newFileDir.append(newFileName);
     //cout << newFileDir << endl;
     return newFileDir;
 }
 
-void createTable(int *registerSize, array<int>* columnSizes){
+void createTable(int* registerSize, array<int>* columnSizes){
+    int offset = 0;
     cout << "**** Insert name for new table ***" << endl;
-    string newFileName;
+    string newFileName = "";
     cin >> newFileName;
-    string* add;
-    ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
+
+    string add;
+
+    string theFileName = createNewFile(newFileName);
+    ofstream database (theFileName.c_str() , ios::trunc);
+
     //append database name to path and creates it there.
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
     else
         cout << "****Database could not be created***" << endl;
 
+    //Register size validachion.
     if(*registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
-        database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
-        add = toChar(registerSize);
-        checkSize(add,K->DEFAULT_REGISTER_SIZE);
-        database << *add;
+        database << "000";
+//        database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
+        add = toChar(*registerSize);
+        checkSize(&add, K->DEFAULT_REGISTER_SIZE);
+        database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
     }
 
     array<int> tempArr = *columnSizes;
     for (int i = 0 ; i < tempArr.getLeght() ; i++)
     {
         int integerElem = tempArr[i];
-        add = toChar(&integerElem);
-        checkSize(add,K->DEFAULT_COLUMN_SIZE);
-        database << *add;
+        add = toChar(integerElem);
+        checkSize(&add,K->DEFAULT_COLUMN_SIZE);
+        database.write(add.c_str() , K->DEFAULT_COLUMN_SIZE);
     }
     //sets seek on the end, gets the address then turns it to char
     //to insert on the beginning.
-    database.seekp(0, ios::end);
+    database.seekp(offset, ios::end);
     int meta = database.tellp();
-    if (meta <= 3){
-        string metadata = *(intToChar(&meta));
+    string metadata = intToChar(meta);
+    checkSize(&metadata, K->METADATA_SIZE);
+    database.seekp(K->ZE_ROW);
+    if (metadata.length() <= 3){
         const char *p = metadata.c_str();
         while (*p != '\0')
-            database.put( *p++ );
+            database.put( *(p++) );
     }else{
-        cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...";
+        cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
 
     database.close();
@@ -120,10 +129,7 @@ int* stringToInt(string* pStr){
     *i= atoi(pStr->c_str());
     return i;
 }
-void readField(){
-    ifstream file (K->DIRFILE.c_str());
-    char character;
-}
+
 string* charCallocToString(char* pCharCalloc){
     string* stringToReturn ;
     *stringToReturn = "";
@@ -194,10 +200,15 @@ int* sizeUntilColumn(ifstream* pFile, int pColumn){
     return sizeToReturn;
 }
 
+void writeRegister(string* pFile){
+    string standardDir = createNewFile(pFile);
+    ofstream file (standardDir);
+
+}
+
 string* readField(string* pFile , int pRow , int Column){
     //Relative route + the name of the file
-    string standardDir = K->DIRFILE;
-    standardDir.append(*pFile);
+    string standardDir = createNewFile(pFile);
     ifstream file (standardDir.c_str());
 
 
@@ -236,6 +247,7 @@ void interfax(){
 
 int main()
 {
+    setup();
     interfax();
     return 0;
 }

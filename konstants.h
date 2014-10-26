@@ -8,6 +8,7 @@ class konstants
 {
 public:
     konstants();
+    const int ZE_ROW = 0;
     const int ONE_BYTE = 1;
     const string EMPTY_STRING = "";
     const string DIRFILE = "../FSQL/";
@@ -15,7 +16,7 @@ public:
     const int DEFAULT_REGISTER_SIZE = 4;
     const int REGISTER_SIZE_ADDRESS = 3;
     const int MAX_REGISTER_SIZE = 999;
-    //const int MAX_METADATA_SIZE =
+    const int METADATA_SIZE = 3;
 };
 
 #endif // KONSTANTS_H
