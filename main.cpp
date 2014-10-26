@@ -17,27 +17,20 @@ void setup()
 {
     K = new konstants();
 }
-
-<<<<<<< HEAD
 string* createNewFile(string newFileName){
-    string* newFileDir;
-    *newFileDir = K->dirFile;
+    string* newFileDir ;
+    *newFileDir = K->DIRFILE;
     newFileDir->append(newFileName);
-=======
-string& createNewFile(string newFileName){
-    string newFileDir = K->DIRFILE;
-    newFileDir.append(newFileName);
->>>>>>> 4ea8fc7c17537ef8f014ff3ace7e10b318c039c1
     //cout << newFileDir << endl;
     return newFileDir;
 }
 
-string& toChar(int *toChar){
-    string s;
+string* toChar(int *toChar){
+    string* s;
     stringstream out;
     out << *toChar;
-    s = out.str();    
-    return &s;
+    *s = out.str();
+    return s;
 }
 
 void checkSize(string* add, int count){
@@ -54,15 +47,15 @@ void checkSize(string* add, int count){
     *add = tmp;
 }
 
-string& intToChar(int *metadata){
+string* intToChar(int *metadata){
     int ch;
-    string tmp;
-    while (metadata != 0){
-        ch = metadata % 10;
-        metadata = metadata / 10;
-        tmp.append(*(toChar(ch)));
+    string* tmp;
+    while (*metadata != 0){
+        ch = *metadata % 10;
+        *metadata = *metadata / 10;
+        tmp->append(*(toChar(&ch)));
     }
-    return &tmp;
+    return tmp;
 }
 
 
@@ -77,7 +70,7 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
     else
         cout << "****Database could not be created***" << endl;
 
-    if(registerSize >= K->MAX_REGISTER_SIZE)
+    if(*registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
@@ -93,10 +86,9 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
         checkColSize(add,K->DEFAULT_COLUMN_SIZE);
         database << *add;
     }
-<<<<<<< HEAD
     //Place char pointer on the data start pointer.
     database.seekp(*getDataInit(&newFileName));
-=======
+
 
     //sets seek on the end, gets the address then turns it to char
     //to insert on the beginning.
@@ -112,7 +104,6 @@ void createTable(int *registerSize, int* columnSizes, int *columns){
     }
 
     database.close();
->>>>>>> 4ea8fc7c17537ef8f014ff3ace7e10b318c039c1
 }
  void createTable(string &ColumnNames, int &ColumnSizes){
      cout << "****Name for new table***" << endl;
@@ -131,18 +122,15 @@ void updateField(){
     file.close();
 }
 
-<<<<<<< HEAD
 int* stringToInt(string* pStr){
     int* i;
     *i= atoi(pStr->c_str());
     return i;
 }
-=======
 void readField(){
     ifstream file (K->DIRFILE.c_str());
     char character;
->>>>>>> 4ea8fc7c17537ef8f014ff3ace7e10b318c039c1
-
+}
 string* charCallocToString(char* pCharCalloc){
     string* stringToReturn ;
     *stringToReturn = "";
