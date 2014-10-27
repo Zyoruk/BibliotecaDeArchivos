@@ -58,12 +58,8 @@ string intToChar(int metadata){
 string createNewFile(string newFileName){
     string newFileDir ;
     newFileDir = K->DIRFILE;
-<<<<<<< HEAD
-    newFileDir->append(newFileName);
-=======
     newFileDir.append(newFileName);
     //cout << newFileDir << endl;
->>>>>>> a77b18de14d87d41b85faf52319ec3137d1c18cc
     return newFileDir;
 }
 
@@ -72,20 +68,12 @@ void createTable(int* registerSize, array<int>* columnSizes){
     cout << "**** Insert name for new table ***" << endl;
     string newFileName = "";
     cin >> newFileName;
-<<<<<<< HEAD
-    string* add;
-=======
 
     string add;
 
     string theFileName = createNewFile(newFileName);
-<<<<<<< HEAD
-    ofstream database (theFileName.c_str() , ios::trunc);
->>>>>>> a77b18de14d87d41b85faf52319ec3137d1c18cc
-=======
-//    fstream database (theFileName.c_str() , ios::trunc);
+    //fstream database (theFileName.c_str() , ios::trunc);
     fstream database (theFileName.c_str());
->>>>>>> 568eaf937761d68afad01349c3134e2635c8b2e1
 
     //append database name to path and creates it there.
     ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
@@ -96,17 +84,13 @@ void createTable(int* registerSize, array<int>* columnSizes){
     else
         cout << "****Database could not be created***" << endl;
 
-<<<<<<< HEAD
-    //check for register max size
-=======
     //Register size validachion.
->>>>>>> a77b18de14d87d41b85faf52319ec3137d1c18cc
     if(*registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
         database << "000";
-//        database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
+//      database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
         add = toChar(*registerSize);
         checkSize(&add, K->DEFAULT_REGISTER_SIZE);
         database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
@@ -136,7 +120,6 @@ void createTable(int* registerSize, array<int>* columnSizes){
     }else{
         cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
-
     database.close();
 }
 
@@ -153,13 +136,6 @@ int stringToInt(string* pStr){
     i= atoi(pStr->c_str());
     return i;
 }
-<<<<<<< HEAD
-void readField(){
-    ifstream file (K->DIRFILE.c_str());
-    char character;
-}
-=======
->>>>>>> a77b18de14d87d41b85faf52319ec3137d1c18cc
 
 string charCallocToString(char* pCharCalloc){
     string stringToReturn ;
@@ -286,7 +262,7 @@ string readField(string pFile , int pRow , int Column){
     return stringToReturn;
 }
 
-void interfax(){
+void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
     cout << "\n";
     int regSize;
@@ -298,13 +274,9 @@ void interfax(){
     columnSais[3] = 64;
     columnSais[4] = 32;
     createTable(&regSize ,&columnSais);
-
 }
 
-int main()
-{
-    setup();
-
+void test1(){
     array<char*> cData(1);
     string stringToAdd = "Luis";
     char *s2 = new char[stringToAdd.size()+1];
@@ -317,6 +289,12 @@ int main()
     string fileName = "Test8";
     cout << fileName;
     writeRegister(fileName, &cData, &cPos);
+}
+
+int main()
+{
+    setup();
+    test1();
     return 0;
 }
 
