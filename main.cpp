@@ -160,6 +160,26 @@ void fillString(string* pData, int pSize){
     }
 }
 
+void placeSeekOn(string* pFile , int* pRow , int* Column, int* pSizeToColumn,
+                 int pCSize){
+
+    //Relative route + the name of the file
+    string fileH = *pFile;
+    string standardDir = createNewFile(fileH.c_str());
+    file.open(standardDir.c_str());
+
+    //Move seek to the row
+    file.seekg(  getMetaDataSize() + ( getRegisterSize() * (*pRow-1) )  );
+
+    //move seek to the beginning of the column
+    *pSizeToColumn = sizeUntilColumn(*Column-1);
+
+    file.seekg(sizeToColumn , ios::cur);
+
+    //Read the info
+    *pCSize = columnSize(*Column);
+}
+
 //****************************************************************************//
 
 /**
@@ -272,23 +292,12 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
  * @param Column is the column of the desired data.
  * @return
  */
-string readRegister(string pFile , int pRow , int Column){
+string readRegister(string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
+    int sizeToColumn;
+    int cSize;
 
-    //Relative route + the name of the file
-    string standardDir = createNewFile(pFile.c_str());
-    file.open(standardDir.c_str());
-
-    //Move seek to the row
-    file.seekg(  getMetaDataSize() + ( getRegisterSize() * (pRow-1) )  );
-
-    //move seek to the beginning of the column
-    int sizeToColumn = sizeUntilColumn(Column-1);
-
-    file.seekg(sizeToColumn , ios::cur);
-
-    //Read the info
-    int cSize = columnSize(Column);
+    placeSeekOn(&pFile , &pRow , &pColumn, &sizeToColumn, &cSize);
 
     //build the stringto return
     string stringToReturn = "";
@@ -315,21 +324,21 @@ string readRegister(string pFile , int pRow , int Column){
 //    return columnData;
 //}
 
-void updateColumn(){
+//void updateColumn(){
 
-}
-
-//void updateField(){
-//    fstream file (K->DIRFILE.c_str() , ios::app);
-//    if(data.size() <= 64){
-
-//    }
-//    file.close();
 //}
 
-void readField(){
+void updateField(string pFile , int pRow , int pColumn){
+    int currSeek = file.tellg();
+    int sizeToColumn;
+    int cSize;
 
+    placeSeekOn(&pFile , &pRow , &pColumn, &sizeToColumn, &cSize);
 }
+
+//void readField(){
+
+//}
 
 
 
