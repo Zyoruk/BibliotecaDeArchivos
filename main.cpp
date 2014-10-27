@@ -72,10 +72,13 @@ void createTable(int* registerSize, array<int>* columnSizes){
     string add;
 
     string theFileName = createNewFile(newFileName);
-//    fstream database (theFileName.c_str() , ios::trunc);
+    //fstream database (theFileName.c_str() , ios::trunc);
     fstream database (theFileName.c_str());
 
     //append database name to path and creates it there.
+    ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
+
+    //check if buffer = true
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
     else
@@ -87,12 +90,13 @@ void createTable(int* registerSize, array<int>* columnSizes){
     else
     {
         database << "000";
-//        database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
+//      database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
         add = toChar(*registerSize);
         checkSize(&add, K->DEFAULT_REGISTER_SIZE);
         database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
     }
 
+    //set column sizes on file
     array<int> tempArr = *columnSizes;
     for (int i = 0 ; i < tempArr.getLeght() ; i++)
     {
@@ -101,6 +105,7 @@ void createTable(int* registerSize, array<int>* columnSizes){
         checkSize(&add,K->DEFAULT_COLUMN_SIZE);
         database.write(add.c_str() , K->DEFAULT_COLUMN_SIZE);
     }
+
     //sets seek on the end, gets the address then turns it to char
     //to insert on the beginning.
     database.seekp(offset, ios::end);
@@ -115,7 +120,6 @@ void createTable(int* registerSize, array<int>* columnSizes){
     }else{
         cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
-
     database.close();
 }
 
@@ -262,7 +266,7 @@ string readField(string pFile , int pRow , int Column){
     return stringToReturn;
 }
 
-void interfax(){
+void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
     cout << "\n";
     int regSize;
@@ -274,13 +278,9 @@ void interfax(){
     columnSais[3] = 64;
     columnSais[4] = 32;
     createTable(&regSize ,&columnSais);
-
 }
 
-int main()
-{
-    setup();
-
+void test1(){
     array<char*> cData(1);
     string stringToAdd = "Luis";
     char *s2 = new char[stringToAdd.size()+1];
@@ -293,6 +293,12 @@ int main()
     string fileName = "Test8";
     cout << fileName;
     writeRegister(fileName, &cData, &cPos);
+}
+
+int main()
+{
+    setup();
+    test1();
     return 0;
 }
 
