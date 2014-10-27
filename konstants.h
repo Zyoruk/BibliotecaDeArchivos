@@ -19,6 +19,7 @@ public:
     static const int METADATA_SIZE = 3;
     static const int METADATA_COLUMN_START = 7;
     const char NULL_CHAR = '*';
+    const string TRIPLE_NULL = "000";
 };
 
 #endif // KONSTANTS_H

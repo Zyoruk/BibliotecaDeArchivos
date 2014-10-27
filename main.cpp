@@ -17,6 +17,7 @@ int option;
 string data;
 string newFileName;
 fstream file;
+
 void setup()
 {
     K = new konstants();
@@ -62,70 +63,6 @@ string createNewFile(string newFileName){
     //cout << newFileDir << endl;
     return newFileDir;
 }
-
-void createTable(int* registerSize, array<int>* columnSizes){
-    int offset = 0;
-    cout << "**** Insert name for new table ***" << endl;
-    string newFileName = "";
-    cin >> newFileName;
-
-    string add;
-
-    string theFileName = createNewFile(newFileName);
-    ofstream database (theFileName.c_str() , ios::trunc);
-//    fstream database (theFileName.c_str());
-    //check if buffer = true
-    if(database.is_open())
-        cout << "****Database succesfully created***" << endl;
-    else
-        cout << "****Database could not be created***" << endl;
-
-    //Register size validachion.
-    if(*registerSize >= K->MAX_REGISTER_SIZE)
-        cout << "Error: Register size beyond max size" << endl;
-    else
-    {
-        database << "000";
-//      database.seekp(K->REGISTER_SIZE_ADDRESS , ios::beg);
-        add = toChar(*registerSize);
-        checkSize(&add, K->DEFAULT_REGISTER_SIZE);
-        database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
-    }
-
-    //set column sizes on file
-    array<int> tempArr = *columnSizes;
-    for (int i = 0 ; i < tempArr.getLenght() ; i++)
-    {
-        int integerElem = tempArr[i];
-        add = toChar(integerElem);
-        checkSize(&add,K->DEFAULT_COLUMN_SIZE);
-        database.write(add.c_str() , K->DEFAULT_COLUMN_SIZE);
-    }
-
-    //sets seek on the end, gets the address then turns it to char
-    //to insert on the beginning.
-    database.seekp(offset, ios::end);
-    int meta = database.tellp();
-    string metadata = intToChar(meta);
-    checkSize(&metadata, K->METADATA_SIZE);
-    database.seekp(K->ZE_ROW);
-    if (metadata.length() <= 3){
-        const char *p = metadata.c_str();
-        while (*p != '\0')
-            database.put( *(p++) );
-    }else{
-        cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
-    }
-    database.close();
-}
-
-//void updateField(){
-//    fstream file (K->DIRFILE.c_str() , ios::app);
-//    if(data.size() <= 64){
-
-//    }
-//    file.close();
-//}
 
 int stringToInt(string* pStr){
     int i;
@@ -179,16 +116,6 @@ int getRegisterQuantity(){
     return regQty;
 }
 
-//array<string>& getAllDataFromColumn(fstream* pFile, int pColumn){
-//    int* regQtt = getRegisterQuantity(pFile , pColumn);
-//    array<string>* columnData(*regQtt);
-//    for (int row = NULL; row <= regQtt; i++){
-//        string* stringToAppend = readField(pFile, row, pColumn);
-//        columnData[row] = *stringToAppend;
-//    }
-//    return columnData;
-//}
-
 int columnSize(int pColumnInt){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
@@ -222,77 +149,191 @@ int sizeUntilColumn(int pColumn){
     return sizeToReturn;
 }
 
+/**
+ * @brief fillString creates a string with the size of a registry
+ * @param pData registry to be initialized.
+ * @param pSize size of the registry.
+ */
 void fillString(string* pData, int pSize){
     while ( pData->length() < pSize){
         pData->push_back(K->NULL_CHAR);
     }
 }
 
+//****************************************************************************//
+
+/**
+ * @brief createTable creates the database and metadata.
+ * @param registerSize is the size for each registry.
+ * @param columnSizes is the sizes for each column.
+ */
+void createTable(int* registerSize, array<int>* columnSizes){
+    string newFileName = "";
+    int offset = 0;
+    string add;
+
+    cout << "**** Insert name for new table ***" << endl;
+    cin >> newFileName;
+
+    string theFileName = createNewFile(newFileName);
+    ofstream database (theFileName.c_str() , ios::trunc);
+
+    //check if buffer = true
+    if(database.is_open())
+        cout << "****Database succesfully created***" << endl;
+    else
+        cout << "****Database could not be created***" << endl;
+
+    //Register size validachion.
+    if(*registerSize >= K->MAX_REGISTER_SIZE)
+        cout << "Error: Register size beyond max size" << endl;
+    else
+    {
+        database << K->TRIPLE_NULL;
+        add = toChar(*registerSize);
+        checkSize(&add, K->DEFAULT_REGISTER_SIZE);
+        database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
+    }
+
+    //set column sizes on file
+    array<int> tempArr = *columnSizes;
+    for (int i = 0 ; i < tempArr.getLenght() ; i++)
+    {
+        int integerElem = tempArr[i];
+        add = toChar(integerElem);
+        checkSize(&add,K->DEFAULT_COLUMN_SIZE);
+        database.write(add.c_str() , K->DEFAULT_COLUMN_SIZE);
+    }
+
+    //sets seek on the end, gets the address then turns it to char
+    //to insert on the beginning.
+    database.seekp(offset, ios::end);
+    int meta = database.tellp();
+    string metadata = intToChar(meta);
+    checkSize(&metadata, K->METADATA_SIZE);
+    database.seekp(K->ZE_ROW);
+    if (metadata.length() <= 3){
+        const char *p = metadata.c_str();
+        while (*p != '\0')
+            database.put( *(p++) );
+    }else{
+        cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
+    }
+    database.close();
+}
+
+/**
+ * @brief writeRegister Method to append a whole registry. Add new element to database.
+ * @param pFileName is the name of database file to add to.
+ * @param pColumnData it's what to append.
+ * @param columnPos is where to append it.
+ */
 void writeRegister(string pFileName, array<char*>* pColumnData ,
                    array<int>* columnPos){
+
     int currSeek = file.tellg();
+
     array<int> tempCPosArr = *columnPos;
     array<char*> tempCDataArr = *pColumnData;
     string registerToWrite = "";
+    int spacesToMove;
+    string Cdata;
+    int Csize;
 
     string standardDir = createNewFile(pFileName);
     file.open(standardDir.c_str());
-    fillString (&registerToWrite , getRegisterSize());
+
     //Get each data and fill the blanks.
-    string Cdata;
-    int Csize;
-    int spacesToMove;
+    fillString (&registerToWrite , getRegisterSize());
+
     for (int i = 0 ; i < tempCPosArr.getLenght() ; i++){
         Cdata  = tempCDataArr[i];
         Csize = columnSize(tempCPosArr[i]);
         //Not sure
         spacesToMove = sizeUntilColumn(tempCPosArr[i]);
-//        cout << spacesToMove;
         fillString(&Cdata ,Csize);
-        cout << "RTWL " << registerToWrite.length()<<endl;
+        //cout << "RTWL " << registerToWrite.length()<<endl;
         registerToWrite.replace(spacesToMove , Csize , Cdata.c_str());
-        cout << "RTWL " << registerToWrite.length()<<endl;
+        //cout << "RTWL " << registerToWrite.length()<<endl;
     }
+
     if (file.is_open()){
         cout << "IS OPEN" << endl;
         file.seekg(K->ZE_ROW , ios::end);
-       file << registerToWrite;
+        file << registerToWrite;
     }
     file.seekg(currSeek);
 }
 
-string readField(string pFile , int pRow , int Column){
+/**
+ * @brief readField returns the data readed on field of the database.
+ * @param pFile is the name of the file to be readed from.
+ * @param pRow is the row of the desired data.
+ * @param Column is the column of the desired data.
+ * @return
+ */
+string readRegister(string pFile , int pRow , int Column){
+    int currSeek = file.tellg();
+
     //Relative route + the name of the file
     string standardDir = createNewFile(pFile.c_str());
     file.open(standardDir.c_str());
-    int currSeek = file.tellg();
+
     //Move seek to the row
-    file.seekg(getMetaDataSize() + (getRegisterSize()*(pRow-1)));
-    cout << getMetaDataSize() <<endl;
-    cout << pRow -1 << endl;
-    cout << getRegisterSize() << endl;
+    file.seekg(  getMetaDataSize() + ( getRegisterSize() * (pRow-1) )  );
+
     //move seek to the beginning of the column
     int sizeToColumn = sizeUntilColumn(Column-1);
 
-    cout << sizeToColumn << endl;
     file.seekg(sizeToColumn , ios::cur);
-    cout << file.tellg()<<endl;
+
     //Read the info
     int cSize = columnSize(Column);
 
-    cout << cSize << endl;
-
     //build the stringto return
     string stringToReturn = "";
+
     for (int i  = 0 ; i < cSize ; i++){
         char currChar = file.get();
-        if (currChar == '*') break;
-        stringToReturn.push_back(currChar);
+        if (currChar != '*')
+            stringToReturn.push_back(currChar);
+        else
+            break;
     }
+
     file.seekg(currSeek);
-    cout << stringToReturn <<endl;
     return stringToReturn;
 }
+
+//array<string>& readColumn(fstream* pFile, int pColumn){
+//    int* regQtt = getRegisterQuantity(pFile , pColumn);
+//    array<string>* columnData(*regQtt);
+//    for (int row = NULL; row <= regQtt; i++){
+//        string* stringToAppend = readField(pFile, row, pColumn);
+//        columnData[row] = *stringToAppend;
+//    }
+//    return columnData;
+//}
+
+void updateColumn(){
+
+}
+
+//void updateField(){
+//    fstream file (K->DIRFILE.c_str() , ios::app);
+//    if(data.size() <= 64){
+
+//    }
+//    file.close();
+//}
+
+void readField(){
+
+}
+
+
+
+//****************************************************************************//
 
 void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
@@ -324,7 +365,7 @@ void test1(){
 
 void test2(){
     string fileName = "Test8";
-    string field = readField(fileName.c_str(),1 ,1);
+    string field = readRegister(fileName.c_str(),1 ,1);
 }
 
 int main()
