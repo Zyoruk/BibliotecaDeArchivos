@@ -161,6 +161,19 @@ void fillString(string* pData, int pSize){
     }
 }
 
+void checkString(string* pStringToCheck){
+    char* tempString = new char[(*pStringToCheck).size()+1];
+    strcpy(tempString, (*pStringToCheck).c_str());
+    for (int i = K->ZE_ROW ; i < pStringToCheck->length(); i++){
+        if (tempString[i] == ' ' ){
+            tempString[i] = '_';
+            cout << tempString[i];
+        }
+    }
+    string stringToReturn(tempString);
+    *pStringToCheck = stringToReturn;
+}
+
 void placeSeekOn(string* pFile , int* pRow , int* pColumn, int* pSizeToColumn,
                  int* pCSize){
 
@@ -242,6 +255,8 @@ void createTable(int* registerSize, array<int>* columnSizes){
     }else{
         cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
+    database.seekp(K->ZE_ROW , ios::end);
+    database.put('\n');
     database.close();
 }
 
@@ -271,6 +286,7 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
 
     for (int i = 0 ; i < tempCPosArr.getLenght() ; i++){
         Cdata  = tempCDataArr[i];
+        checkString(&Cdata);
         Csize = columnSize(tempCPosArr[i]);
         //Not sure
         spacesToMove = sizeUntilColumn(tempCPosArr[i]);
@@ -281,6 +297,7 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
     if (file.is_open()){
 //        cout << "IS OPEN" << endl;
         file.seekg(K->ZE_ROW , ios::end);
+        registerToWrite += "\n";
         file << registerToWrite;
     }
     file.seekg(currSeek);
