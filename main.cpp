@@ -57,7 +57,6 @@ string createNewFile(string newFileName){
     string newFileDir ;
     newFileDir = K->DIRFILE;
     newFileDir->append(newFileName);
-    //cout << newFileDir << endl;
     return newFileDir;
 }
 
@@ -66,13 +65,17 @@ void createTable(int *registerSize, array<int>* columnSizes){
     string newFileName;
     cin >> newFileName;
     string* add;
-    ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
+
     //append database name to path and creates it there.
+    ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
+
+    //check if buffer = true
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
     else
         cout << "****Database could not be created***" << endl;
 
+    //check for register max size
     if(*registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
@@ -83,6 +86,7 @@ void createTable(int *registerSize, array<int>* columnSizes){
         database << *add;
     }
 
+    //set column sizes on file
     array<int> tempArr = *columnSizes;
     for (int i = 0 ; i < tempArr.getLeght() ; i++)
     {
@@ -91,6 +95,7 @@ void createTable(int *registerSize, array<int>* columnSizes){
         checkSize(add,K->DEFAULT_COLUMN_SIZE);
         database << *add;
     }
+
     //sets seek on the end, gets the address then turns it to char
     //to insert on the beginning.
     database.seekp(0, ios::end);
@@ -124,6 +129,7 @@ void readField(){
     ifstream file (K->DIRFILE.c_str());
     char character;
 }
+
 string* charCallocToString(char* pCharCalloc){
     string* stringToReturn ;
     *stringToReturn = "";
