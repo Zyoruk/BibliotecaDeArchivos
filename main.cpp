@@ -161,7 +161,7 @@ void fillString(string* pData, int pSize){
 }
 
 void placeSeekOn(string* pFile , int* pRow , int* Column, int* pSizeToColumn,
-                 int pCSize){
+                 int* pCSize){
 
     //Relative route + the name of the file
     string fileH = *pFile;
@@ -252,6 +252,7 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
                    array<int>* columnPos){
 
     int currSeek = file.tellg();
+    file.seekg(0);
 
     array<int> tempCPosArr = *columnPos;
     array<char*> tempCDataArr = *pColumnData;
@@ -292,7 +293,7 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
  * @param Column is the column of the desired data.
  * @return
  */
-string readRegister(string pFile , int pRow , int pColumn){
+string readField(string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
@@ -328,19 +329,27 @@ string readRegister(string pFile , int pRow , int pColumn){
 
 //}
 
-void updateField(string pFile , int pRow , int pColumn){
+void updateField(string newData, string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
 
+    file.seekg(0);
+
     placeSeekOn(&pFile , &pRow , &pColumn, &sizeToColumn, &cSize);
+
+    for (int i = 0 ; i < Csize ; i++){
+        //Not sure
+        spacesToMove = sizeUntilColumn(pColumn);
+        fillString(&newData,cSize);
+    }
+
+    if (file.is_open()){
+        //cout << "IS OPEN" << endl;
+        file << newData;
+    }
+    file.seekg(currSeek);
 }
-
-//void readField(){
-
-//}
-
-
 
 //****************************************************************************//
 
@@ -376,6 +385,8 @@ void test2(){
     string fileName = "Test8";
     string field = readRegister(fileName.c_str(),1 ,1);
 }
+
+//****************************************************************************//
 
 int main()
 {
