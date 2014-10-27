@@ -181,9 +181,13 @@ int getRegisterQuantity(fstream* pFile){
 //}
 
 int columnSize(fstream* pFile , int pColumnInt){
+    pFile->seekg(0);
     //Move the seek to the beginning of the column.
-    pFile->seekg((K->REGISTER_SIZE_ADDRESS + K->DEFAULT_COLUMN_SIZE) +
-                 ((pColumnInt - K->ONE_BYTE) * K->DEFAULT_COLUMN_SIZE));
+    int whereToMove = K->METADATA_COLUMN_START+
+                      ((pColumnInt - K->ONE_BYTE) * K->DEFAULT_COLUMN_SIZE);
+
+    pFile->seekg(whereToMove);
+
     char* charString = (char*)calloc(K->DEFAULT_COLUMN_SIZE, K->ONE_BYTE);
     pFile->read(charString , K->DEFAULT_COLUMN_SIZE);
     string cSize = K->EMPTY_STRING;
