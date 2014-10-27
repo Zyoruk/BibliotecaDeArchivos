@@ -142,8 +142,9 @@ int columnSize(int pColumnInt){
  * \return
  */
 int sizeUntilColumn(int pColumn){
+//    cout << "sizeUntil" <<pColumn << endl;
     int sizeToReturn = K->ZE_ROW;
-    for (int i = K->ZE_ROW; i < pColumn - K->ONE_BYTE ; i++){
+    for (int i = K->ZE_ROW; i < pColumn -1 ; i++){
         sizeToReturn += columnSize(i);
     }
     return sizeToReturn;
@@ -160,9 +161,10 @@ void fillString(string* pData, int pSize){
     }
 }
 
-void placeSeekOn(string* pFile , int* pRow , int* Column, int* pSizeToColumn,
+void placeSeekOn(string* pFile , int* pRow , int* pColumn, int* pSizeToColumn,
                  int* pCSize){
 
+//    cout << *pColumn;
     //Relative route + the name of the file
     string fileH = *pFile;
     string standardDir = createNewFile(fileH.c_str());
@@ -170,14 +172,15 @@ void placeSeekOn(string* pFile , int* pRow , int* Column, int* pSizeToColumn,
 
     //Move seek to the row
     file.seekg(  getMetaDataSize() + ( getRegisterSize() * (*pRow-1) )  );
-
+//    cout << "seek 1" << file.tellg();
     //move seek to the beginning of the column
-    *pSizeToColumn = sizeUntilColumn(*Column-1);
 
-    file.seekg(sizeToColumn , ios::cur);
-
+    *pSizeToColumn = sizeUntilColumn(*pColumn);
+//    cout << "pSizeToC" << *pSizeToColumn;
+    file.seekg(*pSizeToColumn , ios::cur);
+//    cout << "seek 2" << file.tellg();
     //Read the info
-    *pCSize = columnSize(*Column);
+    *pCSize = columnSize(*pColumn-1);
 }
 
 //****************************************************************************//
@@ -250,19 +253,18 @@ void createTable(int* registerSize, array<int>* columnSizes){
  */
 void writeRegister(string pFileName, array<char*>* pColumnData ,
                    array<int>* columnPos){
-
     int currSeek = file.tellg();
+    string standardDir = createNewFile(pFileName);
+    file.open(standardDir.c_str());
     file.seekg(0);
 
     array<int> tempCPosArr = *columnPos;
     array<char*> tempCDataArr = *pColumnData;
+
     string registerToWrite = "";
     int spacesToMove;
     string Cdata;
     int Csize;
-
-    string standardDir = createNewFile(pFileName);
-    file.open(standardDir.c_str());
 
     //Get each data and fill the blanks.
     fillString (&registerToWrite , getRegisterSize());
@@ -273,17 +275,16 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
         //Not sure
         spacesToMove = sizeUntilColumn(tempCPosArr[i]);
         fillString(&Cdata ,Csize);
-        //cout << "RTWL " << registerToWrite.length()<<endl;
         registerToWrite.replace(spacesToMove , Csize , Cdata.c_str());
-        //cout << "RTWL " << registerToWrite.length()<<endl;
     }
 
     if (file.is_open()){
-        cout << "IS OPEN" << endl;
+//        cout << "IS OPEN" << endl;
         file.seekg(K->ZE_ROW , ios::end);
         file << registerToWrite;
     }
     file.seekg(currSeek);
+    file.close();
 }
 
 /**
@@ -312,6 +313,7 @@ string readField(string pFile , int pRow , int pColumn){
     }
 
     file.seekg(currSeek);
+    file.close();
     return stringToReturn;
 }
 
@@ -338,17 +340,17 @@ void updateField(string newData, string pFile , int pRow , int pColumn){
 
     placeSeekOn(&pFile , &pRow , &pColumn, &sizeToColumn, &cSize);
 
-    for (int i = 0 ; i < Csize ; i++){
-        //Not sure
-        spacesToMove = sizeUntilColumn(pColumn);
-        fillString(&newData,cSize);
-    }
+    fillString(&newData,cSize);
+//    cout << "D lenght" << newData.length() << endl;
 
     if (file.is_open()){
         //cout << "IS OPEN" << endl;
         file << newData;
     }
     file.seekg(currSeek);
+    if (file.is_open()){
+        file.close();
+    }
 }
 
 //****************************************************************************//
@@ -357,7 +359,7 @@ void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
     cout << "\n";
     int regSize;
-    regSize = 320;
+    regSize = 352;
     array<int> columnSais (5);
     columnSais[0] = 64;
     columnSais[1] = 64;
@@ -368,22 +370,36 @@ void test0(){
 }
 
 void test1(){
-    array<char*> cData(1);
-    string stringToAdd = "Luis";
-    char *s2 = new char[stringToAdd.size()+1];
-    strcpy(s2, stringToAdd.c_str());
-    cData[0] = s2;
-
-    array<int> cPos(1);
-    cPos[0] = 1;
 
     string fileName = "Test8";
+
+    array<char*> cData(2);
+    string nameToAdd = "Luis";
+    string lastNameToAdd = "Simon Barrantes";
+    char *s2 = new char[nameToAdd.size()+1];
+    char *s3 = new char[lastNameToAdd.size()+1];
+    strcpy(s2, nameToAdd.c_str());
+    strcpy(s3, lastNameToAdd.c_str());
+    cData[0] = s2;
+    cData[1] = s3;
+
+    array<int> cPos(2);
+    cPos[0] = 1;
+    cPos[1] = 2;
+
+    writeRegister(fileName, &cData, &cPos);
+    writeRegister(fileName, &cData, &cPos);
     writeRegister(fileName, &cData, &cPos);
 }
 
 void test2(){
     string fileName = "Test8";
-    string field = readRegister(fileName.c_str(),1 ,1);
+    string field = readField(fileName.c_str(),1 ,1);
+}
+
+void test3(){
+    updateField("Daniel", "Test8" , 1 , 1);
+    updateField("Jenkins", "Test8" , 1 , 2);
 }
 
 //****************************************************************************//
@@ -391,7 +407,7 @@ void test2(){
 int main()
 {
     setup();
-    test2();
+    test1();
     return 0;
 }
 
