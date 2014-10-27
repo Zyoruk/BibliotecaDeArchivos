@@ -18,7 +18,7 @@ public:
     static const int MAX_REGISTER_SIZE = 999;
     static const int METADATA_SIZE = 3;
     static const int METADATA_COLUMN_START = 7;
-    const string NULL_CHAR = "*";
+    const char NULL_CHAR = '*';
 };
 
 #endif // KONSTANTS_H

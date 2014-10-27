@@ -15,7 +15,7 @@ public:
     void removeElement(K pElement);
     void removeAllOcurrencesOf(K pElement);
     void setArrayBuffer(K* pArrayBuffer);
-    int getLeght();
+    int getLenght();
     bool operator== (array<K>& newArray);
     array<K>& operator= (array<K>& newArray);
     const K& operator[](int pIndex) const;
@@ -39,7 +39,7 @@ array<K>::~array(){
 }
 
 template <typename K>
-int array<K>::getLeght(){
+int array<K>::getLenght(){
     return this->_lenght;
 }
 

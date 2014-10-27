@@ -16,7 +16,7 @@ konstants* K;
 int option;
 string data;
 string newFileName;
-
+fstream file;
 void setup()
 {
     K = new konstants();
@@ -72,12 +72,8 @@ void createTable(int* registerSize, array<int>* columnSizes){
     string add;
 
     string theFileName = createNewFile(newFileName);
-    //fstream database (theFileName.c_str() , ios::trunc);
-    fstream database (theFileName.c_str());
-
-    //append database name to path and creates it there.
-    ofstream database (createNewFile(newFileName).c_str() , ios::trunc);
-
+    ofstream database (theFileName.c_str() , ios::trunc);
+//    fstream database (theFileName.c_str());
     //check if buffer = true
     if(database.is_open())
         cout << "****Database succesfully created***" << endl;
@@ -98,7 +94,7 @@ void createTable(int* registerSize, array<int>* columnSizes){
 
     //set column sizes on file
     array<int> tempArr = *columnSizes;
-    for (int i = 0 ; i < tempArr.getLeght() ; i++)
+    for (int i = 0 ; i < tempArr.getLenght() ; i++)
     {
         int integerElem = tempArr[i];
         add = toChar(integerElem);
@@ -146,31 +142,40 @@ string charCallocToString(char* pCharCalloc){
     return stringToReturn;
 }
 
-int getRegisterSize(fstream* pFile){
-    pFile->seekg(K->DEFAULT_COLUMN_SIZE);
-    char* charString = (char*)calloc(4 ,1);
-    pFile->read(charString, K->REGISTER_SIZE_ADDRESS);
-    string regSizeString = charCallocToString(charString);
+int getRegisterSize(){
+    int currSeek = file.tellg();
+    file.seekg(K->ZE_ROW);
+    file.seekg(K->DEFAULT_COLUMN_SIZE);
+    string regSizeString = "";
+    for (int i  = 0 ; i < K->DEFAULT_REGISTER_SIZE;i++){
+        regSizeString.push_back(file.get());
+    }
     int regSize;
     regSize = stringToInt(&regSizeString);
+    file.seekg(currSeek);
     return regSize;
 }
 
-int getMetaDataSize(fstream* pFile){
-    pFile->seekg(NULL);
-    char* charString = (char*)calloc(3 ,1);
-    pFile->read(charString, K->DEFAULT_COLUMN_SIZE);
-    string MDSizeString = charCallocToString(charString);
+int getMetaDataSize(){
+    int currSeek = file.tellg();
+    file.seekg(K->ZE_ROW);
+    string MDSizeString = "";
+    for (int i  = 0 ; i < K->METADATA_SIZE;i++){
+        MDSizeString.push_back(file.get());
+    }
     int MDSizeInt  = stringToInt(&MDSizeString);
+    file.seekg(currSeek);
     return MDSizeInt;
 }
 
-int getRegisterQuantity(fstream* pFile){
-    pFile->seekg(0 , ios::end);
-    int fileSize = pFile->tellg();
-    int registerSize = getRegisterSize(pFile);
+int getRegisterQuantity(){
+    int currSeek = file.tellg();
+    file.seekg(K->ZE_ROW, ios::end);
+    int fileSize = file.tellg();
+    int registerSize = getRegisterSize();
     int regQty ;
-    regQty = (fileSize - (getMetaDataSize(pFile)))/registerSize;
+    regQty = (fileSize - (getMetaDataSize()))/registerSize;
+    file.seekg(currSeek);
     return regQty;
 }
 
@@ -184,85 +189,108 @@ int getRegisterQuantity(fstream* pFile){
 //    return columnData;
 //}
 
-int columnSize(fstream* pFile , int pColumnInt){
-    pFile->seekg(0);
+int columnSize(int pColumnInt){
+    int currSeek = file.tellg();
+    file.seekg(K->ZE_ROW);
+
     //Move the seek to the beginning of the column.
     int whereToMove = K->METADATA_COLUMN_START+
-                      ((pColumnInt - K->ONE_BYTE) * K->DEFAULT_COLUMN_SIZE);
-
-    pFile->seekg(whereToMove);
-
-    char* charString = (char*)calloc(K->DEFAULT_COLUMN_SIZE, K->ONE_BYTE);
-    pFile->read(charString , K->DEFAULT_COLUMN_SIZE);
+                      (pColumnInt * K->DEFAULT_COLUMN_SIZE);
+    file.seekg(whereToMove);
     string cSize = K->EMPTY_STRING;
     // build the string;
-    for (int i = NULL; i <= K->DEFAULT_COLUMN_SIZE ; i++){
-        cSize.append(((const char*)charString + i));
+    for (int i = whereToMove; i < (whereToMove + K->DEFAULT_COLUMN_SIZE) ; i++){
+        cSize.push_back(file.get());
     }
+
     int cSizeInt = stringToInt(&cSize);
-    cout << cSizeInt;
+    file.seekg(currSeek);
     return cSizeInt;
 }
 
-int sizeUntilColumn(fstream* pFile, int pColumn){
+/*!
+ * \brief sizeUntilColumn saber la cantidad de espacios a recorrer hasta
+ * el inicio de la columna
+ * \param pColumn
+ * \return
+ */
+int sizeUntilColumn(int pColumn){
     int sizeToReturn = K->ZE_ROW;
-    for (int i = NULL; i < pColumn; i++){
-        sizeToReturn = (sizeToReturn)+ columnSize(pFile, i);
+    for (int i = K->ZE_ROW; i < pColumn - K->ONE_BYTE ; i++){
+        sizeToReturn += columnSize(i);
     }
     return sizeToReturn;
 }
 
 void fillString(string* pData, int pSize){
     while ( pData->length() < pSize){
-        pData->append(K->NULL_CHAR.c_str());
+        pData->push_back(K->NULL_CHAR);
     }
 }
 
-void writeRegister(string pFile, array<char*>* columnData ,
+void writeRegister(string pFileName, array<char*>* pColumnData ,
                    array<int>* columnPos){
+    int currSeek = file.tellg();
     array<int> tempCPosArr = *columnPos;
-    array<char*> tempCDataArr = *columnData;
+    array<char*> tempCDataArr = *pColumnData;
     string registerToWrite = "";
 
-    string standardDir = createNewFile(pFile);
-    fstream file (standardDir.c_str(), ios::app | ios::in | ios::out);
-
-    file.seekp(K->ZE_ROW, ios::end);
-    fillString (&registerToWrite , getRegisterSize(&file));
+    string standardDir = createNewFile(pFileName);
+    file.open(standardDir.c_str());
+    fillString (&registerToWrite , getRegisterSize());
     //Get each data and fill the blanks.
-    for (int i = 0 ; i < tempCPosArr.getLeght() ; i++){
-        string Cdata  = tempCDataArr[i];
-        int Csize = columnSize(&file , tempCPosArr[i]);
-        int spacesToMove = sizeUntilColumn(&file ,Csize);
+    string Cdata;
+    int Csize;
+    int spacesToMove;
+    for (int i = 0 ; i < tempCPosArr.getLenght() ; i++){
+        Cdata  = tempCDataArr[i];
+        Csize = columnSize(tempCPosArr[i]);
+        //Not sure
+        spacesToMove = sizeUntilColumn(tempCPosArr[i]);
+//        cout << spacesToMove;
         fillString(&Cdata ,Csize);
-        cout << Cdata << "  " << spacesToMove << "  " << Csize <<"\n";
+        cout << "RTWL " << registerToWrite.length()<<endl;
         registerToWrite.replace(spacesToMove , Csize , Cdata.c_str());
+        cout << "RTWL " << registerToWrite.length()<<endl;
     }
-    cout <<"Registro: " <<registerToWrite;
-    file << registerToWrite;
+    if (file.is_open()){
+        cout << "IS OPEN" << endl;
+        file.seekg(K->ZE_ROW , ios::end);
+       file << registerToWrite;
+    }
+    file.seekg(currSeek);
 }
 
 string readField(string pFile , int pRow , int Column){
     //Relative route + the name of the file
     string standardDir = createNewFile(pFile.c_str());
-    fstream file (standardDir.c_str());
-
-
+    file.open(standardDir.c_str());
+    int currSeek = file.tellg();
     //Move seek to the row
-    file.seekg((getRegisterSize(&file))*pRow);
-
+    file.seekg(getMetaDataSize() + (getRegisterSize()*(pRow-1)));
+    cout << getMetaDataSize() <<endl;
+    cout << pRow -1 << endl;
+    cout << getRegisterSize() << endl;
     //move seek to the beginning of the column
-    int sizeToColumn = sizeUntilColumn(&file , Column);
-    file.seekg(sizeToColumn);
+    int sizeToColumn = sizeUntilColumn(Column-1);
 
+    cout << sizeToColumn << endl;
+    file.seekg(sizeToColumn , ios::cur);
+    cout << file.tellg()<<endl;
     //Read the info
-    int cSize = columnSize(&file , Column);
+    int cSize = columnSize(Column);
 
-    char* infoInsideColumn = (char*)calloc(cSize, sizeof(char));
-    file.read(infoInsideColumn , cSize);
+    cout << cSize << endl;
 
     //build the stringto return
-    string stringToReturn = charCallocToString(infoInsideColumn);
+    string stringToReturn = "";
+    for (int i  = 0 ; i < cSize ; i++){
+        char currChar = file.get();
+        if (currChar == '*') break;
+        stringToReturn.push_back(currChar);
+    }
+    file.seekg(currSeek);
+    cout << stringToReturn <<endl;
     return stringToReturn;
 }
 
@@ -288,17 +316,21 @@ void test1(){
     cData[0] = s2;
 
     array<int> cPos(1);
-    cPos[0] = 0;
+    cPos[0] = 1;
 
     string fileName = "Test8";
-    cout << fileName;
     writeRegister(fileName, &cData, &cPos);
+}
+
+void test2(){
+    string fileName = "Test8";
+    string field = readField(fileName.c_str(),1 ,1);
 }
 
 int main()
 {
     setup();
-    test1();
+    test2();
     return 0;
 }
 
