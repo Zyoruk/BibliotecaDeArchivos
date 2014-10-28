@@ -20,6 +20,7 @@ public:
     static const int METADATA_COLUMN_START = 7;
     const char NULL_CHAR = '*';
     const string TRIPLE_NULL = "000";
+    const char SINGLE_NULL = '0';
 };
 
 #endif // KONSTANTS_H
