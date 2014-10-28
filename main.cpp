@@ -375,15 +375,28 @@ string readField(string pFile , int pRow , int pColumn){
     return stringToReturn;
 }
 
-//array<string>& readColumn(fstream* pFile, int pColumn){
-//    int* regQtt = getRegisterQuantity(pFile , pColumn);
-//    array<string>* columnData(*regQtt);
-//    for (int row = NULL; row <= regQtt; i++){
-//        string* stringToAppend = readField(pFile, row, pColumn);
-//        columnData[row] = *stringToAppend;
-//    }
-//    return columnData;
-//}
+array<char*> readColumn(string pFile , string pColumnName){
+    string standardDir;
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+
+    int Column = getColumnNumber(&standardDir , &pColumnName );
+    int regQty = getRegisterQuantity();
+    string strToConvert = K->EMPTY_STRING;
+    char * toAdd;
+    array <char*> arrayToReturn (regQty);
+    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+        strToConvert = readField(pFile , rowCounter , Column);
+        toAdd = new char[strToConvert.size()+1];
+        strcpy(toAdd, strToConvert.c_str());
+        arrayToReturn[rowCounter - K->ONE_BYTE] = toAdd;
+    }
+    return arrayToReturn;
+}
+
 void updateField(string newData, string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
     int sizeToColumn;
@@ -540,11 +553,17 @@ void test5(){
     updateColumn("Simon_Barrantes" ,"Angel","Test9","Apellido");
 }
 
+void test6(){
+    array<char*> arrTmp = readColumn("Test9" , "Apellido");
+    for (int i = K->ZE_ROW ; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
+}
+
 //****************************************************************************//
 
 int main()
 {
     setup();
+    test6();
     return 0;
 }
 
