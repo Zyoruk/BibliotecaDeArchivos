@@ -1,0 +1,75 @@
+#include "testclass.h"
+
+testClass::testClass()
+{
+}
+
+void test0(){
+    cout << "*** Bienvenido a FSQL Server ***" << endl;
+    cout << "\n";
+    int regSize;
+    regSize = 352;
+    array<int> columnSais (5);
+    columnSais[0] = 64;
+    columnSais[1] = 64;
+    columnSais[2] = 128;
+    columnSais[3] = 64;
+    columnSais[4] = 32;
+    array<char*> cNames(5);
+    cNames[0] = "Nombre";
+    cNames[1] = "Apellido";
+    cNames[2] = "Direccion";
+    cNames[3] = "Telefono";
+    cNames[4] = "Sexo";
+    string file ="Test9";
+    createTable(&regSize ,&columnSais, &cNames ,&file);
+}
+
+void test1(){
+
+    string fileName = "Test9";
+
+    array<char*> cData(2);
+    string nameToAdd = "Luis";
+    string lastNameToAdd = "Simon Barrantes";
+    char *s2 = new char[nameToAdd.size()+1];
+    char *s3 = new char[lastNameToAdd.size()+1];
+    strcpy(s2, nameToAdd.c_str());
+    strcpy(s3, lastNameToAdd.c_str());
+    cData[0] = s2;
+    cData[1] = s3;
+
+    array<int> cPos(2);
+    cPos[0] = 1;
+    cPos[1] = 2;
+
+    writeRegister(fileName, &cData, &cPos);
+    writeRegister(fileName, &cData, &cPos);
+    writeRegister(fileName, &cData, &cPos);
+}
+
+void test2(){
+    string fileName = "Test8";
+    string field = readField(fileName.c_str(),1 ,1);
+}
+
+void test3(){
+    updateField("Daniel", "Test8" , 1 , 1);
+    updateField("Jenkins", "Test8" , 1 , 2);
+}
+
+void test4(){
+    array<char*> test4 = readRegistry("Test8" , 1);
+    for (int i = 0 ; i < test4.getLenght();i++){
+        cout << test4[i] <<endl;
+    }
+}
+
+void test5(){
+    updateColumn("Simon_Barrantes" ,"Angel","Test9","Apellido");
+}
+
+void test6(){
+    array<char*> arrTmp = readColumn("Test9" , "Apellido");
+    for (int i = K->ZE_ROW ; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
+}
