@@ -32,14 +32,13 @@ string toChar(int toChar){
 }
 
 void checkSize(string* add, int count){
-    string hola = "0";
     string tmp;
 
     for (int a = 1 ; a < count ; a++){
         if((tmp.length() + add->length()) == count){
             break;
         }
-        tmp.append(hola);
+        tmp.push_back(K->SINGLE_NULL);
     }
     tmp.append(*add);
     *add = tmp;
@@ -142,7 +141,6 @@ int columnSize(int pColumnInt){
  * \return
  */
 int sizeUntilColumn(int pColumn){
-//    cout << "sizeUntil" <<pColumn << endl;
     int sizeToReturn = K->ZE_ROW;
     for (int i = K->ZE_ROW; i < pColumn -1 ; i++){
         sizeToReturn += columnSize(i);
@@ -167,32 +165,21 @@ void checkString(string* pStringToCheck){
     for (int i = K->ZE_ROW ; i < pStringToCheck->length(); i++){
         if (tempString[i] == ' ' ){
             tempString[i] = '_';
-            cout << tempString[i];
         }
     }
     string stringToReturn(tempString);
     *pStringToCheck = stringToReturn;
 }
 
-void placeSeekOn(string* pFile , int* pRow , int* pColumn, int* pSizeToColumn,
+void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
                  int* pCSize){
-
-//    cout << *pColumn;
-    //Relative route + the name of the file
-    string fileH = *pFile;
-    string standardDir = createNewFile(fileH.c_str());
-    file.open(standardDir.c_str());
-
     //Move seek to the row
-    file.seekg(  getMetaDataSize() + ( getRegisterSize() * (*pRow-1) )  );
-//    cout << "seek 1" << file.tellg();
+      file.seekg(  getMetaDataSize() + ( getRegisterSize() * (*pRow-1) )  );
     //move seek to the beginning of the column
 
     *pSizeToColumn = sizeUntilColumn(*pColumn);
-//    cout << "pSizeToC" << *pSizeToColumn;
     file.seekg(*pSizeToColumn , ios::cur);
-//    cout << "seek 2" << file.tellg();
-    //Read the info
+   //Read the info
     *pCSize = columnSize(*pColumn-1);
 }
 
@@ -256,7 +243,6 @@ void createTable(int* registerSize, array<int>* columnSizes){
         cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
     database.seekp(K->ZE_ROW , ios::end);
-    database.put('\n');
     database.close();
 }
 
@@ -295,9 +281,7 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
     }
 
     if (file.is_open()){
-//        cout << "IS OPEN" << endl;
         file.seekg(K->ZE_ROW , ios::end);
-        registerToWrite += "\n";
         file << registerToWrite;
     }
     file.seekg(currSeek);
@@ -312,25 +296,29 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
  * @return
  */
 string readField(string pFile , int pRow , int pColumn){
-    int currSeek = file.tellg();
+    int currSeek =file.tellg();
     int sizeToColumn;
     int cSize;
-
-    placeSeekOn(&pFile , &pRow , &pColumn, &sizeToColumn, &cSize);
-
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        string standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
     //build the stringto return
     string stringToReturn = "";
 
     for (int i  = 0 ; i < cSize ; i++){
         char currChar = file.get();
-        if (currChar != '*')
+        if (currChar != '*'){
             stringToReturn.push_back(currChar);
-        else
+        }else{
             break;
+        }
     }
-
     file.seekg(currSeek);
-    file.close();
+    if (stringToReturn == "") stringToReturn = "404";
     return stringToReturn;
 }
 
@@ -344,24 +332,71 @@ string readField(string pFile , int pRow , int pColumn){
 //    return columnData;
 //}
 
-//void updateColumn(){
+//void updateColumn(string newData,string pToCompare, string pFile){
+//    int currSeek = file.tellg();
+//    int sizeToColumn;
+//    int cSize;
 
+//    file.seekg(0);
+
+//    int Column = getColumn(pToCompare);
+//    placeSeekOn(&pFile , 1 , Column, &sizeToColumn, &cSize);
+
+//    fillString(&newData,cSize);
+////    cout << "D lenght" << newData.length() << endl;
+
+//    if (file.is_open()){
+//        //cout << "IS OPEN" << endl;
+//        file << newData;
+//    }
+//    file.seekg(currSeek);
+//    if (file.is_open()){
+//        file.close();
+//    }
 //}
+
+array< char* > readRegistry(string pFile , int pRegister){
+
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        string standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+    //Create an array that will contain all the columns
+    int columnQty = (getMetaDataSize() - K->METADATA_COLUMN_START)/K->DEFAULT_COLUMN_SIZE;
+
+    array < char* > arrayToReturn (columnQty);
+    string tempString = K->EMPTY_STRING;
+    char* toAdd;
+    for (int i = K->ZE_ROW; i < columnQty; i++){
+        tempString = readField(pFile , pRegister , i+1);
+        toAdd = new char[tempString.size()+1];
+        strcpy(toAdd, tempString.c_str());
+        arrayToReturn[i] = toAdd;
+    }
+
+    file.close();
+    return arrayToReturn;
+}
 
 void updateField(string newData, string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
 
-    file.seekg(0);
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        string standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
 
-    placeSeekOn(&pFile , &pRow , &pColumn, &sizeToColumn, &cSize);
+    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
 
     fillString(&newData,cSize);
-//    cout << "D lenght" << newData.length() << endl;
 
     if (file.is_open()){
-        //cout << "IS OPEN" << endl;
         file << newData;
     }
     file.seekg(currSeek);
@@ -419,12 +454,20 @@ void test3(){
     updateField("Jenkins", "Test8" , 1 , 2);
 }
 
+void test4(){
+    array<char*> test4 = readRegistry("Test8" , 1);
+    for (int i = 0 ; i < test4.getLenght();i++){
+        cout << test4[i] <<endl;
+    }
+}
+
 //****************************************************************************//
 
 int main()
 {
     setup();
-    test1();
+
+    test4();
     return 0;
 }
 
