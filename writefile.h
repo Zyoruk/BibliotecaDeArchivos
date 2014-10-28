@@ -13,10 +13,10 @@
 
 using namespace std;
 
-class writeFile
+class writefile
 {
 public:
-    writeFile();
+    writefile();
     void createTable(int* registerSize, array<int>* columnSizes ,
                      array<char*>* columnNames , string* pFile);
     void writeRegister(string pFileName, array<char*>* pColumnData ,
@@ -39,6 +39,12 @@ private:
     int getMetaDataSize();
     int getRegisterQuantity();
     int columnSize(int pColumnInt);
+    int sizeUntilColumn(int pColumn);
+    void fillString(string* pData, int pSize);
+    void checkString(string* pStringToCheck);
+    void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn, int* pCSize);
+    void writeColumnNames(string* fileName, array<char*>* columnNames);
+    int getColumnNumber(string* fileName ,string* columnName);
 
 
 };

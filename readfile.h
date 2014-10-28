@@ -11,10 +11,10 @@
 #include "array/array.h"
 #include "readfile.h"
 
-class readFile
+class readfile
 {
     public:
-        readFile();
+        readfile();
         array< char* > readRegistry(string pFile , int pRegister);
         array<char*> readColumn(string pFile , string pColumnName);
         string readField(string pFile , int pRow , int pColumn);
@@ -24,6 +24,8 @@ class readFile
         fstream file;
         fstream file_COL;
         void checkSize(string* add, int count);
+        void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
+                         int* pCSize);
         string toChar(int toChar);
         string intToChar(int metadata);
         string createNewFile(string newFileName);
@@ -33,6 +35,11 @@ class readFile
         int getMetaDataSize();
         int getRegisterQuantity();
         int columnSize(int pColumnInt);
+        int getColumnNumber(string* fileName ,string* columnName);
+        int sizeUntilColumn(int pColumn);
+        void fillString(string* pData, int pSize);
+        void checkString(string* pStringToCheck);
+        string getColumnName(string* fileName ,int* columnNumber);
 
 };
 

@@ -9,9 +9,13 @@
 #include "array/array.h"
 #include "readfile.h"
 
-readFile::readFile()
+konstants* C;
+fstream file;
+fstream file_COL;
+
+readfile::readfile()
 {
-    konstants* K = new konstants();
+    C = new konstants();
 }
 
 /**
@@ -19,10 +23,11 @@ readFile::readFile()
  * @param add the data to be added to metadata.
  * @param count size of the field.
  */
-void checkSize(string* add, int count){
+void readfile::checkSize(string* add, int count){
     string tmp;
+    int len = add->length();
 
-    if(inf *add > count){
+    if( len > count){
         cout << "Datafield beyond max size";
         return;
     }
@@ -31,7 +36,7 @@ void checkSize(string* add, int count){
         if((tmp.length() + add->length()) == count){
             break;
         }
-        tmp.push_back(K->SINGLE_NULL);
+        tmp.push_back( C->SINGLE_NULL);
     }
     tmp.append(*add);
     *add = tmp;
@@ -42,9 +47,9 @@ void checkSize(string* add, int count){
  * @param newFileName
  * @return
  */
-string createNewFile(string newFileName){
+string readfile::createNewFile(string newFileName){
     string newFileDir ;
-    newFileDir = K->DIRFILE;
+    newFileDir = C->DIRFILE;
     newFileDir.append(newFileName);
     return newFileDir;
 }
@@ -54,10 +59,23 @@ string createNewFile(string newFileName){
  * @param pStr
  * @return
  */
-int stringToInt(string* pStr){
+int readfile::stringToInt(string* pStr){
     int i;
     i= atoi(pStr->c_str());
     return i;
+}
+
+/**
+ * @brief toChar Submethod for changing data.
+ * @param toChar
+ * @return
+ */
+string readfile::toChar(int toChar){
+    string s;
+    stringstream out;
+    out << toChar;
+    s = out.str();
+    return s;
 }
 
 /**
@@ -66,7 +84,7 @@ int stringToInt(string* pStr){
  * @param metadata
  * @return
  */
-string intToChar(int metadata){
+string readfile::intToChar(int metadata){
     int ch;
     string tmp ;
     while (metadata != 0){
@@ -78,27 +96,14 @@ string intToChar(int metadata){
 }
 
 /**
- * @brief toChar Submethod for changing data.
- * @param toChar
- * @return
- */
-string toChar(int toChar){
-    string s;
-    stringstream out;
-    out << toChar;
-    s = out.str();
-    return s;
-}
-
-/**
  * @brief charCallocToString
  * @param pCharCalloc
  * @return
  */
-string charCallocToString(char* pCharCalloc){
+string readfile::charCallocToString(char* pCharCalloc){
     string stringToReturn ;
     stringToReturn = "";
-    for (int i = NULL; i <= K->DEFAULT_COLUMN_SIZE;i++){
+    for (int i = NULL; i <= C->DEFAULT_COLUMN_SIZE;i++){
         stringToReturn.append(((const char*)(pCharCalloc + i)));
     }
     return stringToReturn;
@@ -108,10 +113,10 @@ string charCallocToString(char* pCharCalloc){
  * @brief getRegisterSize
  * @return
  */
-int getRegisterSize(){
+int readfile::getRegisterSize(){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW);
-    file.seekg(K->DEFAULT_COLUMN_SIZE);
+    file.seekg(C->ZE_ROW);
+    file.seekg(C->DEFAULT_COLUMN_SIZE);
     string regSizeString = "";
     for (int i  = 0 ; i < K->DEFAULT_REGISTER_SIZE;i++){
         regSizeString.push_back(file.get());
@@ -126,11 +131,11 @@ int getRegisterSize(){
  * @brief getMetaDataSize Parse file for the size of metadata.
  * @return
  */
-int getMetaDataSize(){
+int readfile::getMetaDataSize(){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW);
+    file.seekg(C->ZE_ROW);
     string MDSizeString = "";
-    for (int i  = 0 ; i < K->METADATA_SIZE;i++){
+    for (int i  = 0 ; i < C->METADATA_SIZE;i++){
         MDSizeString.push_back(file.get());
     }
     int MDSizeInt  = stringToInt(&MDSizeString);
@@ -142,9 +147,9 @@ int getMetaDataSize(){
  * @brief getRegisterQuantity gets how many registrys are in the file
  * @return
  */
-int getRegisterQuantity(){
+int readfile::getRegisterQuantity(){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW, ios::end);
+    file.seekg(C->ZE_ROW, ios::end);
     int fileSize = file.tellg();
     int registerSize = getRegisterSize();
     int regQty ;
@@ -158,17 +163,17 @@ int getRegisterQuantity(){
  * @param pColumnInt
  * @return
  */
-int columnSize(int pColumnInt){
+int readfile::columnSize(int pColumnInt){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW);
+    file.seekg(C->ZE_ROW);
 
     //Move the seek to the beginning of the column.
-    int whereToMove = (K->METADATA_COLUMN_START +
-                      (pColumnInt * K->DEFAULT_COLUMN_SIZE));
+    int whereToMove = (C->METADATA_COLUMN_START +
+                      (pColumnInt * C->DEFAULT_COLUMN_SIZE));
     file.seekg(whereToMove);
-    string cSize = K->EMPTY_STRING;
+    string cSize = C->EMPTY_STRING;
     // build the string;
-    for (int i = whereToMove; i < (whereToMove + K->DEFAULT_COLUMN_SIZE) ; i++){
+    for (int i = whereToMove; i < (whereToMove + C->DEFAULT_COLUMN_SIZE) ; i++){
         cSize.push_back(file.get());
     }
 
@@ -183,9 +188,9 @@ int columnSize(int pColumnInt){
  * \param pColumn
  * \return
  */
-int sizeUntilColumn(int pColumn){
-    int sizeToReturn = K->ZE_ROW;
-    for (int i = K->ZE_ROW; i < pColumn -1 ; i++){
+int readfile::sizeUntilColumn(int pColumn){
+    int sizeToReturn = C->ZE_ROW;
+    for (int i = C->ZE_ROW; i < pColumn -1 ; i++){
         sizeToReturn += columnSize(i);
     }
     return sizeToReturn;
@@ -196,9 +201,9 @@ int sizeUntilColumn(int pColumn){
  * @param pData registry to be initialized.
  * @param pSize size of the registry.
  */
-void fillString(string* pData, int pSize){
+void readfile::fillString(string* pData, int pSize){
     while ( pData->length() < pSize){
-        pData->push_back(K->NULL_CHAR);
+        pData->push_back(C->NULL_CHAR);
     }
 }
 
@@ -206,10 +211,10 @@ void fillString(string* pData, int pSize){
  * @brief checkString Check for white spaces on the string entry.
  * @param pStringToCheck
  */
-void checkString(string* pStringToCheck){
+void readfile::checkString(string* pStringToCheck){
     char* tempString = new char[(*pStringToCheck).size()+1];
     strcpy(tempString, (*pStringToCheck).c_str());
-    for (int i = K->ZE_ROW ; i < pStringToCheck->length(); i++){
+    for (int i = C->ZE_ROW ; i < pStringToCheck->length(); i++){
         if (tempString[i] == ' ' ){
             tempString[i] = '_';
         }
@@ -225,7 +230,7 @@ void checkString(string* pStringToCheck){
  * @param pSizeToColumn Size of previous column before field.
  * @param pCSize Size of the column for the field we wan.
  */
-void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
+void readfile::placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
                  int* pCSize){
     //Move seek to the row
       file.seekg(  getMetaDataSize() + ( getRegisterSize() * (*pRow-1) )  );
@@ -243,12 +248,12 @@ void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
  * @param columnName
  * @return
  */
-int getColumnNumber(string* fileName ,string* columnName){
+int readfile::getColumnNumber(string* fileName ,string* columnName){
     string tmp = "Columns";
     string path = *fileName;
     string COLNAME;
     path.append(tmp);
-    int i =K->ONE_BYTE;
+    int i = C->ONE_BYTE;
     int columnNumber = -2;
     file_COL.open(path.c_str());
     while (file_COL.tellg() != -1)
@@ -268,10 +273,10 @@ int getColumnNumber(string* fileName ,string* columnName){
  * @param columnNumber
  * @return
  */
-string getColumnName(string* fileName ,int* columnNumber){
-    string K = "Columns";
+string readfile::getColumnName(string* fileName ,int* columnNumber){
+    string col = "Columns";
     string path = *fileName;
-    path.append(K);
+    path.append(col);
     int i = 0;
 
     string columnName = "NOT FOUND";
@@ -294,7 +299,7 @@ string getColumnName(string* fileName ,int* columnNumber){
  * @param Column is the column of the desired data.
  * @return
  */
-string readField(string pFile , int pRow , int pColumn){
+string readfile::readField(string pFile , int pRow , int pColumn){
     int currSeek =file.tellg();
     int sizeToColumn;
     int cSize;
@@ -305,7 +310,7 @@ string readField(string pFile , int pRow , int pColumn){
         string standardDir = createNewFile(fileH.c_str());
         file.open(standardDir.c_str());
     }
-    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
+    readfile::placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
 
     //build the stringto return
     string stringToReturn = "";
@@ -329,7 +334,7 @@ string readField(string pFile , int pRow , int pColumn){
  * @param pColumnName parameter for returning a value.
  * @return
  */
-array<char*> readColumn(string pFile , string pColumnName){
+array<char*> readfile::readColumn(string pFile , string pColumnName){
     string standardDir;
     if ( !(file.is_open()) ){
         string fileH = pFile;
@@ -337,16 +342,16 @@ array<char*> readColumn(string pFile , string pColumnName){
         file.open(standardDir.c_str());
     }
 
-    int Column = getColumnNumber(&standardDir , &pColumnName );
+    int Column = readfile::getColumnNumber(&standardDir , &pColumnName );
     int regQty = getRegisterQuantity();
-    string strToConvert = K->EMPTY_STRING;
+    string strToConvert = C->EMPTY_STRING;
     char * toAdd;
     array <char*> arrayToReturn (regQty);
-    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+    for (int rowCounter = C->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
         strToConvert = readField(pFile , rowCounter , Column);
         toAdd = new char[strToConvert.size()+1];
         strcpy(toAdd, strToConvert.c_str());
-        arrayToReturn[rowCounter - K->ONE_BYTE] = toAdd;
+        arrayToReturn[rowCounter - C->ONE_BYTE] = toAdd;
     }
     return arrayToReturn;
 }
@@ -357,7 +362,7 @@ array<char*> readColumn(string pFile , string pColumnName){
  * @param pRegister the row to be consulted.
  * @return
  */
-array< char* > readRegistry(string pFile , int pRegister){
+array< char* > readfile::readRegistry(string pFile , int pRegister){
 
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
@@ -366,12 +371,13 @@ array< char* > readRegistry(string pFile , int pRegister){
         file.open(standardDir.c_str());
     }
     //Create an array that will contain all the columns
-    int columnQty = (getMetaDataSize() - K->METADATA_COLUMN_START)/K->DEFAULT_COLUMN_SIZE;
+    int columnQty = (getMetaDataSize() - C->METADATA_COLUMN_START)
+                    / C->DEFAULT_COLUMN_SIZE;
 
     array < char* > arrayToReturn (columnQty);
-    string tempString = K->EMPTY_STRING;
+    string tempString = C->EMPTY_STRING;
     char* toAdd;
-    for (int i = K->ZE_ROW; i < columnQty; i++){
+    for (int i = C->ZE_ROW; i < columnQty; i++){
         tempString = readField(pFile , pRegister , i+1);
         toAdd = new char[tempString.size()+1];
         strcpy(toAdd, tempString.c_str());

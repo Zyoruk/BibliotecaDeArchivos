@@ -14,6 +14,16 @@
 
 using namespace std;
 
+konstants* K;
+readfile* RD;
+writefile* WR;
+
+void setup(){
+    K = new konstants();
+    RD = new readfile();
+    WR = new writefile();
+}
+
 void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
     cout << "\n";
@@ -32,7 +42,7 @@ void test0(){
     cNames[3] = "Telefono";
     cNames[4] = "Sexo";
     string file ="Test9";
-    createTable(&regSize ,&columnSais, &cNames ,&file);
+    WR->createTable(&regSize ,&columnSais, &cNames ,&file);
 }
 
 void test1(){
@@ -53,41 +63,40 @@ void test1(){
     cPos[0] = 1;
     cPos[1] = 2;
 
-    writeRegister(fileName, &cData, &cPos);
-    writeRegister(fileName, &cData, &cPos);
-    writeRegister(fileName, &cData, &cPos);
+    WR->writeRegister(fileName, &cData, &cPos);
+    WR->writeRegister(fileName, &cData, &cPos);
+    WR->writeRegister(fileName, &cData, &cPos);
 }
 
 void test2(){
     string fileName = "Test8";
-    string field = readField(fileName.c_str(),1 ,1);
+    string field = RD->readField(fileName.c_str(),1 ,1);
 }
 
 void test3(){
-    updateField("Daniel", "Test8" , 1 , 1);
-    updateField("Jenkins", "Test8" , 1 , 2);
+    WR->updateField("Daniel", "Test8" , 1 , 1);
+    WR->updateField("Jenkins", "Test8" , 1 , 2);
 }
 
 void test4(){
-    array<char*> test4 = readRegistry("Test8" , 1);
+    array<char*> test4 = RD->readRegistry("Test8" , 1);
     for (int i = 0 ; i < test4.getLenght();i++){
         cout << test4[i] <<endl;
     }
 }
 
 void test5(){
-    updateColumn("Simon_Barrantes" ,"Angel","Test9","Apellido");
+    WR->updateColumn("Simon_Barrantes" ,"Angel","Test9","Apellido");
 }
 
 void test6(){
-    array<char*> arrTmp = readColumn("Test9" , "Apellido");
+    array<char*> arrTmp = RD->readColumn("Test9" , "Apellido");
     for (int i = K->ZE_ROW ; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
 }
 
 int main()
 {
-    readfile* RD = new readfile();
-    writefile* WR = new writefile();
+    setup();
     return 0;
 }
 
