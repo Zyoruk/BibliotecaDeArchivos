@@ -17,6 +17,7 @@ int option;
 string data;
 string newFileName;
 fstream file;
+fstream file_COL;
 
 void setup()
 {
@@ -182,6 +183,62 @@ void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
     *pCSize = columnSize(*pColumn-1);
 }
 
+void writeColumnNames(string* fileName, array<char*>* columnNames){
+    string K = "Columns";
+    string path = *fileName;
+    path.append(K);
+    array<char*> columnNames2Use = *columnNames;
+
+    ofstream whatever(path.c_str() , ios::trunc);
+    cout << whatever.is_open() <<endl;
+    for (int i = 0 ; i < columnNames2Use.getLenght() ; i++){
+        whatever << columnNames2Use[i];
+        if ( i < (columnNames->getLenght() - 1))
+            whatever << "\n";
+    }
+    whatever.close();
+}
+
+//La variable de regreso es eliminada
+int getColumnNumber(string* fileName ,string* columnName){
+    string tmp = "Columns";
+    string path = *fileName;
+    string COLNAME;
+    path.append(tmp);
+    int i = K->ZE_ROW;
+
+    int columnNumber = -2;
+    file_COL.open(path.c_str());
+
+    while (! file_COL.eof() )
+    {
+        getline(file_COL,COLNAME);
+        if ( *columnName == COLNAME)
+            columnNumber = i;
+        i++;
+    }
+    return columnNumber;
+}
+
+//La variable de regreso es eliminada
+string getColumnName(string* fileName ,int* columnNumber){
+    string K = "Columns";
+    string path = *fileName;
+    path.append(K);
+    int i = 0;
+
+    string columnName = "NOT FOUND";
+    file_COL.open(path.c_str());
+
+    while (i != *columnNumber)
+    {
+        getline(file_COL, columnName);
+        if(file_COL.eof())
+            break;
+    }
+    return columnName;
+}
+
 //****************************************************************************//
 
 /**
@@ -189,15 +246,14 @@ void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
  * @param registerSize is the size for each registry.
  * @param columnSizes is the sizes for each column.
  */
-void createTable(int* registerSize, array<int>* columnSizes){
-    string newFileName = "";
+void createTable(int* registerSize, array<int>* columnSizes ,
+                 array<char*>* columnNames , string* pFile){
+//    string newFileName = *pFile;
     int offset = 0;
     string add;
 
-    cout << "**** Insert name for new table ***" << endl;
-    cin >> newFileName;
-
-    string theFileName = createNewFile(newFileName);
+    string theFileName = createNewFile(*pFile);
+    writeColumnNames(&theFileName, columnNames);
     ofstream database (theFileName.c_str() , ios::trunc);
 
     //check if buffer = true
@@ -331,28 +387,52 @@ string readField(string pFile , int pRow , int pColumn){
 //    return columnData;
 //}
 
-//void updateColumn(string newData,string pToCompare, string pFile){
-//    int currSeek = file.tellg();
-//    int sizeToColumn;
-//    int cSize;
+//From pCname of pFile, replace pToCompare with newData
+void updateColumn(string newData,string pToCompare, string pFile, string pCName){
+    int currSeek = file.tellg();
+    int sizeToColumn;
+    int cSize;
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        string standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
 
-//    file.seekg(0);
+    int Column = getColumnNumber(&pFile , &pCName );
+    int regQty = getRegisterQuantity();
+    string currentData = K->EMPTY_STRING;
+    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+        //Move the seek to the column and register.
+        placeSeekOn( &rowCounter , &Column, &sizeToColumn, &cSize);
+        //Build the string of the old data
+        for (int i = 0 ; i < cSize ; i++){
+            char temp = file.get();
+            if (temp == '*'){
+                break;
+            }else{
+                currentData.push_back(temp);
+            }
+        }
+        //Compare data.
+        if (currentData == pToCompare){
+            //Fill the data with * depending on the size of the column.
+            fillString(&newData,cSize);
+            file << newData;
+        }
+    }
 
-//    int Column = getColumn(pToCompare);
-//    placeSeekOn(&pFile , 1 , Column, &sizeToColumn, &cSize);
+//    cout << "D lenght" << newData.length() << endl;
 
-//    fillString(&newData,cSize);
-////    cout << "D lenght" << newData.length() << endl;
-
-//    if (file.is_open()){
-//        //cout << "IS OPEN" << endl;
-//        file << newData;
-//    }
-//    file.seekg(currSeek);
-//    if (file.is_open()){
-//        file.close();
-//    }
-//}
+    if (file.is_open()){
+        //cout << "IS OPEN" << endl;
+        file << newData;
+    }
+    file.seekg(currSeek);
+    if (file.is_open()){
+        file.close();
+    }
+}
 
 array< char* > readRegistry(string pFile , int pRegister){
 
@@ -417,7 +497,14 @@ void test0(){
     columnSais[2] = 128;
     columnSais[3] = 64;
     columnSais[4] = 32;
-    createTable(&regSize ,&columnSais);
+    array<char*> cNames(5);
+    cNames[0] = "Nombre";
+    cNames[1] = "Apellido";
+    cNames[2] = "Direccion";
+    cNames[3] = "Telefono";
+    cNames[4] = "Sexo";
+    string file ="Test9";
+    createTable(&regSize ,&columnSais, &cNames ,&file);
 }
 
 void test1(){
@@ -460,13 +547,17 @@ void test4(){
     }
 }
 
+//void test5(){
+//    updateColumn();
+//}
+
 //****************************************************************************//
 
 int main()
 {
     setup();
 
-    test4();
+    test0();
     return 0;
 }
 
