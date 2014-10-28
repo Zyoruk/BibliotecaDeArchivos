@@ -59,7 +59,6 @@ string createNewFile(string newFileName){
     string newFileDir ;
     newFileDir = K->DIRFILE;
     newFileDir.append(newFileName);
-    //cout << newFileDir << endl;
     return newFileDir;
 }
 
