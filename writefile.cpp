@@ -10,11 +10,9 @@
 #include "array/array.h"
 #include "readfile.h"
 
-using namespace std;
-
-konstants* K;
-fstream file;
-fstream file_COL;
+//konstants* K;
+// file;
+//fstream file_COL;
 
 writefile::writefile()
 {

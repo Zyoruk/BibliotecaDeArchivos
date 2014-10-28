@@ -11,6 +11,8 @@
 #include "array/array.h"
 #include "readfile.h"
 
+using namespace std;
+
 class readfile
 {
     public:
@@ -20,7 +22,7 @@ class readfile
         string readField(string pFile , int pRow , int pColumn);
 
     private:
-        konstants* K;
+        konstants* C;
         fstream file;
         fstream file_COL;
         void checkSize(string* add, int count);

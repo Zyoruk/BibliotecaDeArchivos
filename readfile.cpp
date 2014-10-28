@@ -9,9 +9,9 @@
 #include "array/array.h"
 #include "readfile.h"
 
-konstants* C;
-fstream file;
-fstream file_COL;
+//konstants* C;
+//fstream file;
+//fstream file_COL;
 
 readfile::readfile()
 {
@@ -118,7 +118,7 @@ int readfile::getRegisterSize(){
     file.seekg(C->ZE_ROW);
     file.seekg(C->DEFAULT_COLUMN_SIZE);
     string regSizeString = "";
-    for (int i  = 0 ; i < K->DEFAULT_REGISTER_SIZE;i++){
+    for (int i  = 0 ; i < C->DEFAULT_REGISTER_SIZE;i++){
         regSizeString.push_back(file.get());
     }
     int regSize;
