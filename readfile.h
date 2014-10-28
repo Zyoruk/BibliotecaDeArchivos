@@ -13,26 +13,26 @@
 
 class readFile
 {
-public:
-    readFile();
-    array< char* > readRegistry(string pFile , int pRegister);
-    array<char*> readColumn(string pFile , string pColumnName);
-    string readField(string pFile , int pRow , int pColumn);
+    public:
+        readFile();
+        array< char* > readRegistry(string pFile , int pRegister);
+        array<char*> readColumn(string pFile , string pColumnName);
+        string readField(string pFile , int pRow , int pColumn);
 
-private:
-    //konstants* K;
-    //fstream file;
-    //fstream file_COL;
-    string toChar(int toChar);
-    void checkSize(string* add, int count);
-    string intToChar(int metadata);
-    string createNewFile(string newFileName);
-    int stringToInt(string* pStr);
-    string charCallocToString(char* pCharCalloc);
-    int getRegisterSize();
-    int getMetaDataSize();
-    int getRegisterQuantity();
-    int columnSize(int pColumnInt);
+    private:
+        konstants* K;
+        fstream file;
+        fstream file_COL;
+        void checkSize(string* add, int count);
+        string toChar(int toChar);
+        string intToChar(int metadata);
+        string createNewFile(string newFileName);
+        string charCallocToString(char* pCharCalloc);
+        int stringToInt(string* pStr);
+        int getRegisterSize();
+        int getMetaDataSize();
+        int getRegisterQuantity();
+        int columnSize(int pColumnInt);
 
 };
 

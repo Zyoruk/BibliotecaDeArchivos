@@ -10,14 +10,12 @@
 #include "array/array.h"
 #include "readfile.h"
 
+using namespace std;
+
 writeFile::writeFile()
 {
-    konstants* K = new konstants();
-    fstream file;
-    fstream file_COL;
+    this->K = new konstants();
 }
-
-using namespace std;
 
 string toChar(int toChar){
     string s;

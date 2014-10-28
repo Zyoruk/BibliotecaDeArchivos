@@ -12,20 +12,20 @@
 readFile::readFile()
 {
     konstants* K = new konstants();
-    fstream file;
-    fstream file_COL;
 }
 
-string toChar(int toChar){
-    string s;
-    stringstream out;
-    out << toChar;
-    s = out.str();
-    return s;
-}
-
+/**
+ * @brief checkSize check max size of field size on metadata.
+ * @param add the data to be added to metadata.
+ * @param count size of the field.
+ */
 void checkSize(string* add, int count){
     string tmp;
+
+    if(inf *add > count){
+        cout << "Datafield beyond max size";
+        return;
+    }
 
     for (int a = 1 ; a < count ; a++){
         if((tmp.length() + add->length()) == count){
@@ -37,6 +37,35 @@ void checkSize(string* add, int count){
     *add = tmp;
 }
 
+/**
+ * @brief createNewFile Append constant path to database name for adquiring.
+ * @param newFileName
+ * @return
+ */
+string createNewFile(string newFileName){
+    string newFileDir ;
+    newFileDir = K->DIRFILE;
+    newFileDir.append(newFileName);
+    return newFileDir;
+}
+
+/**
+ * @brief stringToInt Submethod for changing data.
+ * @param pStr
+ * @return
+ */
+int stringToInt(string* pStr){
+    int i;
+    i= atoi(pStr->c_str());
+    return i;
+}
+
+/**
+ * @brief intToChar Decompose an int to a char. Fills the blancks then returns
+ * a string.
+ * @param metadata
+ * @return
+ */
 string intToChar(int metadata){
     int ch;
     string tmp ;
@@ -48,19 +77,24 @@ string intToChar(int metadata){
     return tmp;
 }
 
-string createNewFile(string newFileName){
-    string newFileDir ;
-    newFileDir = K->DIRFILE;
-    newFileDir.append(newFileName);
-    return newFileDir;
+/**
+ * @brief toChar Submethod for changing data.
+ * @param toChar
+ * @return
+ */
+string toChar(int toChar){
+    string s;
+    stringstream out;
+    out << toChar;
+    s = out.str();
+    return s;
 }
 
-int stringToInt(string* pStr){
-    int i;
-    i= atoi(pStr->c_str());
-    return i;
-}
-
+/**
+ * @brief charCallocToString
+ * @param pCharCalloc
+ * @return
+ */
 string charCallocToString(char* pCharCalloc){
     string stringToReturn ;
     stringToReturn = "";
@@ -70,6 +104,10 @@ string charCallocToString(char* pCharCalloc){
     return stringToReturn;
 }
 
+/**
+ * @brief getRegisterSize
+ * @return
+ */
 int getRegisterSize(){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
@@ -84,6 +122,10 @@ int getRegisterSize(){
     return regSize;
 }
 
+/**
+ * @brief getMetaDataSize Parse file for the size of metadata.
+ * @return
+ */
 int getMetaDataSize(){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
@@ -96,6 +138,10 @@ int getMetaDataSize(){
     return MDSizeInt;
 }
 
+/**
+ * @brief getRegisterQuantity gets how many registrys are in the file
+ * @return
+ */
 int getRegisterQuantity(){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW, ios::end);
@@ -107,13 +153,18 @@ int getRegisterQuantity(){
     return regQty;
 }
 
+/**
+ * @brief columnSize Parse the field on file getting a column size.
+ * @param pColumnInt
+ * @return
+ */
 int columnSize(int pColumnInt){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
 
     //Move the seek to the beginning of the column.
-    int whereToMove = K->METADATA_COLUMN_START+
-                      (pColumnInt * K->DEFAULT_COLUMN_SIZE);
+    int whereToMove = (K->METADATA_COLUMN_START +
+                      (pColumnInt * K->DEFAULT_COLUMN_SIZE));
     file.seekg(whereToMove);
     string cSize = K->EMPTY_STRING;
     // build the string;
@@ -151,6 +202,10 @@ void fillString(string* pData, int pSize){
     }
 }
 
+/**
+ * @brief checkString Check for white spaces on the string entry.
+ * @param pStringToCheck
+ */
 void checkString(string* pStringToCheck){
     char* tempString = new char[(*pStringToCheck).size()+1];
     strcpy(tempString, (*pStringToCheck).c_str());
@@ -163,6 +218,13 @@ void checkString(string* pStringToCheck){
     *pStringToCheck = stringToReturn;
 }
 
+/**
+ * @brief placeSeekOn Place the seek on a specific field of the database.
+ * @param pRow
+ * @param pColumn
+ * @param pSizeToColumn Size of previous column before field.
+ * @param pCSize Size of the column for the field we wan.
+ */
 void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
                  int* pCSize){
     //Move seek to the row
@@ -175,7 +237,12 @@ void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
     *pCSize = columnSize(*pColumn-1);
 }
 
-//La variable de regreso es eliminada
+/**
+ * @brief getColumnNumber For a column number get its name.
+ * @param fileName Complete path of file to be asociated with.
+ * @param columnName
+ * @return
+ */
 int getColumnNumber(string* fileName ,string* columnName){
     string tmp = "Columns";
     string path = *fileName;
@@ -191,10 +258,16 @@ int getColumnNumber(string* fileName ,string* columnName){
             columnNumber = i;
         i++;
     }
+    //La variable de regreso es eliminada
     return columnNumber;
 }
 
-//La variable de regreso es eliminada
+/**
+ * @brief getColumnName Match to files searching for the name of a column number.
+ * @param fileName Complete path of file to be asociated with.
+ * @param columnNumber
+ * @return
+ */
 string getColumnName(string* fileName ,int* columnNumber){
     string K = "Columns";
     string path = *fileName;
@@ -210,6 +283,7 @@ string getColumnName(string* fileName ,int* columnNumber){
         if(file_COL.eof())
             break;
     }
+    //La variable de regreso es eliminada
     return columnName;
 }
 

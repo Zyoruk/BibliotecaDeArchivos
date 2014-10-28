@@ -11,6 +11,8 @@
 #include "array/array.h"
 #include "readfile.h"
 
+using namespace std;
+
 class writeFile
 {
 public:
@@ -24,9 +26,9 @@ public:
                       string pCName);
 
 private:
-    //konstants* K;
-    //fstream file;
-    //fstream file_COL;
+    konstants* K;
+    fstream file;
+    fstream file_COL;
     string toChar(int toChar);
     void checkSize(string* add, int count);
     string intToChar(int metadata);
