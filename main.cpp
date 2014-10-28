@@ -205,12 +205,10 @@ int getColumnNumber(string* fileName ,string* columnName){
     string path = *fileName;
     string COLNAME;
     path.append(tmp);
-    int i = K->ZE_ROW;
-
+    int i =K->ONE_BYTE;
     int columnNumber = -2;
     file_COL.open(path.c_str());
-
-    while (! file_COL.eof() )
+    while (file_COL.tellg() != -1)
     {
         getline(file_COL,COLNAME);
         if ( *columnName == COLNAME)
@@ -386,12 +384,11 @@ string readField(string pFile , int pRow , int pColumn){
 //    }
 //    return columnData;
 //}
-
-//From pCname of pFile, replace pToCompare with newData
-void updateColumn(string newData,string pToCompare, string pFile, string pCName){
+void updateField(string newData, string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
+
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
@@ -399,7 +396,32 @@ void updateColumn(string newData,string pToCompare, string pFile, string pCName)
         file.open(standardDir.c_str());
     }
 
-    int Column = getColumnNumber(&pFile , &pCName );
+    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
+
+    fillString(&newData,cSize);
+
+    if (file.is_open()){
+        file << newData;
+    }
+    file.seekg(currSeek);
+    if (file.is_open()){
+        file.close();
+    }
+}
+
+//From pCname of pFile, replace pToCompare with newData
+void updateColumn(string newData,string pToCompare, string pFile, string pCName){
+    int currSeek = file.tellg();
+    int sizeToColumn;
+    int cSize;
+    string standardDir;
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+    int Column = getColumnNumber(&standardDir , &pCName );
     int regQty = getRegisterQuantity();
     string currentData = K->EMPTY_STRING;
     for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
@@ -416,18 +438,10 @@ void updateColumn(string newData,string pToCompare, string pFile, string pCName)
         }
         //Compare data.
         if (currentData == pToCompare){
-            //Fill the data with * depending on the size of the column.
-            fillString(&newData,cSize);
-            file << newData;
+            updateField(newData, pFile , rowCounter , Column);
         }
     }
 
-//    cout << "D lenght" << newData.length() << endl;
-
-    if (file.is_open()){
-        //cout << "IS OPEN" << endl;
-        file << newData;
-    }
     file.seekg(currSeek);
     if (file.is_open()){
         file.close();
@@ -459,31 +473,6 @@ array< char* > readRegistry(string pFile , int pRegister){
     return arrayToReturn;
 }
 
-void updateField(string newData, string pFile , int pRow , int pColumn){
-    int currSeek = file.tellg();
-    int sizeToColumn;
-    int cSize;
-
-    //Relative route + the name of the file
-    if ( !(file.is_open()) ){
-        string fileH = pFile;
-        string standardDir = createNewFile(fileH.c_str());
-        file.open(standardDir.c_str());
-    }
-
-    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
-
-    fillString(&newData,cSize);
-
-    if (file.is_open()){
-        file << newData;
-    }
-    file.seekg(currSeek);
-    if (file.is_open()){
-        file.close();
-    }
-}
-
 //****************************************************************************//
 
 void test0(){
@@ -509,7 +498,7 @@ void test0(){
 
 void test1(){
 
-    string fileName = "Test8";
+    string fileName = "Test9";
 
     array<char*> cData(2);
     string nameToAdd = "Luis";
@@ -547,17 +536,15 @@ void test4(){
     }
 }
 
-//void test5(){
-//    updateColumn();
-//}
+void test5(){
+    updateColumn("Simon_Barrantes" ,"Angel","Test9","Apellido");
+}
 
 //****************************************************************************//
 
 int main()
 {
     setup();
-
-    test0();
     return 0;
 }
 
