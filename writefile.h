@@ -11,22 +11,24 @@
 #include "array/array.h"
 #include "readfile.h"
 
-class writeFile
+using namespace std;
+
+class writefile
 {
 public:
-    writeFile();
+    writefile();
     void createTable(int* registerSize, array<int>* columnSizes ,
                      array<char*>* columnNames , string* pFile);
-    void writeRegister(string pFileName, array<char*>* pColumnData ,
+    bool writeRegister(string pFileName, array<char*>* pColumnData ,
                        array<int>* columnPos);
-    void updateField(string newData, string pFile , int pRow , int pColumn);
-    void updateColumn(string newData,string pToCompare, string pFile,
+    bool updateField(string newData, string pFile , int pRow , int pColumn);
+    bool updateColumn(string newData,string pToCompare, string pFile,
                       string pCName);
 
 private:
-    //konstants* K;
-    //fstream file;
-    //fstream file_COL;
+    konstants* K;
+    fstream file;
+    fstream file_COL;
     string toChar(int toChar);
     void checkSize(string* add, int count);
     string intToChar(int metadata);
@@ -37,6 +39,12 @@ private:
     int getMetaDataSize();
     int getRegisterQuantity();
     int columnSize(int pColumnInt);
+    int sizeUntilColumn(int pColumn);
+    void fillString(string* pData, int pSize);
+    void checkString(string* pStringToCheck);
+    void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn, int* pCSize);
+    void writeColumnNames(string* fileName, array<char*>* columnNames);
+    int getColumnNumber(string* fileName ,string* columnName);
 
 
 };

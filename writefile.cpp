@@ -10,16 +10,12 @@
 #include "array/array.h"
 #include "readfile.h"
 
-writeFile::writeFile()
+writefile::writefile()
 {
-    konstants* K = new konstants();
-    fstream file;
-    fstream file_COL;
+    K = new konstants();
 }
 
-using namespace std;
-
-string toChar(int toChar){
+string writefile::toChar(int toChar){
     string s;
     stringstream out;
     out << toChar;
@@ -27,11 +23,11 @@ string toChar(int toChar){
     return s;
 }
 
-void checkSize(string* add, int count){
+void writefile::checkSize(string* add, int count){
     string tmp;
 
     for (int a = 1 ; a < count ; a++){
-        if((tmp.length() + add->length()) == count){
+        if((unsigned)(tmp.length() + add->length()) == (unsigned) count){
             break;
         }
         tmp.push_back(K->SINGLE_NULL);
@@ -40,7 +36,7 @@ void checkSize(string* add, int count){
     *add = tmp;
 }
 
-string intToChar(int metadata){
+string writefile::intToChar(int metadata){
     int ch;
     string tmp ;
     while (metadata != 0){
@@ -51,29 +47,29 @@ string intToChar(int metadata){
     return tmp;
 }
 
-string createNewFile(string newFileName){
+string writefile::createNewFile(string newFileName){
     string newFileDir ;
     newFileDir = K->DIRFILE;
     newFileDir.append(newFileName);
     return newFileDir;
 }
 
-int stringToInt(string* pStr){
+int writefile::stringToInt(string* pStr){
     int i;
     i= atoi(pStr->c_str());
     return i;
 }
 
-string charCallocToString(char* pCharCalloc){
+string writefile::charCallocToString(char* pCharCalloc){
     string stringToReturn ;
     stringToReturn = "";
-    for (int i = NULL; i <= K->DEFAULT_COLUMN_SIZE;i++){
+    for (int i = 0; i <= K->DEFAULT_COLUMN_SIZE ; i++){
         stringToReturn.append(((const char*)(pCharCalloc + i)));
     }
     return stringToReturn;
 }
 
-int getRegisterSize(){
+int writefile::getRegisterSize(){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
     file.seekg(K->DEFAULT_COLUMN_SIZE);
@@ -87,7 +83,7 @@ int getRegisterSize(){
     return regSize;
 }
 
-int getMetaDataSize(){
+int writefile::getMetaDataSize(){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
     string MDSizeString = "";
@@ -99,7 +95,7 @@ int getMetaDataSize(){
     return MDSizeInt;
 }
 
-int getRegisterQuantity(){
+int writefile::getRegisterQuantity(){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW, ios::end);
     int fileSize = file.tellg();
@@ -110,7 +106,7 @@ int getRegisterQuantity(){
     return regQty;
 }
 
-int columnSize(int pColumnInt){
+int writefile::columnSize(int pColumnInt){
     int currSeek = file.tellg();
     file.seekg(K->ZE_ROW);
 
@@ -135,7 +131,7 @@ int columnSize(int pColumnInt){
  * \param pColumn
  * \return
  */
-int sizeUntilColumn(int pColumn){
+int writefile::sizeUntilColumn(int pColumn){
     int sizeToReturn = K->ZE_ROW;
     for (int i = K->ZE_ROW; i < pColumn -1 ; i++){
         sizeToReturn += columnSize(i);
@@ -148,16 +144,16 @@ int sizeUntilColumn(int pColumn){
  * @param pData registry to be initialized.
  * @param pSize size of the registry.
  */
-void fillString(string* pData, int pSize){
-    while ( pData->length() < pSize){
+void writefile::fillString(string* pData, int pSize){
+    while ( (unsigned) pData->length() < (unsigned) pSize){
         pData->push_back(K->NULL_CHAR);
     }
 }
 
-void checkString(string* pStringToCheck){
+void writefile::checkString(string* pStringToCheck){
     char* tempString = new char[(*pStringToCheck).size()+1];
     strcpy(tempString, (*pStringToCheck).c_str());
-    for (int i = K->ZE_ROW ; i < pStringToCheck->length(); i++){
+    for (int i = K->ZE_ROW ; (unsigned) i < (unsigned) pStringToCheck->length(); i++){
         if (tempString[i] == ' ' ){
             tempString[i] = '_';
         }
@@ -166,7 +162,7 @@ void checkString(string* pStringToCheck){
     *pStringToCheck = stringToReturn;
 }
 
-void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
+void writefile::placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
                  int* pCSize){
     //Move seek to the row
       file.seekg(  getMetaDataSize() + ( getRegisterSize() * (*pRow-1) )  );
@@ -178,14 +174,14 @@ void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
     *pCSize = columnSize(*pColumn-1);
 }
 
-void writeColumnNames(string* fileName, array<char*>* columnNames){
-    string K = "Columns";
+void writefile::writeColumnNames(string* fileName, array<char*>* columnNames){
+    string col = "Columns";
     string path = *fileName;
-    path.append(K);
+    path.append(col);
     array<char*> columnNames2Use = *columnNames;
 
     ofstream whatever(path.c_str() , ios::trunc);
-    cout << whatever.is_open() <<endl;
+    //cout << whatever.is_open() <<endl;
     for (int i = 0 ; i < columnNames2Use.getLenght() ; i++){
         whatever << columnNames2Use[i];
         if ( i < (columnNames->getLenght() - 1))
@@ -195,18 +191,45 @@ void writeColumnNames(string* fileName, array<char*>* columnNames){
 }
 
 /**
+ * @brief getColumnNumber For a column number get its name.
+ * @param fileName Complete path of file to be asociated with.
+ * @param columnName
+ * @return
+ */
+int writefile::getColumnNumber(string* fileName ,string* columnName){
+    string tmp = "Columns";
+    string path = *fileName;
+    string COLNAME;
+    path.append(tmp);
+    int i = K->ONE_BYTE;
+    int columnNumber = -2;
+    file_COL.open(path.c_str());
+    while (file_COL.tellg() != -1)
+    {
+        getline(file_COL,COLNAME);
+        if ( *columnName == COLNAME)
+            columnNumber = i;
+        i++;
+    }
+    //La variable de regreso es eliminada
+    return columnNumber;
+}
+
+//****************************************************************************//
+
+/**
  * @brief createTable creates the database and metadata.
  * @param registerSize is the size for each registry.
  * @param columnSizes is the sizes for each column.
  */
-void createTable(int* registerSize, array<int>* columnSizes ,
-                 array<char*>* columnNames , string* pFile){
-//    string newFileName = *pFile;
+void writefile::createTable(int* registerSize, array<int>* columnSizes ,
+                            array<char*>* columnNames , string* pFile){
+
     int offset = 0;
     string add;
 
     string theFileName = createNewFile(*pFile);
-    writeColumnNames(&theFileName, columnNames);
+    writefile::writeColumnNames(&theFileName, columnNames);
     ofstream database (theFileName.c_str() , ios::trunc);
 
     //check if buffer = true
@@ -215,7 +238,7 @@ void createTable(int* registerSize, array<int>* columnSizes ,
     else
         cout << "****Database could not be created***" << endl;
 
-    //Register size validachion.
+    //Register size valideichion.
     if(*registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
@@ -260,11 +283,19 @@ void createTable(int* registerSize, array<int>* columnSizes ,
  * @param pColumnData it's what to append.
  * @param columnPos is where to append it.
  */
-void writeRegister(string pFileName, array<char*>* pColumnData ,
-                   array<int>* columnPos){
+bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
+                              array<int>* columnPos){
+
     int currSeek = file.tellg();
     string standardDir = createNewFile(pFileName);
     file.open(standardDir.c_str());
+    bool isOpen = true;
+
+    if(!file.is_open()){
+        cout << "NED "  + pFileName << endl;
+        return false;
+    }
+
     file.seekg(0);
 
     array<int> tempCPosArr = *columnPos;
@@ -294,6 +325,7 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
     }
     file.seekg(currSeek);
     file.close();
+    return isOpen;
 }
 
 /**
@@ -303,10 +335,11 @@ void writeRegister(string pFileName, array<char*>* pColumnData ,
  * @param pRow
  * @param pColumn
  */
-void updateField(string newData, string pFile , int pRow , int pColumn){
+bool writefile::updateField(string newData, string pFile , int pRow , int pColumn){
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
+    bool bowl = true;
 
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
@@ -315,17 +348,24 @@ void updateField(string newData, string pFile , int pRow , int pColumn){
         file.open(standardDir.c_str());
     }
 
-    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
+    if ( !(file.is_open()) ){
+        cout << "NED " + pFile << endl;
+        bowl = false;
+    }
 
+    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
     fillString(&newData,cSize);
 
     if (file.is_open()){
         file << newData;
     }
+
     file.seekg(currSeek);
+
     if (file.is_open()){
         file.close();
     }
+    return bowl;
 }
 
 /**
@@ -335,23 +375,34 @@ void updateField(string newData, string pFile , int pRow , int pColumn){
  * @param pFile
  * @param pCName
  */
-void updateColumn(string newData,string pToCompare, string pFile, string pCName){
+bool writefile::updateColumn(string newData,string pToCompare, string pFile, string pCName){
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
     string standardDir;
+    bool bowl = true;
+
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
         standardDir = createNewFile(fileH.c_str());
         file.open(standardDir.c_str());
     }
+
+    if ( !(file.is_open()) ){
+        cout << "NED " + pFile << endl;
+        bowl = false;
+    }
+
     int Column = getColumnNumber(&standardDir , &pCName );
     int regQty = getRegisterQuantity();
     string currentData = K->EMPTY_STRING;
+
     for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+
         //Move the seek to the column and register.
         placeSeekOn( &rowCounter , &Column, &sizeToColumn, &cSize);
+
         //Build the string of the old data
         for (int i = 0 ; i < cSize ; i++){
             char temp = file.get();
@@ -371,4 +422,5 @@ void updateColumn(string newData,string pToCompare, string pFile, string pCName)
     if (file.is_open()){
         file.close();
     }
+    return bowl;
 }

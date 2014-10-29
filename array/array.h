@@ -90,11 +90,11 @@ void array<K>::removeAllOcurrencesOf(K pElement){
 //In order to work with normals assignments
 template<typename K>
 K& array<K>::operator[](int pIndex){
+
     if (pIndex < FIRST_POSITION || pIndex >= this->_lenght) {
         cout << "Invalid Index\n";
-    }else{
-        return *(_arrayBuffer + pIndex);
     }
+    return *(_arrayBuffer + pIndex);
 }
 
 //In order to work with constant objects
