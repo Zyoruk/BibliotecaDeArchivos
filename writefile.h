@@ -19,10 +19,10 @@ public:
     writefile();
     void createTable(int* registerSize, array<int>* columnSizes ,
                      array<char*>* columnNames , string* pFile);
-    void writeRegister(string pFileName, array<char*>* pColumnData ,
+    bool writeRegister(string pFileName, array<char*>* pColumnData ,
                        array<int>* columnPos);
-    void updateField(string newData, string pFile , int pRow , int pColumn);
-    void updateColumn(string newData,string pToCompare, string pFile,
+    bool updateField(string newData, string pFile , int pRow , int pColumn);
+    bool updateColumn(string newData,string pToCompare, string pFile,
                       string pCName);
 
 private:

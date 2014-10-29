@@ -9,10 +9,6 @@
 #include "array/array.h"
 #include "readfile.h"
 
-//konstants* C;
-//fstream file;
-//fstream file_COL;
-
 readfile::readfile()
 {
     C = new konstants();
@@ -310,6 +306,11 @@ string readfile::readField(string pFile , int pRow , int pColumn){
         string standardDir = createNewFile(fileH.c_str());
         file.open(standardDir.c_str());
     }
+
+    if ( !(file.is_open()) ){
+        return "NED " + pFile;
+    }
+
     readfile::placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
 
     //build the stringto return
@@ -336,10 +337,17 @@ string readfile::readField(string pFile , int pRow , int pColumn){
  */
 array<char*> readfile::readColumn(string pFile , string pColumnName){
     string standardDir;
+    array <char*> errorArray (1);   //if !database, return null array
+
     if ( !(file.is_open()) ){
         string fileH = pFile;
         standardDir = createNewFile(fileH.c_str());
         file.open(standardDir.c_str());
+    }
+
+    if ( !(file.is_open()) ){
+        cout << "NED " + pFile << endl;
+        return errorArray;
     }
 
     int Column = readfile::getColumnNumber(&standardDir , &pColumnName );
@@ -347,6 +355,7 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
     string strToConvert = C->EMPTY_STRING;
     char * toAdd;
     array <char*> arrayToReturn (regQty);
+
     for (int rowCounter = C->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
         strToConvert = readField(pFile , rowCounter , Column);
         toAdd = new char[strToConvert.size()+1];
@@ -363,13 +372,19 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
  * @return
  */
 array< char* > readfile::readRegistry(string pFile , int pRegister){
-
+    array< char* > errorArray (1);
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
         string standardDir = createNewFile(fileH.c_str());
         file.open(standardDir.c_str());
     }
+
+    if ( !(file.is_open()) ){
+        cout << "NED " + pFile << endl;
+        return errorArray;
+    }
+
     //Create an array that will contain all the columns
     int columnQty = (getMetaDataSize() - C->METADATA_COLUMN_START)
                     / C->DEFAULT_COLUMN_SIZE;

@@ -97,6 +97,7 @@ void test6(){
 int main()
 {
     setup();
+    test1();
     return 0;
 }
 
