@@ -1,5 +1,9 @@
 #include "fsqlserverfilesystem.h"
 
+//Switch case doesn't allow the use of "_C->".
+const char _Y = 'Y';
+const char _N = 'N';
+
 FSQLServerFileSystem::FSQLServerFileSystem()
 {
     this->RF = new readfile();
@@ -13,14 +17,14 @@ void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          string* pFile){
     char confirm ;
     if (checkIfFileExists(*pFile)){
-            cout << "Do you want to overwrite the existant file ?";
+            cout << _C->OVER_WRITE;
             cin >> confirm;
             switch (confirm){
-                case 'Y':
+                case _Y:
                     WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                                    pFile);
-                case 'N':
-                    cout << "File was not created."<< endl;
+                case _N:
+                    cout << _C->FILE_NOT_CREATED << endl;
             }
         }
 }
@@ -78,10 +82,10 @@ void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
                 cout << columnData[i] << endl;
             }
         }else if (pRow < _C->ZE_ROW ||pColumn <_C->ZE_ROW){
-            cout << "Invalid values." << endl;
+            cout << _C->INVALID_VALUES << endl;
         }else{
             string field = RF->readField(pFileName, pRow, pColumn);
-            cout << "Data inside field: " << field << endl;
+            cout << field << endl;
         }
     }else{
         cout << _C->NO_EXISTANT_FILE << endl;
@@ -97,7 +101,7 @@ void FSQLServerFileSystem::backUpFile (string pFileName){
 }
 
 void FSQLServerFileSystem::restoreFile(string pFileName){
-    string backUp= "backup";
+    string backUp = _C->BACKUP_STRING;
     backUp.append(pFileName);
     if (checkIfFileExists(backUp)){
          WF->restoreFile(pFileName);
@@ -109,10 +113,13 @@ void FSQLServerFileSystem::restoreFile(string pFileName){
 
 bool FSQLServerFileSystem::checkIfFileExists(string pFile){
     string newFileDir ;
+    bool isOpen;
     newFileDir = _C->DIRFILE;
     newFileDir.append(pFile);
     fstream file;
     file.open(newFileDir.c_str());
-    if (!file.is_open()) cout << _C->NO_EXISTANT_FILE << endl;
-    return file.is_open();
+    isOpen = file.is_open();
+    if (!isOpen) cout << _C->NO_EXISTANT_FILE << endl;
+    file.close();
+    return isOpen;
 }
