@@ -21,6 +21,9 @@ public:
     const char NULL_CHAR = '*';
     const string TRIPLE_NULL = "000";
     const char SINGLE_NULL = '0';
+    const string NO_EXISTANT_FILE = "NEF";
+    const char _Y_ = 'Y';
+    const char _N_ = 'N';
 };
 
 #endif // KONSTANTS_H

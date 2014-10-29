@@ -20,7 +20,7 @@ class readfile
         array< char* > readRegistry(string pFile , int pRegister);
         array<char*> readColumn(string pFile , string pColumnName);
         string readField(string pFile , int pRow , int pColumn);
-
+        string getColumnName(string* fileName ,int* columnNumber);
     private:
         konstants* C;
         fstream file;
@@ -41,7 +41,6 @@ class readfile
         int sizeUntilColumn(int pColumn);
         void fillString(string* pData, int pSize);
         void checkString(string* pStringToCheck);
-        string getColumnName(string* fileName ,int* columnNumber);
 
 };
 

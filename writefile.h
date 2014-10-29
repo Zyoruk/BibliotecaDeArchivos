@@ -24,7 +24,8 @@ public:
     bool updateField(string newData, string pFile , int pRow , int pColumn);
     bool updateColumn(string newData,string pToCompare, string pFile,
                       string pCName);
-
+    void backUpFile(string fileTobackUp);
+    void restoreFile(string fileToRestore);
 private:
     konstants* K;
     fstream file;

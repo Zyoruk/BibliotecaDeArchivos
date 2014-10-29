@@ -424,3 +424,31 @@ bool writefile::updateColumn(string newData,string pToCompare, string pFile, str
     }
     return bowl;
 }
+
+void writefile::backUpFile(string fileTobackUp){
+    string backUp= "backup";
+    backUp.append(pFileName);
+
+    string pathFileToBackUp = createNewFile(fileTobackUp);
+    string pathbackUpFile = createNewFile(backUp);
+
+
+    std::ifstream ifs(pathFileToBackUp, std::ios::binary);
+    std::ofstream ofs(pathbackUpFile, std::ios::binary);
+
+    ofs << ifs.rdbuf();
+}
+
+void writefile::restoreFile(string fileToRestore){
+    string backUp= "backup";
+    backUp.append(pFileName);
+
+    string pathFileToRestore = createNewFile(backUp);
+    string pathRestoredFile = createNewFile(fileToRestore);
+
+
+    std::ifstream ifs(pathFileToRestore, std::ios::binary);
+    std::ofstream ofs(pathRestoredFile, std::ios::binary);
+
+    ofs << ifs.rdbuf();
+}
