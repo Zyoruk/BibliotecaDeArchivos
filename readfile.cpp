@@ -402,3 +402,23 @@ array< char* > readfile::readRegistry(string pFile , int pRegister){
     file.close();
     return arrayToReturn;
 }
+
+array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
+                                             string valueToConsult){
+    string standardDir;
+    int regs = getRegisterQuantity();
+    int colNum = getColumnNumber(standardDir,pColumnName);
+
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+
+    array< array<char*> > select ();
+    for ( int i = 1 ; i <= regs ; i ++){
+        if(valueToConsult == readField(pFile,i,colNum)){
+            select [i] = readRegistry( pFile , colNum);
+        }
+    }
+}
