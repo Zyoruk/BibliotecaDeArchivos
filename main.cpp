@@ -97,13 +97,10 @@ void test6(){
 
 int main()
 {
-<<<<<<< HEAD
     testClass test;
     test.test6();
-=======
     setup();
     test1();
->>>>>>> 9469f8001863b6f8754559dd297a1866b3b8d98b
     return 0;
 }
 
