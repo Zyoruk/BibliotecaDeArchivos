@@ -5,7 +5,6 @@
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
-#include "testclass.h"
 #include "konstants.h"
 #include "array/array.h"
 #include "writefile.h"
@@ -97,9 +96,8 @@ void test6(){
 
 int main()
 {
-    testClass test;
-    test.test6();
     setup();
+    test6();
     test1();
     return 0;
 }
