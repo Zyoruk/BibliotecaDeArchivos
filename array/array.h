@@ -2,6 +2,7 @@
 #define ARRAY_H
 #include <stdlib.h>
 #include <assert.h>
+#include <iostream>
 using namespace std;
 const int EMPTY = 0;
 const int FIRST_POSITION = 0;

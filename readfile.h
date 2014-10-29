@@ -21,6 +21,8 @@ class readfile
         array<char*> readColumn(string pFile , string pColumnName);
         string readField(string pFile , int pRow , int pColumn);
         string getColumnName(string* fileName ,int* columnNumber);
+        array< array<char*> > getRegisters(string pFile, string pColumnName,
+                                                     string valueToConsult);
     private:
         konstants* C;
         fstream file;

@@ -427,28 +427,70 @@ bool writefile::updateColumn(string newData,string pToCompare, string pFile, str
 
 void writefile::backUpFile(string fileTobackUp){
     string backUp= "backup";
-    backUp.append(pFileName);
+    backUp.append(fileTobackUp); //backupTest8
 
-    string pathFileToBackUp = createNewFile(fileTobackUp);
-    string pathbackUpFile = createNewFile(backUp);
+    string pathFileToBackUp = createNewFile(fileTobackUp); //../FSQL/Test8
+    string pathbackUpFile = createNewFile(backUp);// ../FSQL/backupTest8
 
+    ofstream newfile (pathbackUpFile.c_str() , ios::trunc);
+    newfile.close();
 
-    std::ifstream ifs(pathFileToBackUp, std::ios::binary);
-    std::ofstream ofs(pathbackUpFile, std::ios::binary);
+    std::ifstream ifs(pathFileToBackUp.c_str(), std::ios::binary);
+    std::ofstream ofs(pathbackUpFile.c_str(), std::ios::binary);
 
     ofs << ifs.rdbuf();
+
+    ifs.close();
+    ofs.close();
+
+    pathFileToBackUp.append("Columns");
+    pathbackUpFile.append("Columns");
+
+    ofstream newfile2 (pathbackUpFile.c_str() , ios::trunc);
+    newfile2.close();
+
+    std::ifstream ifs2(pathFileToBackUp.c_str(), std::ios::binary);
+    std::ofstream ofs2(pathbackUpFile.c_str(), std::ios::binary);
+
+    ifs2.close();
+    ofs2.close();
+
+    ofs2 << ifs2.rdbuf();
+
 }
 
 void writefile::restoreFile(string fileToRestore){
     string backUp= "backup";
-    backUp.append(pFileName);
+    backUp.append(fileToRestore);
 
     string pathFileToRestore = createNewFile(backUp);
     string pathRestoredFile = createNewFile(fileToRestore);
 
+    ofstream newfile (pathRestoredFile.c_str() , ios::trunc);
+    newfile.close();
 
-    std::ifstream ifs(pathFileToRestore, std::ios::binary);
-    std::ofstream ofs(pathRestoredFile, std::ios::binary);
+
+    std::ifstream ifs(pathFileToRestore.c_str(), std::ios::binary);
+    std::ofstream ofs(pathRestoredFile.c_str(), std::ios::binary);
 
     ofs << ifs.rdbuf();
+
+    ifs.close();
+    ofs.close();
+
+    pathFileToRestore.append("Columns");
+    pathRestoredFile.append("Columns");
+
+    ofstream newfile2 (pathRestoredFile.c_str() , ios::trunc);
+    newfile2.close();
+
+    std::ifstream ifs2(pathFileToRestore.c_str(), std::ios::binary);
+    std::ofstream ofs2(pathRestoredFile.c_str(), std::ios::binary);
+
+    ofs2 << ifs2.rdbuf();
+
+    ifs2.close();
+    ofs2.close();
+
+
 }

@@ -9,6 +9,7 @@
 #include "array/array.h"
 #include "writefile.h"
 #include "readfile.h"
+#include "fsqlserverfilesystem.h"
 
 //#define STR(x) #x << '=' << x
 
@@ -94,11 +95,20 @@ void test6(){
     for (int i = K->ZE_ROW ; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
 }
 
+void test7(){
+    FSQLServerFileSystem* filesystem = new FSQLServerFileSystem();
+    filesystem->backUpFile("Test9");
+}
+
+void test8(){
+    FSQLServerFileSystem* filesystem = new FSQLServerFileSystem();
+    filesystem->restoreFile("Test9");
+}
+
 int main()
 {
     setup();
-    test6();
-    test1();
+    test8();
     return 0;
 }
 

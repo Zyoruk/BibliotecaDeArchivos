@@ -12,26 +12,26 @@ void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          array<char*>* pColumnNames ,
                                          string* pFile){
     char confirm ;
-    if (checkIfFileExists(pFileName)){
+    if (checkIfFileExists(*pFile)){
             cout << "Do you want to overwrite the existant file ?";
-            cin << confirm;
+            cin >> confirm;
             switch (confirm){
-                case _C._Y_:
-                    WF.createTable(pRegisterSize, pColumnSizes, pColumnNames ,
+                case 'Y':
+                    WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                                    pFile);
-                case _C._N_:
+                case 'N':
                     cout << "File was not created."<< endl;
             }
         }
 }
 
 void FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
-                                              array<char*> pWhatToWrite,
+                                              array<char*>* pWhatToWrite,
                                               array<int>* pColumnPos){
     if (checkIfFileExists(pFileName)){
-        WF.writeRegister(pFileName, pWhatToWrite , pColumnPos);
+        WF->writeRegister(pFileName, pWhatToWrite , pColumnPos);
     }else{
-        cout << _C.NO_EXISTANT_FILE;
+        cout << _C->NO_EXISTANT_FILE;
     }
 
 }
@@ -39,11 +39,11 @@ void FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
 void FSQLServerFileSystem::removeFile(string pFileName){
     if (checkIfFileExists(pFileName)){
         string newFileDir ;
-        newFileDir = C->DIRFILE;
-        newFileDir.append(pFile);
-        remove(newFileDir);
+        newFileDir = _C->DIRFILE;
+        newFileDir.append(pFileName);
+        remove(newFileDir.c_str());
     }else{
-        cout << _C.NO_EXISTANT_FILE;
+        cout << _C->NO_EXISTANT_FILE;
     }
 }
 
@@ -51,66 +51,68 @@ void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
                                         int pRow){
     if (checkIfFileExists(pFileName)){
         //If column is zero then the user means to read a whole registry
-        if(pColumn == _C.ZE_ROW){
-            array<char*> registryData = RF.readRegistry(pFileName , pRow);
+        if(pColumn == _C->ZE_ROW){
+            array<char*> registryData = RF->readRegistry(pFileName , pRow);
 
             string newFileDir ;
-            newFileDir = C->DIRFILE;
-            newFileDir.append(pFile);
+            newFileDir = _C->DIRFILE;
+            newFileDir.append(pFileName);
 
-            for(int i = _C.ZE_ROW ; i < registryData.getLenght();i++){
-                cout << RF.getColumnName(&newFileDir , i)<< registryData[i] << endl;
+            for(int i = _C->ZE_ROW ; i < registryData.getLenght();i++){
+                cout << RF->getColumnName(&newFileDir , &i)<< registryData[i] << endl;
             }
 
         //If the row is 0 then the user means to read a whole column
-        }else if(pRow == _C.ZE_ROW){
-            array<char*> columnData = RF.readColumn(pFileName , RF.getColumnName(pColumn));
+        }else if(pRow == _C->ZE_ROW){
 
             string newFileDir ;
-            newFileDir = C->DIRFILE;
-            newFileDir.append(pFile);
+            newFileDir = _C->DIRFILE;
+            newFileDir.append(pFileName);
 
-            cout << RF.getColumnName(&newFileDir , i);
+            array<char*> columnData =
+                    RF->readColumn(pFileName ,
+                                   RF->getColumnName(&newFileDir , &pColumn));
 
-            for(int i = _C.ZE_ROW ; i < columnData.getLenght();i++){
+            for(int i = _C->ZE_ROW ; i < columnData.getLenght();i++){
+                cout << RF->getColumnName(&newFileDir , &i);
                 cout << columnData[i] << endl;
             }
-        }else if (pRow < _C.ZE_ROW ||pColumn <_C.ZE_ROW){
+        }else if (pRow < _C->ZE_ROW ||pColumn <_C->ZE_ROW){
             cout << "Invalid values." << endl;
         }else{
-            string field = RF.readField(pFile, pRow, pColumn);
+            string field = RF->readField(pFileName, pRow, pColumn);
             cout << "Data inside field: " << field << endl;
         }
     }else{
-        cout << _C.NO_EXISTANT_FILE << endl;
+        cout << _C->NO_EXISTANT_FILE << endl;
     }
 }
 
 void FSQLServerFileSystem::backUpFile (string pFileName){
     if (checkIfFileExists(pFileName)){
-        WF.backUpFile(pFileName);
+        WF->backUpFile(pFileName);
     }else{
-        cout << _C.NO_EXISTANT_FILE << endl;
+        cout << _C->NO_EXISTANT_FILE << endl;
     }
 }
 
 void FSQLServerFileSystem::restoreFile(string pFileName){
     string backUp= "backup";
     backUp.append(pFileName);
-    if (checkIfFileExists(pFileName)){
-         WF.restoreFile(pFileName);
+    if (checkIfFileExists(backUp)){
+         WF->restoreFile(pFileName);
     }else{
-        cout << _C.NO_EXISTANT_FILE << endl;
+        cout << _C->NO_EXISTANT_FILE << endl;
     }
 
 }
 
 bool FSQLServerFileSystem::checkIfFileExists(string pFile){
     string newFileDir ;
-    newFileDir = C->DIRFILE;
+    newFileDir = _C->DIRFILE;
     newFileDir.append(pFile);
     fstream file;
-    file.open(newFileDir);
-    if (!file.is_open()) cout << _C.NO_EXISTANT_FILE <<endl;
+    file.open(newFileDir.c_str());
+    if (!file.is_open()) cout << _C->NO_EXISTANT_FILE << endl;
     return file.is_open();
 }

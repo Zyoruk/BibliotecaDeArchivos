@@ -11,19 +11,22 @@ class FSQLServerFileSystem
 {
 public:
     FSQLServerFileSystem();
-    void createNewFile(string pFileName);
-    void writeNewLineToFile(string pFileName , array<char*> pWhatToWrite,
+    void createNewFile(int* pRegisterSize,
+                                             array<int>* pColumnSizes ,
+                                             array<char*>* pColumnNames ,
+                                             string* pFile);
+    void writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
                             array<int>* columnPos);
     void removeFile(string pFileName);
     void readFromFile(string pFileName , int pColumn, int pRow);
     void backUpFile (string pFileName);
     void restoreFile(string pFileName);
 private:
-    array<char*> _FilesMetaData;
+//    array<char*> _FilesMetaData;
     bool checkIfFileExists(string pFile);
-    konstants _C;
-    readfile RF;
-    writefile WF;
+    konstants* _C;
+    readfile* RF;
+    writefile* WF;
 };
 
 #endif // FSQLSERVERFILESYSTEM_H
