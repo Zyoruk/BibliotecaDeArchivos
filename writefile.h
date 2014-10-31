@@ -19,8 +19,11 @@ public:
                       string pCName);
     void backUpFile(string fileTobackUp);
     void restoreFile(string fileToRestore);
+    bool deleteRegister(string pFileName, string pColumnName, string pDato);
+
 private:
     void writeColumnNames(string* fileName, array<char*>* columnNames);
+    bool updateField(string newData);
     //string charCallocToString(char* pCharCalloc);
 };
 
