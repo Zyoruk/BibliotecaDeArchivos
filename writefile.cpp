@@ -263,10 +263,12 @@ void writefile::backUpFile(string fileTobackUp){
 
     ifs2.close();
     ofs2.close();
-
-
 }
 
+/**
+ * @brief writefile::restoreFile
+ * @param fileToRestore
+ */
 void writefile::restoreFile(string fileToRestore){
     string backUp= "backup";
     backUp.append(fileToRestore);
@@ -299,4 +301,51 @@ void writefile::restoreFile(string fileToRestore){
 
     ifs2.close();
     ofs2.close();
+}
+
+bool writefile::deleteRegister(string pFile, string pCName, string newData){
+    int currSeek = file.tellg();
+    int sizeToColumn;
+    int Column = getColumnNumber(&standardDir , &pCName );
+    int cSize = columnSize();
+    string standardDir;
+    bool bowl = true;
+
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+
+    if ( !(file.is_open()) ){
+        cout << "NED " + pFile << endl;
+        bowl = false;
+    }
+
+    int regQty = getRegisterQuantity();
+    string voidField = K->EMPTY_STRING;
+
+    fillString(&voidField,cSize);
+
+    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+
+        //Move the seek to the column and register.
+        placeSeekOn( &rowCounter , &Column, &sizeToColumn, &cSize);
+
+        //Compare data.
+        if (reafField() == newData){
+            if (file.is_open()){
+                file << newData;
+            } else {
+                bowl = false;
+            }
+        }
+    }
+
+    file.seekg(currSeek);
+    if (file.is_open()){
+        file.close();
+    }
+    return bowl;
 }
