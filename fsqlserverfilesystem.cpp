@@ -12,15 +12,17 @@ void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          array<char*>* pColumnNames ,
                                          string* pFile){
     char confirm ;
-    if (checkIfFileExists(*pFile)){
-            cout << "Do you want to overwrite the existant file ?";
+    if (fileExists(*pFile)){
+            cout << " Do you want to overwrite the existant file ?";
             cin >> confirm;
             switch (confirm){
                 case 'Y':
                     WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                                    pFile);
                 case 'N':
-                    cout << "File was not created."<< endl;
+                    cout << " File was not created."<< endl;
+                default:
+                    cout << " No monkeys allowed"<< endl;
             }
         }
 }
@@ -28,7 +30,7 @@ void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
 void FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
                                               array<char*>* pWhatToWrite,
                                               array<int>* pColumnPos){
-    if (checkIfFileExists(pFileName)){
+    if (fileExists(pFileName)){
         WF->writeRegister(pFileName, pWhatToWrite , pColumnPos);
     }else{
         cout << _C->NO_EXISTANT_FILE;
@@ -37,7 +39,7 @@ void FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
 }
 
 void FSQLServerFileSystem::removeFile(string pFileName){
-    if (checkIfFileExists(pFileName)){
+    if (fileExists(pFileName)){
         string newFileDir ;
         newFileDir = _C->DIRFILE;
         newFileDir.append(pFileName);
@@ -49,7 +51,7 @@ void FSQLServerFileSystem::removeFile(string pFileName){
 
 void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
                                         int pRow){
-    if (checkIfFileExists(pFileName)){
+    if (fileExists(pFileName)){
         //If column is zero then the user means to read a whole registry
         if(pColumn == _C->ZE_ROW){
             array<char*> registryData = RF->readRegistry(pFileName , pRow);
@@ -89,7 +91,7 @@ void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
 }
 
 void FSQLServerFileSystem::backUpFile (string pFileName){
-    if (checkIfFileExists(pFileName)){
+    if (fileExists(pFileName)){
         WF->backUpFile(pFileName);
     }else{
         cout << _C->NO_EXISTANT_FILE << endl;
@@ -99,7 +101,7 @@ void FSQLServerFileSystem::backUpFile (string pFileName){
 void FSQLServerFileSystem::restoreFile(string pFileName){
     string backUp= "backup";
     backUp.append(pFileName);
-    if (checkIfFileExists(backUp)){
+    if (fileExists(backUp)){
          WF->restoreFile(pFileName);
     }else{
         cout << _C->NO_EXISTANT_FILE << endl;
@@ -107,7 +109,7 @@ void FSQLServerFileSystem::restoreFile(string pFileName){
 
 }
 
-bool FSQLServerFileSystem::checkIfFileExists(string pFile){
+bool FSQLServerFileSystem::fileExists(string pFile){
     string newFileDir ;
     newFileDir = _C->DIRFILE;
     newFileDir.append(pFile);
