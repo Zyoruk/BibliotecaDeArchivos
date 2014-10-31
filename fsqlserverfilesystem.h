@@ -16,8 +16,8 @@ public:
     bool writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
                             array<int>* columnPos);
     bool removeFile(string pFileName);
-    void readFromFile(string pFileName , int pColumn, int pRow);
-    void backUpFile (string pFileName);
+    array<char*> readFromFile(string pFileName , int pColumn, int pRow);
+    bool backUpFile (string pFileName);
     bool restoreFile(string pFileName);
 private:
 //    array<char*> _FilesMetaData;

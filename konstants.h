@@ -11,7 +11,8 @@ public:
     static const int ZE_ROW = 0;
     static const int ONE_BYTE = 1;
     const string EMPTY_STRING = "";
-    const string DIRFILE = "../FSQL/";
+    const string DIRFILE = "../FSQL/databases/";
+    const string BACK_UPS_DIR = "../FSQL/backups/";
     static const int DEFAULT_COLUMN_SIZE = 3;
     static const int DEFAULT_REGISTER_SIZE = 4;
     static const int REGISTER_SIZE_ADDRESS = 3;

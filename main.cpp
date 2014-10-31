@@ -70,17 +70,18 @@ void test1(){
 }
 
 void test2(){
-    string fileName = "Test8";
+    string fileName = "Test9";
     string field = RD->readField(fileName.c_str(),1 ,1);
+    cout << field;
 }
 
 void test3(){
-    WR->updateField("Daniel", "Test8" , 1 , 1);
-    WR->updateField("Jenkins", "Test8" , 1 , 2);
+    WR->updateField("Daniel", "Test9" , 1 , 1);
+    WR->updateField("Jenkins", "Test9" , 1 , 2);
 }
 
 void test4(){
-    array<char*> test4 = RD->readRegistry("Test8" , 1);
+    array<char*> test4 = RD->readRegistry("Test9" , 1);
     for (int i = 0 ; i < test4.getLenght();i++){
         cout << test4[i] <<endl;
     }
@@ -108,7 +109,7 @@ void test8(){
 int main()
 {
     setup();
-    test8();
+    test7();
     return 0;
 }
 

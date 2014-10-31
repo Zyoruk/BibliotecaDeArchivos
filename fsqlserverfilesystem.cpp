@@ -115,13 +115,10 @@ bool FSQLServerFileSystem::restoreFile(string pFileName){
 bool FSQLServerFileSystem::fileExists(string pFile){
     string newFileDir ;
     fstream file;
-    bool op;
     newFileDir = _C->DIRFILE;
     newFileDir.append(pFile);
     file.open(newFileDir.c_str());
-    if (!file.is_open())
-        //cout << _C->NO_EXISTANT_FILE << endl;
-    op = file.is_open();
+    bool op = file.is_open();
     file.close();
     return op;
 }
