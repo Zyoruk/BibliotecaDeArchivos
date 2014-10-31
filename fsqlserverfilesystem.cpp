@@ -7,11 +7,12 @@ FSQLServerFileSystem::FSQLServerFileSystem()
     this->_C = new konstants();
 }
 
-void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
+bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          array<int>* pColumnSizes ,
                                          array<char*>* pColumnNames ,
                                          string* pFile){
     char confirm ;
+    bool op = true;
     if (fileExists(*pFile)){
             cout << " Do you want to overwrite the existant file ?";
             cin >> confirm;
@@ -20,11 +21,14 @@ void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                     WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                                    pFile);
                 case 'N':
-                    cout << " File was not created."<< endl;
+                    //cout << " File was not created."<< endl;
+                    op = false;
                 default:
-                    cout << " No monkeys allowed"<< endl;
+                    //cout << " No monkeys allowed"<< endl;
+                    op = false;
             }
         }
+    return op;
 }
 
 bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,

@@ -11,7 +11,7 @@ class FSQLServerFileSystem
 {
 public:
     FSQLServerFileSystem();
-    void createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
+    bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
                        array<char*>* pColumnNames, string* pFile);
     bool writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
                             array<int>* columnPos);
