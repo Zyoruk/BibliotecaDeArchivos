@@ -13,12 +13,12 @@ public:
     FSQLServerFileSystem();
     void createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
                        array<char*>* pColumnNames, string* pFile);
-    void writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
+    bool writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
                             array<int>* columnPos);
-    void removeFile(string pFileName);
+    bool removeFile(string pFileName);
     void readFromFile(string pFileName , int pColumn, int pRow);
     void backUpFile (string pFileName);
-    void restoreFile(string pFileName);
+    bool restoreFile(string pFileName);
 private:
 //    array<char*> _FilesMetaData;
     bool fileExists(string pFile);

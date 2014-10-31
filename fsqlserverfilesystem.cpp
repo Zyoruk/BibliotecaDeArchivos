@@ -27,42 +27,45 @@ void FSQLServerFileSystem::createNewFile(int* pRegisterSize,
         }
 }
 
-void FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
+bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
                                               array<char*>* pWhatToWrite,
                                               array<int>* pColumnPos){
     if (fileExists(pFileName)){
         WF->writeRegister(pFileName, pWhatToWrite , pColumnPos);
     }else{
-        cout << _C->NO_EXISTANT_FILE;
+        return false;
+        //cout << _C->NO_EXISTANT_FILE;
     }
-
+    return true;
 }
 
-void FSQLServerFileSystem::removeFile(string pFileName){
+bool FSQLServerFileSystem::removeFile(string pFileName){
     if (fileExists(pFileName)){
         string newFileDir ;
         newFileDir = _C->DIRFILE;
         newFileDir.append(pFileName);
         remove(newFileDir.c_str());
     }else{
-        cout << _C->NO_EXISTANT_FILE;
+        //cout << _C->NO_EXISTANT_FILE;
+        return false;
     }
+    return true;
 }
 
-void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
+array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
                                         int pRow){
+
+    array<char*> columnData;
+
+    if (pRow < _C->ZE_ROW || pColumn <_C->ZE_ROW ){
+        cout << " Eres un bolonio. Invalid values." << endl;
+        return columnData;
+    }
+
     if (fileExists(pFileName)){
         //If column is zero then the user means to read a whole registry
         if(pColumn == _C->ZE_ROW){
-            array<char*> registryData = RF->readRegistry(pFileName , pRow);
-
-            string newFileDir ;
-            newFileDir = _C->DIRFILE;
-            newFileDir.append(pFileName);
-
-            for(int i = _C->ZE_ROW ; i < registryData.getLenght();i++){
-                cout << RF->getColumnName(&newFileDir , &i)<< registryData[i] << endl;
-            }
+            columnData = RF->readRegistry(pFileName , pRow);
 
         //If the row is 0 then the user means to read a whole column
         }else if(pRow == _C->ZE_ROW){
@@ -71,16 +74,8 @@ void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
             newFileDir = _C->DIRFILE;
             newFileDir.append(pFileName);
 
-            array<char*> columnData =
-                    RF->readColumn(pFileName ,
-                                   RF->getColumnName(&newFileDir , &pColumn));
-
-            for(int i = _C->ZE_ROW ; i < columnData.getLenght();i++){
-                cout << RF->getColumnName(&newFileDir , &i);
-                cout << columnData[i] << endl;
-            }
-        }else if (pRow < _C->ZE_ROW ||pColumn <_C->ZE_ROW){
-            cout << "Invalid values." << endl;
+            columnData = RF->readColumn(pFileName, RF->getColumnName(&newFileDir,
+                                                                     &pColumn));
         }else{
             string field = RF->readField(pFileName, pRow, pColumn);
             cout << "Data inside field: " << field << endl;
@@ -88,33 +83,41 @@ void FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
     }else{
         cout << _C->NO_EXISTANT_FILE << endl;
     }
+    return columnData;
 }
 
-void FSQLServerFileSystem::backUpFile (string pFileName){
+bool FSQLServerFileSystem::backUpFile (string pFileName){
     if (fileExists(pFileName)){
         WF->backUpFile(pFileName);
     }else{
-        cout << _C->NO_EXISTANT_FILE << endl;
+        //cout << _C->NO_EXISTANT_FILE << endl;
+        return false;
     }
+    return true;
 }
 
-void FSQLServerFileSystem::restoreFile(string pFileName){
+bool FSQLServerFileSystem::restoreFile(string pFileName){
     string backUp= "backup";
     backUp.append(pFileName);
     if (fileExists(backUp)){
          WF->restoreFile(pFileName);
     }else{
-        cout << _C->NO_EXISTANT_FILE << endl;
+        //cout << _C->NO_EXISTANT_FILE << endl;
+        return false;
     }
-
+    return true;
 }
 
 bool FSQLServerFileSystem::fileExists(string pFile){
     string newFileDir ;
+    fstream file;
+    bool op;
     newFileDir = _C->DIRFILE;
     newFileDir.append(pFile);
-    fstream file;
     file.open(newFileDir.c_str());
-    if (!file.is_open()) cout << _C->NO_EXISTANT_FILE << endl;
-    return file.is_open();
+    if (!file.is_open())
+        //cout << _C->NO_EXISTANT_FILE << endl;
+    op = file.is_open();
+    file.close();
+    return op;
 }
