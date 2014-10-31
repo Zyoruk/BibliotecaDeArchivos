@@ -1,6 +1,6 @@
 #ifndef SIMPLELISTNODE_H
 #define SIMPLELISTNODE_H
-#include "src/dataStructures/interfaceNode.h"
+#include "interfaces/interfaceNode.h"
 /*!
  * \brief The SimpleListNode class. A simple list node is the corresponding node to the data structure
  * "simple linked list".
