@@ -90,7 +90,7 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
  * @param columnPos is where to append it.
  */
 bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
-                              array<int>* columnPos){
+                              array<char*>* pColumnNam){
 
     int currSeek = file.tellg();
     string standardDir = createNewFile(pFileName);
@@ -102,25 +102,36 @@ bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
         return false;
     }
 
-    file.seekg(0);
+    file.seekg(K->ZE_ROW);
 
-    array<int> tempCPosArr = *columnPos;
-    array<char*> tempCDataArr = *pColumnData;
-
-    string registerToWrite = "";
     int spacesToMove;
-    string Cdata;
     int Csize;
+    int lon = pColumnNam->getLenght();
 
-    //Get each data and fill the blanks.
+    array<char*> tempCDataArr = *pColumnData;
+    array<char*> tempNames = *pColumnNam;
+    array<int> ColumnPos (lon);
+
+    string registerToWrite = K->EMPTY_STRING;
+    string Cdata;
+
+    const char* charT ;
+
+    for (int i = K->ZE_ROW ; i < lon ; i++){
+        charT  = tempNames[i];
+        string strToAdd(charT);
+        ColumnPos[i] = getColumnNumber(&pFileName, &strToAdd);
+    }
+
+    //Get the register and fill the blanks.
     fillString (&registerToWrite , getRegisterSize());
 
-    for (int i = 0 ; i < tempCPosArr.getLenght() ; i++){
+    for (int i = 0 ; i < ColumnPos.getLenght() ; i++){
         Cdata  = tempCDataArr[i];
         checkString(&Cdata);
-        Csize = columnSize(tempCPosArr[i]);
+        Csize = columnSize(ColumnPos[i]);
         //Not sure
-        spacesToMove = sizeUntilColumn(tempCPosArr[i]);
+        spacesToMove = sizeUntilColumn(ColumnPos[i]);
         fillString(&Cdata ,Csize);
         registerToWrite.replace(spacesToMove , Csize , Cdata.c_str());
     }
@@ -146,7 +157,6 @@ bool writefile::updateField(string newData, string pFile , int pRow , int pColum
     int sizeToColumn;
     int cSize;
     bool bowl = true;
-
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
@@ -161,6 +171,7 @@ bool writefile::updateField(string newData, string pFile , int pRow , int pColum
 
     placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
     fillString(&newData,cSize);
+
 
     if (file.is_open()){
         file << newData;
@@ -182,6 +193,7 @@ bool writefile::updateField(string newData, string pFile , int pRow , int pColum
  * @param pCName
  */
 bool writefile::updateColumn(string newData,string pToCompare, string pFile, string pCName){
+
     int currSeek = file.tellg();
     int sizeToColumn;
     int cSize;
@@ -221,6 +233,8 @@ bool writefile::updateColumn(string newData,string pToCompare, string pFile, str
         //Compare data.
         if (currentData == pToCompare){
             updateField(newData, pFile , rowCounter , Column);
+        }else{
+            currentData = K->EMPTY_STRING;
         }
     }
 
@@ -252,7 +266,6 @@ void writefile::backUpFile(string fileTobackUp){
     pathFileToBackUp.append("Columns");
     pathbackUpFile.append("Columns");
 
-    cout << pathbackUpFile << " " << pathFileToBackUp;
     ofstream newfile2 (pathbackUpFile.c_str() , ios::trunc);
     newfile2.close();
 
@@ -273,7 +286,7 @@ void writefile::restoreFile(string fileToRestore){
     string backUp= "backup";
     backUp.append(fileToRestore);
 
-    string pathFileToRestore = createNewFile(backUp);
+    string pathFileToRestore = createNewBackUp(backUp);
     string pathRestoredFile = createNewFile(fileToRestore);
 
     ofstream newfile (pathRestoredFile.c_str() , ios::trunc);
@@ -305,38 +318,37 @@ void writefile::restoreFile(string fileToRestore){
 
 bool writefile::deleteRegister(string pFile, string pCName, string newData){
     int currSeek = file.tellg();
-    int sizeToColumn;
-    int Column = getColumnNumber(&standardDir , &pCName );
-    int cSize = columnSize();
+    int Column;
+    int cSize;
     string standardDir;
     bool bowl = true;
 
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        string fileH = pFile;
-        standardDir = createNewFile(fileH.c_str());
+        standardDir = createNewFile(pFile.c_str());
         file.open(standardDir.c_str());
     }
 
     if ( !(file.is_open()) ){
         cout << "NED " + pFile << endl;
-        bowl = false;
+        return false;
     }
 
+    Column = getColumnNumber(&standardDir , &pCName );
+    cSize = getRegisterSize();
     int regQty = getRegisterQuantity();
     string voidField = K->EMPTY_STRING;
+    int sizeToColumn = sizeUntilColumn(Column);
 
     fillString(&voidField,cSize);
-
+    cout << voidField.length() <<endl;
     for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
 
-        //Move the seek to the column and register.
-        placeSeekOn( &rowCounter , &Column, &sizeToColumn, &cSize);
-
         //Compare data.
-        if (reafField() == newData){
+        if (readField(pFile , rowCounter , Column) == newData){
+            placeSeekOn(&rowCounter , &Column, &sizeToColumn, &cSize);
             if (file.is_open()){
-                file << newData;
+                file << voidField;
             } else {
                 bowl = false;
             }

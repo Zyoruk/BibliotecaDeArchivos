@@ -2,18 +2,18 @@
 #define WRITEFILE_H
 #include <string.h>
 #include "array/array.h"
-#include "usefile.h"
+#include "readfile.h"
 
 using namespace std;
 
-class writefile : protected useFile
+class writefile : protected readfile
 {
 public:
     writefile();
     void createTable(int* registerSize, array<int>* columnSizes ,
                      array<char*>* columnNames , string* pFile);
     bool writeRegister(string pFileName, array<char*>* pColumnData ,
-                       array<int>* columnPos);
+                       array<char*>* columnNam);
     bool updateField(string newData, string pFile , int pRow , int pColumn);
     bool updateColumn(string newData,string pToCompare, string pFile,
                       string pCName);
@@ -23,7 +23,6 @@ public:
 
 private:
     void writeColumnNames(string* fileName, array<char*>* columnNames);
-    bool updateField(string newData);
     //string charCallocToString(char* pCharCalloc);
 };
 

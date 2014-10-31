@@ -27,20 +27,23 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                     //cout << " No monkeys allowed"<< endl;
                     op = false;
             }
-        }
+        }else{
+            WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
+                           pFile);
+    }
     return op;
 }
 
 bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
                                               array<char*>* pWhatToWrite,
-                                              array<int>* pColumnPos){
+                                              array<char*>* pColumnNam){
+
     if (fileExists(pFileName)){
-        WF->writeRegister(pFileName, pWhatToWrite , pColumnPos);
+       bool toReturn =  WF->writeRegister(pFileName, pWhatToWrite , pColumnNam);
+       return toReturn;
     }else{
         return false;
-        //cout << _C->NO_EXISTANT_FILE;
     }
-    return true;
 }
 
 bool FSQLServerFileSystem::removeFile(string pFileName){
@@ -50,7 +53,6 @@ bool FSQLServerFileSystem::removeFile(string pFileName){
         newFileDir.append(pFileName);
         remove(newFileDir.c_str());
     }else{
-        //cout << _C->NO_EXISTANT_FILE;
         return false;
     }
     return true;
@@ -70,7 +72,6 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
         //If column is zero then the user means to read a whole registry
         if(pColumn == _C->ZE_ROW){
             columnData = RF->readRegistry(pFileName , pRow);
-
         //If the row is 0 then the user means to read a whole column
         }else if(pRow == _C->ZE_ROW){
 
@@ -93,23 +94,41 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
 bool FSQLServerFileSystem::backUpFile (string pFileName){
     if (fileExists(pFileName)){
         WF->backUpFile(pFileName);
+        if (backupExists(pFileName)){
+            return true;
+        }else{
+            return false;
+        }
     }else{
-        //cout << _C->NO_EXISTANT_FILE << endl;
         return false;
     }
-    return true;
 }
 
 bool FSQLServerFileSystem::restoreFile(string pFileName){
     string backUp= "backup";
     backUp.append(pFileName);
-    if (fileExists(backUp)){
+    if (backupExists(backUp)){
          WF->restoreFile(pFileName);
+         if (fileExists(pFileName)){
+             return true;
+         }else{
+             return false;
+         }
     }else{
         //cout << _C->NO_EXISTANT_FILE << endl;
         return false;
     }
-    return true;
+}
+bool FSQLServerFileSystem::backupExists(string pBackUp){
+    string newFileDir ;
+    fstream file;
+    newFileDir = _C->BACK_UPS_DIR;
+    newFileDir.append(pBackUp);
+    file.open(newFileDir.c_str());
+    bool op = file.is_open();
+    file.close();
+
+    return op;
 }
 
 bool FSQLServerFileSystem::fileExists(string pFile){
@@ -121,4 +140,31 @@ bool FSQLServerFileSystem::fileExists(string pFile){
     bool op = file.is_open();
     file.close();
     return op;
+}
+
+bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, int pColumn){
+    if (fileExists(pFileName)){
+        bool toReturn = WF->updateField(pData , pFileName , pRow , pColumn);
+        return toReturn;
+    }else{
+        return false;
+    }
+}
+
+bool FSQLServerFileSystem::deleteData(string pFileName, string pColumnName, string pData){
+    if (fileExists(pFileName)){
+        bool toReturn = WF->deleteRegister(pFileName , pColumnName , pData);
+        return toReturn;
+    }else{
+        return false;
+    }
+}
+
+bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare, string pFile, string pCName){
+    if (fileExists(pFile)){
+        bool toReturn = WF->updateColumn(newData,pToCompare,pFile,pCName);
+        return toReturn;
+    }else{
+        return false;
+    }
 }

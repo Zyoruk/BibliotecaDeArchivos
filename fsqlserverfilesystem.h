@@ -15,11 +15,16 @@ public:
     bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
                        array<char*>* pColumnNames, string* pFile);
     bool writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
-                            array<int>* columnPos);
+                            array<char*>* pColumnNam);
     bool removeFile(string pFileName);
+    bool update (string pData , string pFileName,  int pRow, int pColumn);
     array<char*> readFromFile(string pFileName , int pColumn, int pRow);
     bool backUpFile (string pFileName);
     bool restoreFile(string pFileName);
+    bool deleteData ( string pFilename , string pColumnName , string pData);
+    bool backupExists(string pBackUp);
+    bool updateColumn(string newData,string pToCompare, string pFile, string pCName);
+
 private:
 //    array<char*> _FilesMetaData;
     bool fileExists(string pFile);

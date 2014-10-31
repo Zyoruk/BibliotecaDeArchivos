@@ -15,16 +15,8 @@
 
 using namespace std;
 
-konstants* K;
-readfile* RD;
-writefile* WR;
-
-void setup(){
-    K = new konstants();
-    RD = new readfile();
-    WR = new writefile();
-}
-
+FSQLServerFileSystem* filesystem = new FSQLServerFileSystem();
+konstants* K ;
 void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
     cout << "\n";
@@ -43,7 +35,7 @@ void test0(){
     cNames[3] = "Telefono";
     cNames[4] = "Sexo";
     string file ="Test9";
-    WR->createTable(&regSize ,&columnSais, &cNames ,&file);
+    filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file);
 }
 
 void test1(){
@@ -60,49 +52,51 @@ void test1(){
     cData[0] = s2;
     cData[1] = s3;
 
-    array<int> cPos(2);
-    cPos[0] = 1;
-    cPos[1] = 2;
+    array<char*> cPos(2);
+    cPos[0] = "Nombre";
+    cPos[1] = "Apellido";
 
-    WR->writeRegister(fileName, &cData, &cPos);
-    WR->writeRegister(fileName, &cData, &cPos);
-    WR->writeRegister(fileName, &cData, &cPos);
+    filesystem->writeNewLineToFile(fileName , &cData, &cPos);
+    filesystem->writeNewLineToFile(fileName , &cData, &cPos);
+//    filesystem->writeNewLineToFile(fileName , &cData, &cPos);
 }
 
 void test2(){
     string fileName = "Test9";
-    string field = RD->readField(fileName.c_str(),1 ,1);
-    cout << field;
+    array<char*> field = filesystem->readFromFile(fileName , 1 , 1);
+    for (int i = 0 ; i < field.getLenght() ; i++){
+        cout << field[i] << " ";
+    }
 }
 
 void test3(){
-    WR->updateField("Daniel", "Test9" , 1 , 1);
-    WR->updateField("Jenkins", "Test9" , 1 , 2);
+    filesystem->update("Daniel", "Test9" , 1 , 1);
+    filesystem->update("Jenkins", "Test9" , 1 , 2);;
+    filesystem->update("Josafat", "Test9" , 3 , 1);
+    filesystem->update("Vargas","Test9" , 3 , 2);
 }
 
 void test4(){
-    array<char*> test4 = RD->readRegistry("Test9" , 1);
+    array<char*> test4 =filesystem->readFromFile("Test9" , 0 , 1);
     for (int i = 0 ; i < test4.getLenght();i++){
         cout << test4[i] <<endl;
     }
 }
 
 void test5(){
-    WR->updateColumn("Simon_Barrantes" ,"Angel","Test9","Apellido");
+    filesystem->updateColumn("Masculino","","Test9","Sexo");
 }
 
 void test6(){
-    array<char*> arrTmp = RD->readColumn("Test9" , "Apellido");
+    array<char*> arrTmp = filesystem->readFromFile("Test9" , 2 , 0);
     for (int i = K->ZE_ROW ; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
 }
 
 void test7(){
-    FSQLServerFileSystem* filesystem = new FSQLServerFileSystem();
     filesystem->backUpFile("Test9");
 }
 
 void test8(){
-    FSQLServerFileSystem* filesystem = new FSQLServerFileSystem();
     filesystem->restoreFile("Test9");
 }
 
@@ -119,13 +113,16 @@ void test9 (int pColumnSize){
 }
 
 void test10(string pWhatToWrite){
-//    char* tuGruait = (char*) calloc ()
+//    char* turrait = (char*) calloc ()
+}
+
+void test11(){
+    filesystem->deleteData("Test9" , "Nombre" , "Luis");
 }
 
 int main()
 {
-    setup();
-    test9(22);
+    K = new konstants();
     return 0;
 }
 

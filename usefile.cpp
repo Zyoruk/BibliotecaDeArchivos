@@ -18,14 +18,24 @@ int useFile::getColumnNumber(string* fileName ,string* columnName){
     path.append(tmp);
     int i = K->ONE_BYTE;
     int columnNumber = -2;
-    file_COL.open(path.c_str());
-    while (file_COL.tellg() != -1)
+    if (!file_COL.is_open()) {
+        file_COL.open(path.c_str());
+    }
+
+    if (!file_COL.is_open()){
+        cout << K->NO_EXISTANT_FILE ;
+        return -1;
+    }
+
+    file_COL.seekg(K->ZE_ROW);
+    while (!file_COL.eof())
     {
         getline(file_COL,COLNAME);
         if ( *columnName == COLNAME)
             columnNumber = i;
         i++;
     }
+    file_COL.close();
     //La variable de regreso es eliminada
     return columnNumber;
 }

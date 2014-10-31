@@ -24,13 +24,13 @@ string readfile::getColumnName(string* fileName ,int* columnNumber){
     string path = *fileName;
     path.append(col);
     int i = 0;
-
     string columnName = "NOT FOUND";
     file_COL.open(path.c_str());
 
     while (i != *columnNumber)
     {
         getline(file_COL, columnName);
+        i++;
         if(file_COL.eof())
             break;
     }
@@ -61,7 +61,7 @@ string readfile::readField(string pFile , int pRow , int pColumn){
         return "NED " + pFile;
     }
 
-    readfile::placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
+    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
 
     //build the stringto return
     string stringToReturn = "";
@@ -87,7 +87,7 @@ string readfile::readField(string pFile , int pRow , int pColumn){
  */
 array<char*> readfile::readColumn(string pFile , string pColumnName){
     string standardDir;
-    array <char*> errorArray (1);   //if !database, return null array
+    array <char*> errorArray (K->ONE_BYTE);   //if !database, return null array
 
     if ( !(file.is_open()) ){
         string fileH = pFile;
@@ -100,7 +100,7 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
         return errorArray;
     }
 
-    int Column = readfile::getColumnNumber(&standardDir , &pColumnName );
+    int Column = getColumnNumber(&standardDir , &pColumnName );
     int regQty = getRegisterQuantity();
     string strToConvert = K->EMPTY_STRING;
     char * toAdd;
@@ -157,7 +157,7 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
                                              string valueToConsult){
     string standardDir;
     int regs = getRegisterQuantity();
-    int colNum = getColumnNumber(&standardDir, &pColumnName);
+    int colNum;
 
     if ( !(file.is_open()) ){
         string fileH = pFile;
@@ -165,10 +165,15 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
         file.open(standardDir.c_str());
     }
 
+    colNum = getColumnNumber(&standardDir, &pColumnName);
+
     array< array<char*> > select (getRegisterQuantity());
-    for ( int i = 1 ; i <= regs ; i ++){
-        if(valueToConsult == readField(pFile,i,colNum)){
-//            select [i] = readRegistry( pFile , colNum);
+
+    for ( int i = K->ZE_ROW ; i < regs ; i ++){
+        if(valueToConsult == readField(pFile,i+1,colNum)){
+            select [i] = readRegistry( pFile , colNum);
         }
     }
+
+    return select;
 }
