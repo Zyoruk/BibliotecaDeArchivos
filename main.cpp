@@ -106,10 +106,26 @@ void test8(){
     filesystem->restoreFile("Test9");
 }
 
+void test9 (int pColumnSize){
+    fstream file("../FSQL/backups/backupTest9");
+    void * pterFile = &file;
+    char*  pterFile2 = (char*)pterFile;
+    char* alloc = (char*)calloc(pColumnSize,sizeof(char));
+           file.read(alloc,pColumnSize);
+           for (int i = 0 ; i < pColumnSize ;i++){
+
+               (cout << *(alloc + i));
+           }
+}
+
+void test10(string pWhatToWrite){
+//    char* tuGruait = (char*) calloc ()
+}
+
 int main()
 {
     setup();
-    test7();
+    test9(22);
     return 0;
 }
 

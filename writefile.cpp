@@ -299,6 +299,4 @@ void writefile::restoreFile(string fileToRestore){
 
     ifs2.close();
     ofs2.close();
-
-
 }
