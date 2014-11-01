@@ -8,6 +8,7 @@
 //#include "konstants.h"
 //#include "array/array.h"
 #include "readfile.h"
+#include "usefile.h"
 
 readfile::readfile()
 {
@@ -61,7 +62,7 @@ string readfile::readField(string pFile , int pRow , int pColumn){
         return "NED " + pFile;
     }
 
-    placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
+   placeSeekOn(&pRow , &pColumn, &sizeToColumn, &cSize);
 
     //build the stringto return
     string stringToReturn = "";
