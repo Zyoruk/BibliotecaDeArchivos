@@ -10,6 +10,7 @@ template <typename K>
 class array{
 public:
     array (int pLenght);
+    array();
     ~array();
     void insert(int pIndex , K pElement);
     void removeElementAt(int pIndex);
@@ -19,6 +20,7 @@ public:
     int getLenght();
     bool operator== (array<K>& newArray);
     array<K>& operator= (array<K>& newArray);
+    array<K> operator= (array<K> newArray);
     const K& operator[](int pIndex) const;
     K& operator[](int pIndex);
 private:
@@ -32,6 +34,14 @@ array<K>::array(int pLenght){
     //this->_arrayBuffer = new T[pLenght];
     this->_arrayBuffer = (K*)calloc(pLenght, sizeof(K));
     this->_lenght = pLenght;
+    this->_currentLenght = EMPTY;
+}
+
+template <typename K>
+array<K>::array(){
+    //this->_arrayBuffer = new T[pLenght];
+    this->_arrayBuffer = EMPTY;
+    this->_lenght = EMPTY;
     this->_currentLenght = EMPTY;
 }
 
@@ -111,6 +121,15 @@ const K& array<K>::operator[](int pIndex) const{
 //Method that let us replace arrays.
 template <typename K>
 array<K>& array<K>::operator= (array<K>& newArray){
+    //if (this->_arrayBuffer != NULL) delete[] this->_arrayBuffer;
+    if (this->_arrayBuffer != NULL) free(_arrayBuffer);
+    this->_arrayBuffer = newArray._arrayBuffer;
+    this->_lenght = newArray._lenght;
+    return *this;
+}
+
+template <typename K>
+array<K> array<K>::operator= (array<K> newArray){
     //if (this->_arrayBuffer != NULL) delete[] this->_arrayBuffer;
     if (this->_arrayBuffer != NULL) free(_arrayBuffer);
     this->_arrayBuffer = newArray._arrayBuffer;
