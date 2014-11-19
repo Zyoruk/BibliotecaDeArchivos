@@ -120,6 +120,10 @@ void test11(){
     filesystem->deleteData("Test9" , "Nombre" , "Luis");
 }
 
+void test12(){
+
+}
+
 int main()
 {
     K = new konstants();

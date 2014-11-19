@@ -98,7 +98,7 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
     int registerSize = 0;
     array<int> tempArr = *columnSizes;
     for (int i = 0 ; i < tempArr.getLenght() ; i++){
-        registerSize += columnSizes[i];
+        registerSize += tempArr[i];
     }
 
     string theFileName = createNewFile(*pFile);
@@ -112,12 +112,12 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
         cout << "****Database could not be created***" << endl;
 
     //Register size valideichion.
-    if(*registerSize >= K->MAX_REGISTER_SIZE)
+    if(registerSize >= K->MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
         database << K->TRIPLE_NULL;
-        add = toChar(*registerSize);
+        add = toChar(registerSize);
         checkSize(&add, K->DEFAULT_REGISTER_SIZE);
         database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
     }
