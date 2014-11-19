@@ -1,4 +1,5 @@
 #include "tcpserver.h"
+#include "konstants.h"
 
 TCPServer::TCPServer()
 {
@@ -72,7 +73,8 @@ void TCPServer::receive(int* portno)
 
 
      // This send() function sends the 13 bytes of the string to the new socket
-     send(newsockfd, "Hello, world!\n", 13, 0);
+     send(newsockfd, SERVER_INSTANCE, sizeof(SERVER_INSTANCE), 0);
+     static const char SERVER_INSTANCE = '1';
 
      bzero(buffer,256);
 

@@ -122,11 +122,7 @@ void test11(){
 }
 
 void test12(){
-<<<<<<< HEAD
-
-=======
     permissionsLayer pL = permissionsLayer();
->>>>>>> e290c7afe4ebd371452c95fd7feae5513a83cb1b
 }
 
 int main()

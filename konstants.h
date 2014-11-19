@@ -4,10 +4,6 @@
 
 using namespace std;
 
-class konstants
-{
-public:
-    konstants();
     const string NO_EXISTANT_FILE = "NEF";
     const string NO_EXISTANT_DALTA = "NED";
     const string INVALID_VALUES = "IV";
@@ -33,6 +29,6 @@ public:
     static const char SINGLE_NULL = '0';
     static const char _Y_ = 'Y';
     static const char _N_ = 'N';
-};
+    static const char SERVER_INSTANCE = '1';
 
 #endif // KONSTANTS_H
