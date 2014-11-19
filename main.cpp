@@ -128,6 +128,7 @@ void test12(){
 int main()
 {
     K = new konstants();
+    test0;
     return 0;
 }
 
