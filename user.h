@@ -6,16 +6,16 @@ class user
 {
 public:
     user();
-    bool CanWrite(char* pFileName);
-    bool CanRead(char* pFileName);
-    char* getUsername();
-    void setUserName(char* pNewName);
-    void addToWrite(char* pFileName);
-    void addToRead(char* pFileName);
+    bool CanWrite(string pFileName);
+    bool CanRead(string pFileName);
+    string getUsername();
+    void setUserName(string pNewName);
+    void addToWrite(string pFileName);
+    void addToRead(string pFileName);
 
 private:
     bool _admin;
-    char* _userName;
+    string _userName;
     SimpleList<char*>* _ReadOnlyDBS;
     SimpleList<char*>* _WriteDBS;
 };

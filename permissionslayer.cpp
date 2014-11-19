@@ -47,10 +47,12 @@ user permissionsLayer::loadUser(string pUserName){
         cout << INVALID_USERNAME;
     }
     user tempUser ;
+    tempUser.setUserName(pUserName);
+//    tempUser.addToRead();
 }
 
 bool permissionsLayer::createUser(string pUserName , string pPass){
-    if (!checkUser(pUserName, pPass)){
+    if (!checkUser(pUserName)){
         //create file with pass
         string path = createNewUser(pUserName);
         ofstream whatever(path.c_str() , ios::trunc);

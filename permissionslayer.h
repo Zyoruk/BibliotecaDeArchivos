@@ -7,7 +7,7 @@ class permissionsLayer: public FSQLServerFileSystem
 {
 public:
     permissionsLayer();
-    bool checkUser(string pUserName , string pPass);
+    bool checkUser(string pUserName);
     user loadUser(string pUserName);
     bool createUser(string pUserName , string pPass);
     bool dropUser (string pUserName);

@@ -5,38 +5,39 @@ user::user()
     this->_ReadOnlyDBS = new SimpleList < char* >();
     this->_WriteDBS = new SimpleList < char* >();
     this->_admin = false;
-    this->_userName = 0;
+    this->_userName = "";
 }
 
-void user::addToRead(char *pFileName){
-    this->_ReadOnlyDBS->append(pFileName);
+void user::addToRead(string pFileName){
+    this->_ReadOnlyDBS->append(const_cast<char *>(pFileName.c_str()));
 }
 
-void user::addToWrite(char *pFileName){
-    this->_WriteDBS->append(pFileName);
+void user::addToWrite(string pFileName){
+    this->_WriteDBS->append(const_cast<char *>(pFileName.c_str()));
 }
 
-bool user::CanRead(char *pFileName){
-    if(this->_ReadOnlyDBS->ifExists(pFileName)){
+bool user::CanRead(string pFileName){
+    if(this->_ReadOnlyDBS->ifExists(const_cast<char *>(pFileName.c_str()))){
         return true;
     }else{
         return false;
     }
 }
 
-bool user::CanWrite(char *pFileName){
-    if(this->_WriteDBS->ifExists(pFileName)){
+bool user::CanWrite(string pFileName){
+    char* temp = const_cast<char *>(pFileName.c_str());
+    if(this->_WriteDBS->ifExists(temp)){
         return true;
     }else{
         return false;
     }
 }
 
-char* user::getUsername(){
+string user::getUsername(){
     return this->_userName;
 }
 
-void user::setUserName(char *pNewName){
+void user::setUserName(string pNewName){
     this->_userName = pNewName;
 }
 
