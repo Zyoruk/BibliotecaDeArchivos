@@ -1,6 +1,7 @@
 #ifndef USER_H
 #define USER_H
 #include "SimpleList.h"
+
 class user
 {
 public:
@@ -15,8 +16,8 @@ public:
 private:
     bool _admin;
     char* _userName;
-    SimpleList<char*> _ReadOnlyDBS;
-    SimpleList<char*> _WriteDBS;
+    SimpleList<char*>* _ReadOnlyDBS;
+    SimpleList<char*>* _WriteDBS;
 };
 
 #endif // USER_H

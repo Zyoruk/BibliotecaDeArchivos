@@ -1,12 +1,3 @@
-//#include <iostream>
-//#include <fstream>
-//#include <limits>
-//#include <cstdlib>
-//#include <sstream>
-//#include <stdio.h>
-//#include <string.h>
-//#include "konstants.h"
-//#include "array/array.h"
 #include "readfile.h"
 #include "usefile.h"
 
@@ -88,7 +79,7 @@ string readfile::readField(string pFile , int pRow , int pColumn){
  */
 array<char*> readfile::readColumn(string pFile , string pColumnName){
     string standardDir;
-    array <char*> errorArray (K->ONE_BYTE);   //if !database, return null array
+    array <char*> errorArray (ONE_BYTE);   //if !database, return null array
 
     if ( !(file.is_open()) ){
         string fileH = pFile;
@@ -103,15 +94,15 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
 
     int Column = getColumnNumber(&standardDir , &pColumnName );
     int regQty = getRegisterQuantity();
-    string strToConvert = K->EMPTY_STRING;
+    string strToConvert = EMPTY_STRING;
     char * toAdd;
     array <char*> arrayToReturn (regQty);
 
-    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+    for (int rowCounter = ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
         strToConvert = readField(pFile , rowCounter , Column);
         toAdd = new char[strToConvert.size()+1];
         strcpy(toAdd, strToConvert.c_str());
-        arrayToReturn[rowCounter - K->ONE_BYTE] = toAdd;
+        arrayToReturn[rowCounter - ONE_BYTE] = toAdd;
     }
     return arrayToReturn;
 }
@@ -132,18 +123,18 @@ array< char* > readfile::readRegistry(string pFile , int pRegister){
     }
 
     if ( !(file.is_open()) ){
-        cout << "NED " + pFile << endl;
+        cout << NO_EXISTANT_DATA + pFile << endl;
         return errorArray;
     }
 
     //Create an array that will contain all the columns
-    int columnQty = (getMetaDataSize() - K->METADATA_COLUMN_START)
-                    / K->DEFAULT_COLUMN_SIZE;
+    int columnQty = (getMetaDataSize() - METADATA_COLUMN_START)
+                    / DEFAULT_COLUMN_SIZE;
 
     array < char* > arrayToReturn (columnQty);
-    string tempString = K->EMPTY_STRING;
+    string tempString = EMPTY_STRING;
     char* toAdd;
-    for (int i = K->ZE_ROW; i < columnQty; i++){
+    for (int i = ZE_ROW; i < columnQty; i++){
         tempString = readField(pFile , pRegister , i+1);
         toAdd = new char[tempString.size()+1];
         strcpy(toAdd, tempString.c_str());
@@ -170,7 +161,7 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
 
     array< array<char*> > select (getRegisterQuantity());
 
-    for ( int i = K->ZE_ROW ; i < regs ; i ++){
+    for ( int i = ZE_ROW ; i < regs ; i ++){
         if(valueToConsult == readField(pFile,i+1,colNum)){
             select [i] = readRegistry( pFile , colNum);
         }

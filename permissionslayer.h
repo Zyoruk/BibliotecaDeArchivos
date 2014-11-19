@@ -7,12 +7,14 @@ class permissionsLayer: public FSQLServerFileSystem
 {
 public:
     permissionsLayer();
-    bool checkUser(char* pUserName , char* pPass);
-    user loadUser(char* pUserName);
-    bool createUser(char* pUserName , char* pPass);
-    bool dropUser (char* pUserName);
-    bool grantPermission(char* pUserName , char* pNewPermission, char* pFile);
-    bool revokePermission(char* pUserName, char* pNewPermission, char* pFile);
+    bool checkUser(string pUserName , string pPass);
+    user loadUser(string pUserName);
+    bool createUser(string pUserName , string pPass);
+    bool dropUser (string pUserName);
+    bool grantPermission(string pUserName , string pNewPermission, string pFile);
+    bool revokePermission(string pUserName, string pNewPermission, string pFile);
+private:
+    string createNewUser(string pNewUser);
 };
 
 #endif // PERMISSIONSLAYER_H

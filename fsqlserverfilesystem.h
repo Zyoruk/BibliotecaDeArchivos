@@ -1,7 +1,7 @@
 #ifndef FSQLSERVERFILESYSTEM_H
 #define FSQLSERVERFILESYSTEM_H
 #include "array/array.h"
-#include "konstants.h"
+//#include "konstants.h"
 #include "readfile.h"
 #include "writefile.h"
 #include <string.h>
@@ -115,7 +115,6 @@ public:
 private:
 //    array<char*> _FilesMetaData;
     bool fileExists(string pFile);
-    konstants* _C;
     readfile* RF;
     writefile* WF;
 };

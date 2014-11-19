@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "konstants.h"
+
 using namespace std;
 
 class useFile
@@ -15,7 +16,6 @@ class useFile
 protected:
     useFile();
 
-    konstants* K;
     fstream file;
     fstream file_COL;
 

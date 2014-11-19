@@ -13,7 +13,7 @@ public:
     virtual ~interfaceNode();
     virtual K* getElement();
     virtual void setElement(K* pElement);
-private:
+protected:
     K _data;
 };
 template <typename K>

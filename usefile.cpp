@@ -2,7 +2,6 @@
 
 useFile::useFile()
 {
-    K  = new konstants();
 }
 
 /**
@@ -16,18 +15,18 @@ int useFile::getColumnNumber(string* fileName ,string* columnName){
     string path = *fileName;
     string COLNAME;
     path.append(tmp);
-    int i = K->ONE_BYTE;
+    int i = ONE_BYTE;
     int columnNumber = -2;
     if (!file_COL.is_open()) {
         file_COL.open(path.c_str());
     }
 
     if (!file_COL.is_open()){
-        cout << K->NO_EXISTANT_FILE ;
+        cout << NO_EXISTANT_FILE ;
         return -1;
     }
 
-    file_COL.seekg(K->ZE_ROW);
+    file_COL.seekg(ZE_ROW);
     while (!file_COL.eof())
     {
         getline(file_COL,COLNAME);
@@ -54,7 +53,7 @@ void useFile::checkSize(string* add, int count){
         if((unsigned)(tmp.length() + add->length()) == (unsigned) count){
             break;
         }
-        tmp.push_back(K->SINGLE_NULL);
+        tmp.push_back(SINGLE_NULL);
     }
     tmp.append(*add);
     *add = tmp;
@@ -73,14 +72,14 @@ string useFile::intToChar(int metadata){
 
 string useFile::createNewFile(string newFileName){
     string newFileDir ;
-    newFileDir = K->DIRFILE;
+    newFileDir = DIRFILE;
     newFileDir.append(newFileName);
     return newFileDir;
 }
 
 string useFile::createNewBackUp(string newFileName){
     string newFileDir ;
-    newFileDir = K->BACK_UPS_DIR;
+    newFileDir = BACK_UPS_DIR;
     newFileDir.append(newFileName);
     return newFileDir;
 }
@@ -95,7 +94,7 @@ int useFile::stringToInt(string* pStr){
 //string useFile::charCallocToString(char* pCharCalloc){
 //    string stringToReturn ;
 //    stringToReturn = "";
-//    for (int i = 0; i <= K->DEFAULT_COLUMN_SIZE ; i++){
+//    for (int i = 0; i <= DEFAULT_COLUMN_SIZE ; i++){
 //        stringToReturn.append(((const char*)(pCharCalloc + i)));
 //    }
 //    return stringToReturn;
@@ -103,10 +102,10 @@ int useFile::stringToInt(string* pStr){
 
 int useFile::getRegisterSize(){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW);
-    file.seekg(K->DEFAULT_COLUMN_SIZE);
+    file.seekg(ZE_ROW);
+    file.seekg(DEFAULT_COLUMN_SIZE);
     string regSizeString = "";
-    for (int i  = 0 ; i < K->DEFAULT_REGISTER_SIZE;i++){
+    for (int i  = 0 ; i < DEFAULT_REGISTER_SIZE;i++){
         regSizeString.push_back(file.get());
     }
     int regSize;
@@ -117,9 +116,9 @@ int useFile::getRegisterSize(){
 
 int useFile::getMetaDataSize(){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW);
+    file.seekg(ZE_ROW);
     string MDSizeString = "";
-    for (int i  = 0 ; i < K->METADATA_SIZE;i++){
+    for (int i  = 0 ; i < METADATA_SIZE;i++){
         MDSizeString.push_back(file.get());
     }
     int MDSizeInt  = stringToInt(&MDSizeString);
@@ -129,7 +128,7 @@ int useFile::getMetaDataSize(){
 
 int useFile::getRegisterQuantity(){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW, ios::end);
+    file.seekg(ZE_ROW, ios::end);
     int fileSize = file.tellg();
     int registerSize = getRegisterSize();
     int regQty ;
@@ -140,15 +139,15 @@ int useFile::getRegisterQuantity(){
 
 int useFile::columnSize(int pColumnInt){
     int currSeek = file.tellg();
-    file.seekg(K->ZE_ROW);
+    file.seekg(ZE_ROW);
 
     //Move the seek to the beginning of the column.
-    int whereToMove = K->METADATA_COLUMN_START+
-                      (pColumnInt * K->DEFAULT_COLUMN_SIZE);
+    int whereToMove = METADATA_COLUMN_START+
+                      (pColumnInt * DEFAULT_COLUMN_SIZE);
     file.seekg(whereToMove);
-    string cSize = K->EMPTY_STRING;
+    string cSize = EMPTY_STRING;
     // build the string;
-    for (int i = whereToMove; i < (whereToMove + K->DEFAULT_COLUMN_SIZE) ; i++){
+    for (int i = whereToMove; i < (whereToMove + DEFAULT_COLUMN_SIZE) ; i++){
         cSize.push_back(file.get());
     }
 
@@ -164,8 +163,8 @@ int useFile::columnSize(int pColumnInt){
  * \return
  */
 int useFile::sizeUntilColumn(int pColumn){
-    int sizeToReturn = K->ZE_ROW;
-    for (int i = K->ZE_ROW; i < pColumn -1 ; i++){
+    int sizeToReturn = ZE_ROW;
+    for (int i = ZE_ROW; i < pColumn -1 ; i++){
         sizeToReturn += columnSize(i);
     }
     return sizeToReturn;
@@ -178,14 +177,14 @@ int useFile::sizeUntilColumn(int pColumn){
  */
 void useFile::fillString(string* pData, int pSize){
     while ( (unsigned) pData->length() < (unsigned) pSize){
-        pData->push_back(K->NULL_CHAR);
+        pData->push_back(NULL_CHAR);
     }
 }
 
 void useFile::checkString(string* pStringToCheck){
     char* tempString = new char[(*pStringToCheck).size()+1];
     strcpy(tempString, (*pStringToCheck).c_str());
-    for (int i = K->ZE_ROW ; (unsigned) i < (unsigned) pStringToCheck->length(); i++){
+    for (int i = ZE_ROW ; (unsigned) i < (unsigned) pStringToCheck->length(); i++){
         if (tempString[i] == ' ' ){
             tempString[i] = '_';
         }

@@ -5,19 +5,13 @@
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
-#include "konstants.h"
-#include "array/array.h"
-#include "writefile.h"
-#include "readfile.h"
 #include "fsqlserverfilesystem.h"
 #include "permissionslayer.h"
-
 //#define STR(x) #x << '=' << x
 
 using namespace std;
 
 FSQLServerFileSystem* filesystem = new FSQLServerFileSystem();
-konstants* K ;
 void test0(){
     cout << "*** Bienvenido a FSQL Server ***" << endl;
     cout << "\n";
@@ -90,7 +84,7 @@ void test5(){
 
 void test6(){
     array<char*> arrTmp = filesystem->readFromFile("Test9" , 2 , 0);
-    for (int i = K->ZE_ROW ; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
+    for (int i = 0; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
 }
 
 void test7(){
@@ -127,7 +121,6 @@ void test12(){
 
 int main()
 {
-    K = new konstants();
     test0;
     return 0;
 }

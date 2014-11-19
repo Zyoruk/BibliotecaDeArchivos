@@ -47,14 +47,14 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
         cout << "****Database could not be created***" << endl;
 
     //Register size valideichion.
-    if(*registerSize >= K->MAX_REGISTER_SIZE)
+    if(*registerSize >= MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
-        database << K->TRIPLE_NULL;
+        database << TRIPLE_NULL;
         add = toChar(*registerSize);
-        checkSize(&add, K->DEFAULT_REGISTER_SIZE);
-        database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
+        checkSize(&add, DEFAULT_REGISTER_SIZE);
+        database.write(add.c_str() , DEFAULT_REGISTER_SIZE);
     }
 
     //set column sizes on file
@@ -63,8 +63,8 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
     {
         int integerElem = tempArr[i];
         add = toChar(integerElem);
-        checkSize(&add,K->DEFAULT_COLUMN_SIZE);
-        database.write(add.c_str() , K->DEFAULT_COLUMN_SIZE);
+        checkSize(&add, DEFAULT_COLUMN_SIZE);
+        database.write(add.c_str() , DEFAULT_COLUMN_SIZE);
     }
 
     //sets seek on the end, gets the address then turns it to char
@@ -72,8 +72,8 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
     database.seekp(offset, ios::end);
     int meta = database.tellp();
     string metadata = intToChar(meta);
-    checkSize(&metadata, K->METADATA_SIZE);
-    database.seekp(K->ZE_ROW);
+    checkSize(&metadata, METADATA_SIZE);
+    database.seekp(ZE_ROW);
     if (metadata.length() <= 3){
         const char *p = metadata.c_str();
         while (*p != '\0')
@@ -81,7 +81,7 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
     }else{
         cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
-    database.seekp(K->ZE_ROW , ios::end);
+    database.seekp(ZE_ROW , ios::end);
     database.close();
 }
 
@@ -95,10 +95,10 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
 
     int offset = 0;
     string add;
-    int registerSize = 0;
+    int* registerSize = 0;
     array<int> tempArr = *columnSizes;
     for (int i = 0 ; i < tempArr.getLenght() ; i++){
-        registerSize += columnSizes[i];
+        registerSize += tempArr[i];
     }
 
     string theFileName = createNewFile(*pFile);
@@ -112,14 +112,14 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
         cout << "****Database could not be created***" << endl;
 
     //Register size valideichion.
-    if(*registerSize >= K->MAX_REGISTER_SIZE)
+    if(*registerSize >= MAX_REGISTER_SIZE)
         cout << "Error: Register size beyond max size" << endl;
     else
     {
-        database << K->TRIPLE_NULL;
+        database << TRIPLE_NULL;
         add = toChar(*registerSize);
-        checkSize(&add, K->DEFAULT_REGISTER_SIZE);
-        database.write(add.c_str() , K->DEFAULT_REGISTER_SIZE);
+        checkSize(&add, DEFAULT_REGISTER_SIZE);
+        database.write(add.c_str() , DEFAULT_REGISTER_SIZE);
     }
 
     //set column sizes on file
@@ -127,8 +127,8 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
     {
         int integerElem = tempArr[i];
         add = toChar(integerElem);
-        checkSize(&add,K->DEFAULT_COLUMN_SIZE);
-        database.write(add.c_str() , K->DEFAULT_COLUMN_SIZE);
+        checkSize(&add,DEFAULT_COLUMN_SIZE);
+        database.write(add.c_str() , DEFAULT_COLUMN_SIZE);
     }
 
     //sets seek on the end, gets the address then turns it to char
@@ -136,8 +136,8 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
     database.seekp(offset, ios::end);
     int meta = database.tellp();
     string metadata = intToChar(meta);
-    checkSize(&metadata, K->METADATA_SIZE);
-    database.seekp(K->ZE_ROW);
+    checkSize(&metadata, METADATA_SIZE);
+    database.seekp(ZE_ROW);
     if (metadata.length() <= 3){
         const char *p = metadata.c_str();
         while (*p != '\0')
@@ -145,7 +145,7 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
     }else{
         cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
     }
-    database.seekp(K->ZE_ROW , ios::end);
+    database.seekp(ZE_ROW , ios::end);
     database.close();
 }
 
@@ -168,7 +168,7 @@ bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
         return false;
     }
 
-    file.seekg(K->ZE_ROW);
+    file.seekg(ZE_ROW);
 
     int spacesToMove;
     int Csize;
@@ -178,12 +178,12 @@ bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
     array<char*> tempNames = *pColumnNam;
     array<int> ColumnPos (lon);
 
-    string registerToWrite = K->EMPTY_STRING;
+    string registerToWrite = EMPTY_STRING;
     string Cdata;
 
     const char* charT ;
 
-    for (int i = K->ZE_ROW ; i < lon ; i++){
+    for (int i = ZE_ROW ; i < lon ; i++){
         charT  = tempNames[i];
         string strToAdd(charT);
         ColumnPos[i] = getColumnNumber(&pFileName, &strToAdd);
@@ -203,7 +203,7 @@ bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
     }
 
     if (file.is_open()){
-        file.seekg(K->ZE_ROW , ios::end);
+        file.seekg(ZE_ROW , ios::end);
         file << registerToWrite;
     }
     file.seekg(currSeek);
@@ -280,9 +280,9 @@ bool writefile::updateColumn(string newData,string pToCompare, string pFile, str
 
     int Column = getColumnNumber(&standardDir , &pCName );
     int regQty = getRegisterQuantity();
-    string currentData = K->EMPTY_STRING;
+    string currentData = EMPTY_STRING;
 
-    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+    for (int rowCounter = ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
 
         //Move the seek to the column and register.
         placeSeekOn( &rowCounter , &Column, &sizeToColumn, &cSize);
@@ -300,7 +300,7 @@ bool writefile::updateColumn(string newData,string pToCompare, string pFile, str
         if (currentData == pToCompare){
             updateField(newData, pFile , rowCounter , Column);
         }else{
-            currentData = K->EMPTY_STRING;
+            currentData = EMPTY_STRING;
         }
     }
 
@@ -414,12 +414,12 @@ bool writefile::deleteRegister(string pFile, string pCName, string newData){
     Column = getColumnNumber(&standardDir , &pCName );
     cSize = getRegisterSize();
     int regQty = getRegisterQuantity();
-    string voidField = K->EMPTY_STRING;
+    string voidField = EMPTY_STRING;
     int sizeToColumn = sizeUntilColumn(Column);
 
     fillString(&voidField,cSize);
     cout << voidField.length() <<endl;
-    for (int rowCounter = K->ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
+    for (int rowCounter = ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
 
         //Compare data.
         if (readField(pFile , rowCounter , Column) == newData){

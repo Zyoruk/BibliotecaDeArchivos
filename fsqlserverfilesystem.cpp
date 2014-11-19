@@ -1,6 +1,6 @@
 #include "fsqlserverfilesystem.h"
 
-//Switch case doesn't allow the use of "_C->".
+//Switch case doesn't allow the use of "".
 const char _Y = 'Y';
 const char _N = 'N';
 
@@ -8,7 +8,6 @@ FSQLServerFileSystem::FSQLServerFileSystem()
 {
     this->RF = new readfile();
     this->WF = new writefile();
-    this->_C = new konstants();
 }
 
 bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
@@ -18,7 +17,7 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
     bool op;
     char confirm ;
     if (fileExists(*pFile)){
-            cout << _C->OVER_WRITE;
+            cout << OVER_WRITE;
             op = true;
             cin >> confirm;
             switch (confirm){
@@ -26,7 +25,7 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                     WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                                    pFile);
                 case _N:
-                    cout << _C->FILE_NOT_CREATED << endl;
+                    cout << FILE_NOT_CREATED << endl;
                     op = false;
                 default:
                     //cout << " No monkeys allowed"<< endl;
@@ -54,7 +53,7 @@ bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
 bool FSQLServerFileSystem::removeFile(string pFileName){
     if (fileExists(pFileName)){
         string newFileDir ;
-        newFileDir = _C->DIRFILE;
+        newFileDir = DIRFILE;
         newFileDir.append(pFileName);
         remove(newFileDir.c_str());
     }else{
@@ -68,32 +67,32 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
 
     array<char*> columnData;
 
-    if (pRow < _C->ZE_ROW || pColumn <_C->ZE_ROW ){
+    if (pRow < ZE_ROW || pColumn <ZE_ROW ){
         cout << " Eres un bolonio. Invalid values." << endl;
         return columnData;
     }
 
     string newFileDir ;
-    newFileDir = _C->DIRFILE;
+    newFileDir = DIRFILE;
     newFileDir.append(pFileName);
 
     if (fileExists(pFileName)){
         //If column is zero then the user means to read a whole registry
-        if(pColumn == _C->ZE_ROW){
+        if(pColumn == ZE_ROW){
             columnData = RF->readRegistry(pFileName , pRow);
         //If the row is 0 then the user means to read a whole column
-        }else if(pRow == _C->ZE_ROW){
+        }else if(pRow == ZE_ROW){
 
             array<char*> columnData =
                     RF->readColumn(pFileName ,
                                    RF->getColumnName(&newFileDir , &pColumn));
 
-            for(int i = _C->ZE_ROW ; i < columnData.getLenght();i++){
+            for(int i = ZE_ROW ; i < columnData.getLenght();i++){
                 cout << RF->getColumnName(&newFileDir , &i);
                 cout << columnData[i] << endl;
             }
-        }else if (pRow < _C->ZE_ROW ||pColumn <_C->ZE_ROW){
-            cout << _C->INVALID_VALUES << endl;
+        }else if (pRow < ZE_ROW ||pColumn <ZE_ROW){
+            cout << INVALID_VALUES << endl;
             columnData = RF->readColumn(pFileName, RF->getColumnName(&newFileDir,
                                                                      &pColumn));
         }else{
@@ -101,7 +100,7 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
             cout << field << endl;
         }
     }else{
-        cout << _C->NO_EXISTANT_FILE << endl;
+        cout << NO_EXISTANT_FILE << endl;
     }
     return columnData;
 }
@@ -120,7 +119,7 @@ bool FSQLServerFileSystem::backUpFile (string pFileName){
 }
 
 bool FSQLServerFileSystem::restoreFile(string pFileName){
-    string backUp = _C->BACKUP_STRING;
+    string backUp = BACKUP_STRING;
     backUp.append(pFileName);
     if (backupExists(backUp)){
          WF->restoreFile(pFileName);
@@ -130,14 +129,14 @@ bool FSQLServerFileSystem::restoreFile(string pFileName){
              return false;
          }
     }else{
-        //cout << _C->NO_EXISTANT_FILE << endl;
+        //cout << NO_EXISTANT_FILE << endl;
         return false;
     }
 }
 bool FSQLServerFileSystem::backupExists(string pBackUp){
     string newFileDir ;
     fstream file;
-    newFileDir = _C->BACK_UPS_DIR;
+    newFileDir = BACK_UPS_DIR;
     newFileDir.append(pBackUp);
     file.open(newFileDir.c_str());
     bool op = file.is_open();
@@ -150,11 +149,11 @@ bool FSQLServerFileSystem::fileExists(string pFile){
     string newFileDir ;
     bool isOpen;
     fstream file;
-    newFileDir = _C->DIRFILE;
+    newFileDir = DIRFILE;
     newFileDir.append(pFile);
     file.open(newFileDir.c_str());
     isOpen = file.is_open();
-    if (!isOpen) cout << _C->NO_EXISTANT_FILE << endl;
+    if (!isOpen) cout << NO_EXISTANT_FILE << endl;
     file.close();
     return isOpen;
     bool op = file.is_open();

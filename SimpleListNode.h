@@ -58,17 +58,17 @@ private:
 template <typename K>
 SimpleListNode<K>::SimpleListNode() {
     this->_next = 0;
-    this->_element = 0;
+    this->_data = 0 ;
 }
 
 template <typename K>
 SimpleListNode<K>::~SimpleListNode() {
 }
 template <typename K>
-void SimpleListNode<K>::setElement(K pElement){this->_element = pElement;}
+void SimpleListNode<K>::setElement(K pElement){this->_data = pElement;}
 
 template <typename K>
-K* SimpleListNode<K>::getElement(){return &(this->_element);}
+K* SimpleListNode<K>::getElement(){return &(this->_data);}
 
 template <typename K>
 void SimpleListNode<K>::setNext(SimpleListNode<K> *pNextNode){this->_next = pNextNode;}
