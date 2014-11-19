@@ -29,5 +29,6 @@ static const char NULL_CHAR = '*';
 static const char SINGLE_NULL = '0';
 static const char _Y_ = 'Y';
 static const char _N_ = 'N';
+static const char SERVER_INSTANCE = '1';
 
 #endif

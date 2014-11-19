@@ -116,7 +116,7 @@ void test11(){
 }
 
 void test12(){
-    permissionsLayer pL = permissionsLayer();
+    //permissionsLayer pL = permissionsLayer();
 }
 
 int main()

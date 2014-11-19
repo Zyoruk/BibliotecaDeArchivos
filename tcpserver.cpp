@@ -73,8 +73,7 @@ void TCPServer::receive(int* portno)
 
 
      // This send() function sends the 13 bytes of the string to the new socket
-     send(newsockfd, SERVER_INSTANCE, sizeof(SERVER_INSTANCE), 0);
-     static const char SERVER_INSTANCE = '1';
+     send(newsockfd, "Hello, world!\n", 13, 0);
 
      bzero(buffer,256);
 
