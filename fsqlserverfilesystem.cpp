@@ -15,38 +15,29 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          array<int>* pColumnSizes ,
                                          array<char*>* pColumnNames ,
                                          string* pFile){
+    bool op;
     char confirm ;
-<<<<<<< HEAD
-    if (checkIfFileExists(*pFile)){
-            cout << _C->OVER_WRITE;
-=======
-    bool op = true;
     if (fileExists(*pFile)){
-            cout << " Do you want to overwrite the existant file ?";
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
+            cout << _C->OVER_WRITE;
+            op = true;
             cin >> confirm;
             switch (confirm){
                 case _Y:
                     WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                                    pFile);
-<<<<<<< HEAD
                 case _N:
                     cout << _C->FILE_NOT_CREATED << endl;
-=======
-                case 'N':
-                    //cout << " File was not created."<< endl;
                     op = false;
                 default:
                     //cout << " No monkeys allowed"<< endl;
                     op = false;
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
             }
         }else{
             WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
                            pFile);
-    }
+        }
     return op;
-}
+    }
 
 bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
                                               array<char*>* pWhatToWrite,
@@ -82,6 +73,10 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
         return columnData;
     }
 
+    string newFileDir ;
+    newFileDir = _C->DIRFILE;
+    newFileDir.append(pFileName);
+
     if (fileExists(pFileName)){
         //If column is zero then the user means to read a whole registry
         if(pColumn == _C->ZE_ROW){
@@ -89,11 +84,6 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
         //If the row is 0 then the user means to read a whole column
         }else if(pRow == _C->ZE_ROW){
 
-            string newFileDir ;
-            newFileDir = _C->DIRFILE;
-            newFileDir.append(pFileName);
-
-<<<<<<< HEAD
             array<char*> columnData =
                     RF->readColumn(pFileName ,
                                    RF->getColumnName(&newFileDir , &pColumn));
@@ -104,10 +94,8 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
             }
         }else if (pRow < _C->ZE_ROW ||pColumn <_C->ZE_ROW){
             cout << _C->INVALID_VALUES << endl;
-=======
             columnData = RF->readColumn(pFileName, RF->getColumnName(&newFileDir,
                                                                      &pColumn));
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
         }else{
             string field = RF->readField(pFileName, pRow, pColumn);
             cout << field << endl;
@@ -131,13 +119,8 @@ bool FSQLServerFileSystem::backUpFile (string pFileName){
     }
 }
 
-<<<<<<< HEAD
-void FSQLServerFileSystem::restoreFile(string pFileName){
-    string backUp = _C->BACKUP_STRING;
-=======
 bool FSQLServerFileSystem::restoreFile(string pFileName){
-    string backUp= "backup";
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
+    string backUp = _C->BACKUP_STRING;
     backUp.append(pFileName);
     if (backupExists(backUp)){
          WF->restoreFile(pFileName);
@@ -165,20 +148,15 @@ bool FSQLServerFileSystem::backupExists(string pBackUp){
 
 bool FSQLServerFileSystem::fileExists(string pFile){
     string newFileDir ;
-<<<<<<< HEAD
     bool isOpen;
-=======
     fstream file;
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
     newFileDir = _C->DIRFILE;
     newFileDir.append(pFile);
     file.open(newFileDir.c_str());
-<<<<<<< HEAD
     isOpen = file.is_open();
     if (!isOpen) cout << _C->NO_EXISTANT_FILE << endl;
     file.close();
     return isOpen;
-=======
     bool op = file.is_open();
     file.close();
     return op;
@@ -209,5 +187,4 @@ bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare, string
     }else{
         return false;
     }
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
 }

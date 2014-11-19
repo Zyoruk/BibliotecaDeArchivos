@@ -12,8 +12,6 @@ public:
     const string NO_EXISTANT_DALTA = "NED";
     const string INVALID_VALUES = "IV";
     const string EMPTY_STRING = "";
-<<<<<<< HEAD
-    const string DIRFILE = "../FSQL/";
     const string TRIPLE_NULL = "000";
     const string OVER_WRITE = "Do you want to overwrite the existant file ?";
     const string FILE_NOT_CREATED = "File was not created.";
@@ -21,10 +19,9 @@ public:
 
     static const int ZE_ROW = 0;
     static const int ONE_BYTE = 1;
-=======
     const string DIRFILE = "../FSQL/databases/";
     const string BACK_UPS_DIR = "../FSQL/backups/";
->>>>>>> 79b448cbd07c58f486baadf69888cefa70e6f053
+    const string USERS_DIR = "../FSQL/users/";
     static const int DEFAULT_COLUMN_SIZE = 3;
     static const int DEFAULT_REGISTER_SIZE = 4;
     static const int REGISTER_SIZE_ADDRESS = 3;

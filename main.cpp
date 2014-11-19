@@ -10,6 +10,7 @@
 #include "writefile.h"
 #include "readfile.h"
 #include "fsqlserverfilesystem.h"
+#include "permissionslayer.h"
 
 //#define STR(x) #x << '=' << x
 
@@ -102,8 +103,8 @@ void test8(){
 
 void test9 (int pColumnSize){
     fstream file("../FSQL/backups/backupTest9");
-    void * pterFile = &file;
-    char*  pterFile2 = (char*)pterFile;
+//    void * pterFile = &file;
+//    char*  pterFile2 = (char*)pterFile;
     char* alloc = (char*)calloc(pColumnSize,sizeof(char));
            file.read(alloc,pColumnSize);
            for (int i = 0 ; i < pColumnSize ;i++){
@@ -118,6 +119,10 @@ void test10(string pWhatToWrite){
 
 void test11(){
     filesystem->deleteData("Test9" , "Nombre" , "Luis");
+}
+
+void test12(){
+    permissionsLayer pL = permissionsLayer();
 }
 
 int main()
