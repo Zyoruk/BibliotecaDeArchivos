@@ -1,13 +1,36 @@
 #include "raidmanager.h"
 
-raidManager::raidManager(bool* mode)
+raidManager::raidManager()
 {
     this->ip1 = SERVER_IP1;
     this->ip2 = SERVER_IP2;
     this->ip3 = SERVER_IP3;
     this->FS = new FSQLServerFileSystem();
     this->net = new networkAccess(mode);
+}
 
+bool raidManager::createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
+                   array<char*>* pColumnNames, string* pFile, int raidMode){
+
+    switch(raidMode){
+        case RAID0:
+            FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
+            net->client->link(PORTNO, ip1, DATAAAAAAA);
+
+
+        case RAID1:
+            FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
+            net->client->link(PORTNO, ip1, DATAAAAAAA);
+
+        case RAID10:
+            FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
+            net->client->link(PORTNO, ip1, DATAAAAAAA);
+            net->client->link(PORTNO, ip2, DATAAAAAAA);
+            net->client->link(PORTNO, ip3, DATAAAAAAA);
+
+        default:
+
+    }
 }
 
 bool raidManager::saveRegister(string* pFileName ,
@@ -17,7 +40,7 @@ bool raidManager::saveRegister(string* pFileName ,
     int raid = getRaidMode();
     char*[] location = getLatestRegistryLocation(pFileName);
 
-    if (location == " "){
+    if (location == ""){
         location = NI;
     }
 

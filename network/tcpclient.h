@@ -15,7 +15,7 @@ class TCPClient
 {
 public:
     TCPClient();
-    void link(int portno, const char* raidServ, char* buffer[]);
+    void link(int portno, const char* raidServ, char *buffer);
     void error(const char *msg);
 };
 

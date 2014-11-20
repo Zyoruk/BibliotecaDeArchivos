@@ -2,12 +2,14 @@
 #define RAIDMANAGER_H
 #include "konstants.h"
 #include "fsqlserverfilesystem.h"
-#include "networkaccess.h"
+#include "network/networkaccess.h"
 
-class raidManager : protected raidManager
+class raidManager
 {
 public:
-    raidManager(bool* mode);
+    raidManager();
+    bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
+                       array<char*>* pColumnNames, string* pFile, int raidMode);
     bool retrieveRegister(string pFileName, int pColumn, int pRow);
     bool saveRegister(string pFile, int raidMode);
     bool dataRecovery(char* database);

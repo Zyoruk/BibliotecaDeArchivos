@@ -25,6 +25,7 @@ public:
 
 private:
     void writeColumnNames(string* fileName, array<char*>* columnNames);
+    void createRaidFile(string* pFile);
     //string charCallocToString(char* pCharCalloc);
 };
 

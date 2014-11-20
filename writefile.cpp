@@ -105,6 +105,7 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
     string theFileName = createNewFile(*pFile);
     writeColumnNames(&theFileName, columnNames);
     ofstream database (theFileName.c_str() , ios::trunc);
+    createRaidFile(pFile);
 
     //check if buffer = true
     if(database.is_open())
@@ -440,4 +441,16 @@ bool writefile::deleteRegister(string pFile, string pCName, string newData){
         file.close();
     }
     return bowl;
+}
+
+void writeFile::createRaidFile(string* pFile){
+    string raid = "RaidConfig";
+    string path = DIRFILE;
+    string file = *pFile;
+    path.append(file);
+    path.append(raid);
+
+    ofstream whatever(path.c_str() , ios::trunc);
+    //cout << whatever.is_open() <<endl;'d
+    whatever.close();
 }

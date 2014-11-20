@@ -10,7 +10,7 @@ void TCPClient::error(const char *msg)
     exit(0);
 }
 
-void TCPClient::link(int portno,const char* raidServ, char* buffer[])
+void TCPClient::link(int portno,const char* raidServ, char* buffer)
 {
     int sockfd, n;
     struct sockaddr_in serv_addr;
