@@ -181,6 +181,17 @@ void useFile::fillString(string* pData, int pSize){
     }
 }
 
+/**
+ * @brief fillString creates a string with the size of a registry
+ * @param pData registry to be initialized.
+ * @param pSize size of the registry.
+ */
+void useFile::fillZString(string* pData, int pSize){
+    while ( (unsigned) pData->length() < (unsigned) pSize){
+        pData->push_back(0);
+    }
+}
+
 void useFile::checkString(string* pStringToCheck){
     char* tempString = new char[(*pStringToCheck).size()+1];
     strcpy(tempString, (*pStringToCheck).c_str());
@@ -203,4 +214,16 @@ void useFile::placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
     file.seekg(*pSizeToColumn , ios::cur);
    //Read the info
     *pCSize = columnSize(*pColumn-1);
+}
+
+int useFile::getRaidMode(){
+    int currSeek = file.tellg();
+    file.seekg(METADATA_COLUMN_START - 2);
+    string RM = "";
+    for (int i  = 0 ; i < 2 ;i++){
+        RM.push_back(file.get());
+    }
+    int RM  = stringToInt(&RM);
+    file.seekg(currSeek);
+    return RM;
 }

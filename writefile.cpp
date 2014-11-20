@@ -91,18 +91,19 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
  * @param columnSizes is the sizes for each column.
  */
 void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
-                            string* pFile){
+                            string* pFile, int* raidMode){
 
     int offset = 0;
     string add;
     int* registerSize = 0;
     array<int> tempArr = *columnSizes;
+    string raid;
     for (int i = 0 ; i < tempArr.getLenght() ; i++){
         registerSize += tempArr[i];
     }
 
     string theFileName = createNewFile(*pFile);
-    writefile::writeColumnNames(&theFileName, columnNames);
+    writeColumnNames(&theFileName, columnNames);
     ofstream database (theFileName.c_str() , ios::trunc);
 
     //check if buffer = true
@@ -120,6 +121,8 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
         add = toChar(*registerSize);
         checkSize(&add, DEFAULT_REGISTER_SIZE);
         database.write(add.c_str() , DEFAULT_REGISTER_SIZE);
+        raid = intToChar(raidMode); //pos 8 and 9 to RM.
+        database << fillZString(&raid,2);
     }
 
     //set column sizes on file
@@ -143,7 +146,7 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
         while (*p != '\0')
             database.put( *(p++) );
     }else{
-        cout << "Invalid metadata size. Yoh ! Pls kontact ur admin...\n";
+        cout << "Invalid metadata size. Yoh! Pls kontact ur admin...\n";
     }
     database.seekp(ZE_ROW , ios::end);
     database.close();

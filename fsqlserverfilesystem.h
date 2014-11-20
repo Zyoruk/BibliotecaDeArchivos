@@ -12,7 +12,7 @@ using namespace std;
  * \brief The FSQLServerFileSystem class This class provides the interface to
  * interact with the files.
  */
-class FSQLServerFileSystem
+class FSQLServerFileSystem : protected raidManager
 {
 public:
     /*!
@@ -30,7 +30,7 @@ public:
      * \return  boolean if the operation succeded.
      */
     bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
-                       array<char*>* pColumnNames, string* pFile);
+                       array<char*>* pColumnNames, string* pFile, int raidMode);
 
     /*!
      * \brief writeNewLineToFile demands that a new register must be created into the

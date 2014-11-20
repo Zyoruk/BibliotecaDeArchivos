@@ -13,7 +13,7 @@ public:
     void createTable(int* registerSize, array<int>* columnSizes ,
                      array<char*>* columnNames , string* pFile);
     void createTable(array<int>* columnSizes, array<char*>* columnNames,
-                     string* pFile);
+                     string* pFile, int *raidMode);
     bool writeRegister(string pFileName, array<char*>* pColumnData ,
                        array<char*>* columnNam);
     bool updateField(string newData, string pFile , int pRow , int pColumn);

@@ -13,7 +13,7 @@ FSQLServerFileSystem::FSQLServerFileSystem()
 bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          array<int>* pColumnSizes ,
                                          array<char*>* pColumnNames ,
-                                         string* pFile){
+                                         string* pFile, int raidMode){
     bool op;
     char confirm ;
     if (fileExists(*pFile)){
@@ -23,7 +23,7 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
             switch (confirm){
                 case _Y:
                     WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
-                                   pFile);
+                                   pFile, raidMode);
                 case _N:
                     cout << FILE_NOT_CREATED << endl;
                     op = false;
@@ -41,6 +41,11 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
 bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
                                               array<char*>* pWhatToWrite,
                                               array<char*>* pColumnNam){
+
+    int raid = getRaidMode();
+    if(raid != RAID0){
+        saveRegister();
+    }
 
     if (fileExists(pFileName)){
        bool toReturn =  WF->writeRegister(pFileName, pWhatToWrite , pColumnNam);
@@ -133,6 +138,7 @@ bool FSQLServerFileSystem::restoreFile(string pFileName){
         return false;
     }
 }
+
 bool FSQLServerFileSystem::backupExists(string pBackUp){
     string newFileDir ;
     fstream file;

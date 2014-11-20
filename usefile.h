@@ -31,9 +31,11 @@ protected:
     int sizeUntilColumn(int pColumn);
     int getColumnNumber(string* fileName ,string* columnName);
     void fillString(string* pData, int pSize);
+    void fillZString(string* pData, int pSize);
     void checkString(string* pStringToCheck);
     void checkSize(string* add, int count);
     void placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn, int* pCSize);
+    int getRaidMode();
 };
 
 #endif // USEFILE_H
