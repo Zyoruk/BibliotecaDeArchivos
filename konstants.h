@@ -16,7 +16,6 @@ static const char* DIRFILE = "../FSQL/databases/";
 static const char* BACK_UPS_DIR = "../FSQL/backups/";
 static const char* USERS_DIR = "../FSQL/users/";
 
-
 static const int ZE_ROW = 0;
 static const int ONE_BYTE = 1;
 static const int DEFAULT_COLUMN_SIZE = 3;
@@ -24,11 +23,16 @@ static const int DEFAULT_REGISTER_SIZE = 4;
 static const int REGISTER_SIZE_ADDRESS = 3;
 static const int MAX_REGISTER_SIZE = 999;
 static const int METADATA_SIZE = 3;
+<<<<<<< HEAD
 static const int METADATA_COLUMN_START = 9;
 static const char SERVER_IP1 = "192.168.0.20";
 static const char SERVER_IP2 = "192.168.0.40";
 static const char SERVER_IP3 = "192.168.0.60";
 static const char SERVER_IP4 = "192.168.0.80";
+=======
+static const int METADATA_COLUMN_START = 7;
+
+>>>>>>> 1de7c7ad1dcd8edc6c09cedc80d7274c0b474fe9
 static const char NULL_CHAR = '*';
 static const char SINGLE_NULL = '0';
 static const char _Y_ = 'Y';

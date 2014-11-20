@@ -1,5 +1,5 @@
 #include "permissionslayer.h"
-
+#include "unistd.h"
 permissionsLayer::permissionsLayer()
 {
 }
@@ -36,9 +36,10 @@ bool checkPass(string pUserName, string pPass){
     getline(file, pass);
     if (pass == pPass){
         file.close();
-        return isOpen;
+        return true;
     }else{
         cout << INVALID_PASSWORD << endl;
+        return false;
     }
 }
 
@@ -48,7 +49,35 @@ user permissionsLayer::loadUser(string pUserName){
     }
     user tempUser ;
     tempUser.setUserName(pUserName);
-//    tempUser.addToRead();
+
+    string toAdd;
+    string path = " ";
+    fstream file;
+    //open file that stores read-only
+    string RODBS = "read";
+    RODBS.append(pUserName);
+    path = createNewUser(RODBS);
+    file.open(path.c_str());
+    file.seekg(ios::beg);
+    while(toAdd != ""){
+        getline(file , toAdd);
+        tempUser.addToRead(toAdd);
+    }
+    file.close();
+
+    //open file that stores write
+    string WDBS = "write";
+    WDBS.append(pUserName);
+    path = createNewUser(WDBS);
+    file.open(path.c_str());
+    file.seekg(ios::beg);
+    while(toAdd != ""){
+        getline(file , toAdd);
+        tempUser.addToWrite(toAdd);
+    }
+    file.close();
+
+    return tempUser;
 }
 
 bool permissionsLayer::createUser(string pUserName , string pPass){
@@ -80,15 +109,115 @@ bool permissionsLayer::createUser(string pUserName , string pPass){
 }
 
 bool permissionsLayer::dropUser (string pUserName){
+    // hay que borrar los archivos
+    if (checkUser(pUserName)){
+        string temp = createNewUser(pUserName);
+        unlink(temp.c_str());
 
+        string temp2 = "write";
+        temp2.append(temp);
+        unlink(temp2.c_str());
+
+        temp2 = "read";
+        temp2.append(temp);
+        unlink(temp2.c_str());
+        return true;
+    }else{
+        cout << INVALID_USERNAME;
+        return false;
+    }
 }
 
-bool permissionsLayer::grantPermission(string pUserName , string pNewPermission, string pFile){
+bool permissionsLayer::grantPermission(string pUserName , string pNewPermission,
+                                       string pFile)
+{
+    if (!checkUser(pUserName))
+    {
+        cout << INVALID_USERNAME <<endl;
+        return false;
+    }else if (!fileExists(pFile))
+    {
+        cout << NO_EXISTANT_FILE << endl;
+        return false;
+    }else
+    {
+        string temp;
+        string path;
+        if(pNewPermission =="read"){
+            temp = pNewPermission;
+            temp.append(pUserName);
+            path = createNewUser(temp);
 
+            std::ofstream ofs(path.c_str(), std::ios::binary);
+            ofs << pFile;
+            return true;
+
+        }else if(pNewPermission == "write"){
+            temp = pNewPermission;
+            temp.append(pUserName);
+            path = createNewUser(temp);
+
+            std::ofstream ofs2(path.c_str(), std::ios::binary);
+            ofs2 << pFile;
+            return true;
+        }
+        return false;
+    }
 }
 
-bool permissionsLayer::revokePermission(string pUserName, string pNewPermission, string pFile){
+bool permissionsLayer::revokePermission(string pUserName, string pPermission,
+                                        string pFile)
+{
+    bool toReturn = true;
+    if (!checkUser(pUserName))
+    {
+        cout << INVALID_USERNAME <<endl;
+        return !toReturn;
+    }else if (!fileExists(pFile))
+    {
+        cout << NO_EXISTANT_FILE << endl;
+        return !toReturn;
+    }else
+    {
+        string temp;
+        string path;
+        fstream file;
+        if(pPermission =="read"){
+            temp = pPermission;
+            temp.append(pUserName);
+            path = createNewUser(temp);
 
+            file.open(path.c_str());
+            file.seekg(ios::beg);
+
+            string toCompare = " ";
+            while(toCompare != ""){
+                getline(file , toCompare);
+                if (toCompare == pFile){
+                    return toReturn;
+                }
+            }
+            return !toReturn;
+
+        }else if(pPermission == "write"){
+            temp = pPermission;
+            temp.append(pUserName);
+            path = createNewUser(temp);
+
+            file.open(path.c_str());
+            file.seekg(ios::beg);
+
+            string toCompare = " ";
+            while(toCompare != ""){
+                getline(file , toCompare);
+                if (toCompare == pFile){
+                    return toReturn;
+                }
+            }
+            return !toReturn;
+        }
+        return false;
+    }
 }
 
 //************************************************
