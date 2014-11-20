@@ -112,7 +112,7 @@ public:
      */
     bool updateColumn(string newData,string pToCompare, string pFile, string pCName);
 
-private:
+protected:
 //    array<char*> _FilesMetaData;
     bool fileExists(string pFile);
     readfile* RF;

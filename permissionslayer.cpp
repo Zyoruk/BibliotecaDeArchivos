@@ -1,5 +1,5 @@
 #include "permissionslayer.h"
-
+#include "unistd.h"
 permissionsLayer::permissionsLayer()
 {
 }
@@ -80,14 +80,63 @@ bool permissionsLayer::createUser(string pUserName , string pPass){
 }
 
 bool permissionsLayer::dropUser (string pUserName){
+    // hay que borrar los archivos
+    if (checkUser(pUserName)){
+        string temp = createNewUser(pUserName);
+        unlink(temp.c_str());
 
+        string temp2 = "write";
+        temp2.append(temp);
+        unlink(temp2.c_str());
+
+        temp2 = "read";
+        temp2.append(temp);
+        unlink(temp2.c_str());
+        return true;
+    }else{
+        cout << INVALID_USERNAME;
+        return false;
+    }
 }
 
-bool permissionsLayer::grantPermission(string pUserName , string pNewPermission, string pFile){
+bool permissionsLayer::grantPermission(string pUserName , string pNewPermission,
+                                       string pFile)
+{
+    if (!checkUser(pUserName))
+    {
+        cout << INVALID_USERNAME <<endl;
+        return false;
+    }else if (!fileExists(pFile))
+    {
+        cout << NO_EXISTANT_FILE << endl;
+    }else
+    {
+        string temp;
+        string path;
+        if(pNewPermission =="read"){
+            temp = pNewPermission;
+            temp.append(pUserName);
+            path = createNewUser(temp);
 
+            std::ofstream ofs(path.c_str(), std::ios::binary);
+            ofs << pFile;
+
+        }else if(pNewPermission == "write"){
+            temp = pNewPermission;
+            temp.append(pUserName);
+            path = createNewUser(temp);
+
+            std::ofstream ofs2(path.c_str(), std::ios::binary);
+            ofs2 << pFile;
+        }
+
+
+    }
 }
 
-bool permissionsLayer::revokePermission(string pUserName, string pNewPermission, string pFile){
+bool permissionsLayer::revokePermission(string pUserName, string pNewPermission,
+                                        string pFile)
+{
 
 }
 
