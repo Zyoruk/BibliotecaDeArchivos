@@ -17,13 +17,13 @@ string readfile::getColumnName(string* fileName ,int* columnNumber){
     path.append(col);
     int i = 0;
     string columnName = "NOT FOUND";
-    file_COL.open(path.c_str());
+    file_col.open(path.c_str());
 
     while (i != *columnNumber)
     {
-        getline(file_COL, columnName);
+        getline(file_col, columnName);
         i++;
-        if(file_COL.eof())
+        if(file_col.eof())
             break;
     }
     //La variable de regreso es eliminada
@@ -168,4 +168,33 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
     }
 
     return select;
+}
+
+string readfile::readDataLocation(string pFile , int pRow){
+    int currSeek = file.tellg();
+
+    //Relative route + the name of the file
+    if ( !(file_lo.is_open()) ){
+        string fileH = pFile;
+        string standardDir = createNewFile(fileH.c_str());
+        file_lo.open(standardDir.c_str());
+    }
+
+    if ( !(file_lo.is_open()) ){
+        return "NED " + pFile;
+    }
+
+    //build the stringto return
+    string stringToReturn = "";
+
+    while (i != pRow)
+    {
+        getline(file_lo, stringToReturn);
+        i++;
+        if(file_lo.eof())
+            break;
+    }
+    file.seekg(currSeek);
+    if (stringToReturn == "") stringToReturn = "404";
+    return stringToReturn;
 }

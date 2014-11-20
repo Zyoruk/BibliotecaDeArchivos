@@ -17,24 +17,24 @@ int useFile::getColumnNumber(string* fileName ,string* columnName){
     path.append(tmp);
     int i = ONE_BYTE;
     int columnNumber = -2;
-    if (!file_COL.is_open()) {
-        file_COL.open(path.c_str());
+    if (!file_col.is_open()) {
+        file_col.open(path.c_str());
     }
 
-    if (!file_COL.is_open()){
+    if (!file_col.is_open()){
         cout << NO_EXISTANT_FILE ;
         return -1;
     }
 
-    file_COL.seekg(ZE_ROW);
-    while (!file_COL.eof())
+    file_col.seekg(ZE_ROW);
+    while (!file_col.eof())
     {
-        getline(file_COL,COLNAME);
+        getline(file_col,COLNAME);
         if ( *columnName == COLNAME)
             columnNumber = i;
         i++;
     }
-    file_COL.close();
+    file_col.close();
     //La variable de regreso es eliminada
     return columnNumber;
 }

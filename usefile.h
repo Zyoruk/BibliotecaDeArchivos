@@ -17,7 +17,11 @@ protected:
     useFile();
 
     fstream file;
-    fstream file_COL;
+    fstream file_col;
+    fstream file_lo;
+    fstream file_userpass;
+    fstream file_userpermrd;
+    fstream file_userpermrw;
 
     string toChar(int toChar);
     string intToChar(int metadata);

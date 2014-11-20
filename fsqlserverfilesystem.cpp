@@ -42,11 +42,6 @@ bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
                                               array<char*>* pWhatToWrite,
                                               array<char*>* pColumnNam){
 
-    int raid = getRaidMode();
-    if(raid != RAID0){
-        saveRegister();
-    }
-
     if (fileExists(pFileName)){
        bool toReturn =  WF->writeRegister(pFileName, pWhatToWrite , pColumnNam);
        return toReturn;

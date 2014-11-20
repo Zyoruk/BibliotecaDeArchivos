@@ -12,7 +12,7 @@ using namespace std;
  * \brief The FSQLServerFileSystem class This class provides the interface to
  * interact with the files.
  */
-class FSQLServerFileSystem : protected raidManager
+class FSQLServerFileSystem
 {
 public:
     /*!
