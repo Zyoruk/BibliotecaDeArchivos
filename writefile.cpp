@@ -470,3 +470,5 @@ void writefile::writeRaidFile(string* pFile, string* ip, int pos){
     file_lo << "\n";
     file_lo.close();
 }
+
+void writefile::writeRaidFile(string* pFile, string* ip, int pos){

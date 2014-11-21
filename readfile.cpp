@@ -170,18 +170,18 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
     return select;
 }
 
-string readfile::readDataLocation(string pFile){
+string readfile::readDataLocation(string* pFile){
     int currSeek = file.tellg();
 
     //Relative route + the name of the file
     if ( !(file_lo.is_open()) ){
-        string fileH = pFile;
+        string fileH = *pFile;
         string standardDir = createNewFile(fileH.c_str());
         file_lo.open(standardDir.c_str());
     }
 
     if ( !(file_lo.is_open()) ){
-        return "NED " + pFile;
+        return "NED " + *pFile;
     }
 
     //build the stringto return

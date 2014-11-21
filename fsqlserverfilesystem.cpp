@@ -180,7 +180,8 @@ bool FSQLServerFileSystem::deleteData(string pFileName, string pColumnName, stri
     }
 }
 
-bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare, string pFile, string pCName){
+bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare,
+                                        string pFile, string pCName){
     if (fileExists(pFile)){
         bool toReturn = WF->updateColumn(newData,pToCompare,pFile,pCName);
         return toReturn;
@@ -189,6 +190,17 @@ bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare, string
     }
 }
 
-void FSQLServerFileSystem::updateDatabaseStruct(string* pFile, string* ip, int pos){
+void FSQLServerFileSystem::updateDatabaseStruct(string* pFile, string* ip,
+                                                int pos){
+    WF->writeRaidFile( pFile, ip, pos);
+}
 
+int FSQLServerFileSystem::getRaidMode(string* pFile){
+    int tmp = RF->getRaidMode(pFile);
+    return tmp;
+}
+
+string FSQLServerFileSystem::readDataLocation(string* pFile){
+    string tmp = RF->readDataLocation(pFile);
+    return tmp;
 }
