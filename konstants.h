@@ -32,24 +32,17 @@ static const char _Y_ = 'Y';
 static const char _N_ = 'N';
 
 //NETWORK
-<<<<<<< HEAD
 static const char* SERVER_IP1 = "192.168.0.20";
 static const char* SERVER_IP2 = "192.168.0.40";
 static const char* SERVER_IP3 = "192.168.0.60";
-static const char* SERVER_IP4 = "192.168.0.80";
-static const char SERVER_INSTANCE = '1';
-=======
-static const char SERVER_IP1 = "192.168.0.20";
-static const char SERVER_IP2 = "192.168.0.40";
-static const char SERVER_IP3 = "192.168.0.60";
-static const char LOCAL = "172.0.0.1";
+static const char* LOCAL = "172.0.0.1";
 static const char SERVER_INSTANCE = 1;
->>>>>>> 66079f738be7ae8cf716692c7cb5f8307ea72be3
 static const int RAID0 = 0;
 static const int RAID1 = 1;
 static const int RAID5 = 5;
 static const int RAID10 = 10;
 static const int PORTNO = 21000;
 static const char* NI = "ni";
+static const char* RAID = "RaidConfig"
 
 #endif

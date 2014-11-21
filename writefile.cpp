@@ -446,14 +446,10 @@ bool writefile::deleteRegister(string pFile, string pCName, string newData){
 }
 
 void writefile::createRaidFile(string* pFile){
-<<<<<<< HEAD
-    string raid = "RaidConfig";
-=======
->>>>>>> 66079f738be7ae8cf716692c7cb5f8307ea72be3
     string path = DIRFILE;
 
     path.append(*pFile);
-    path.append(raid);
+    path.append(RAID);
 
     ofstream whatever(path.c_str() , ios::trunc);
     //cout << whatever.is_open() <<endl;'d
@@ -464,7 +460,7 @@ void writefile::writeRaidFile(string* pFile, string* ip, int pos){
     string path = DIRFILE;
 
     path.append(*pFile);
-    path.append(raid);
+    path.append(RAID);
 
     file_lo.open(path.c_str());
     file_lo.seekg(ZE_ROW,ios::end);
