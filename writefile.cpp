@@ -155,7 +155,8 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
 }
 
 /**
- * @brief writeRegister Method to append a whole registry. Add new element to database.
+ * @brief writeRegister Method to append a whole registry. Add new element to
+ * database.
  * @param pFileName is the name of database file to add to.
  * @param pColumnData it's what to append.
  * @param columnPos is where to append it.
@@ -445,13 +446,30 @@ bool writefile::deleteRegister(string pFile, string pCName, string newData){
 }
 
 void writefile::createRaidFile(string* pFile){
+<<<<<<< HEAD
     string raid = "RaidConfig";
+=======
+>>>>>>> 66079f738be7ae8cf716692c7cb5f8307ea72be3
     string path = DIRFILE;
-    string file = *pFile;
-    path.append(file);
+
+    path.append(*pFile);
     path.append(raid);
 
     ofstream whatever(path.c_str() , ios::trunc);
     //cout << whatever.is_open() <<endl;'d
     whatever.close();
+}
+
+void writefile::writeRaidFile(string* pFile, string* ip, int pos){
+    string path = DIRFILE;
+
+    path.append(*pFile);
+    path.append(raid);
+
+    file_lo.open(path.c_str());
+    file_lo.seekg(ZE_ROW,ios::end);
+    string locali = *ip + ',' + pos;
+    file_lo << locali;
+    file_lo << "\n";
+    file_lo.close();
 }

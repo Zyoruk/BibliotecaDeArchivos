@@ -188,3 +188,7 @@ bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare, string
         return false;
     }
 }
+
+void FSQLServerFileSystem::updateDatabaseStruct(string* pFile, string* ip, int pos){
+
+}

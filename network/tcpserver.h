@@ -13,7 +13,7 @@ class TCPServer
 public:
     TCPServer();
     void error(const char *msg);
-    void receive(int* portno);
+    void receive();
 };
 
 #endif // TCPSERVER_H

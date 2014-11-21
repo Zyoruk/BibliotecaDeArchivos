@@ -11,7 +11,7 @@ public:
     bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
                        array<char*>* pColumnNames, string* pFile, int raidMode);
     bool retrieveRegister(string pFileName, int pColumn, int pRow);
-    bool saveRegister(string pFile, int raidMode);
+    bool storeRegister(string pFile, int raidMode);
     bool dataRecovery(char* database);
 
 private:

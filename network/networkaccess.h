@@ -13,6 +13,7 @@ public:
 
 private:
     TCPClient* client;
+    TCPServer* server;
 };
 
 #endif // NETWORKACCESS_H
