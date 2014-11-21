@@ -219,11 +219,11 @@ void useFile::placeSeekOn(int* pRow , int* pColumn, int* pSizeToColumn,
 int useFile::getRaidMode(){
     int currSeek = file.tellg();
     file.seekg(METADATA_COLUMN_START - 2);
-    string RM = "";
+    string RMstr = "";
     for (int i  = 0 ; i < 2 ;i++){
-        RM.push_back(file.get());
+        RMstr.push_back(file.get());
     }
-    int RM  = stringToInt(&RM);
+    int RM  = stringToInt(&RMstr);
     file.seekg(currSeek);
     return RM;
 }

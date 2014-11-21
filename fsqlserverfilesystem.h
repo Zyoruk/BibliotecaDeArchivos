@@ -30,7 +30,7 @@ public:
      * \return  boolean if the operation succeded.
      */
     bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
-                       array<char*>* pColumnNames, string* pFile, int raidMode);
+                       array<char*>* pColumnNames, string* pFile, int* raidMode);
 
     /*!
      * \brief writeNewLineToFile demands that a new register must be created into the

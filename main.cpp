@@ -30,7 +30,12 @@ void test0(){
     cNames[3] = "Telefono";
     cNames[4] = "Sexo";
     string file ="Test9";
-    filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file);
+
+    int* test;
+    int temp = 00 ;
+    test = &temp;
+    cout << test <<endl;
+    filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file, test);
 }
 
 void test1(){
@@ -116,12 +121,14 @@ void test11(){
 }
 
 void test12(){
-    //permissionsLayer pL = permissionsLayer();
+    permissionsLayer pL = permissionsLayer();
+    pL.createUser("Luis" , "123123");
 }
 
 int main()
 {
-    test0;
+    test0();
+    test12();
     return 0;
 }
 

@@ -24,7 +24,7 @@ static const int REGISTER_SIZE_ADDRESS = 3;
 static const int MAX_REGISTER_SIZE = 999;
 static const int METADATA_SIZE = 3;
 static const int METADATA_COLUMN_START = 9;
-static const int METADATA_COLUMN_START = 7;
+//static const int METADATA_COLUMN_START = 7;
 
 static const char NULL_CHAR = '*';
 static const char SINGLE_NULL = '0';
@@ -32,10 +32,10 @@ static const char _Y_ = 'Y';
 static const char _N_ = 'N';
 
 //NETWORK
-static const char SERVER_IP1 = "192.168.0.20";
-static const char SERVER_IP2 = "192.168.0.40";
-static const char SERVER_IP3 = "192.168.0.60";
-static const char SERVER_IP4 = "192.168.0.80";
+static const char* SERVER_IP1 = "192.168.0.20";
+static const char* SERVER_IP2 = "192.168.0.40";
+static const char* SERVER_IP3 = "192.168.0.60";
+static const char* SERVER_IP4 = "192.168.0.80";
 static const char SERVER_INSTANCE = '1';
 static const int RAID0 = 0;
 static const int RAID1 = 1;

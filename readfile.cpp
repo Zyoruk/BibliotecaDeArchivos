@@ -187,6 +187,7 @@ string readfile::readDataLocation(string pFile , int pRow){
     //build the stringto return
     string stringToReturn = "";
 
+    int i = 0;
     while (i != pRow)
     {
         getline(file_lo, stringToReturn);

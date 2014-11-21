@@ -122,8 +122,9 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
         add = toChar(*registerSize);
         checkSize(&add, DEFAULT_REGISTER_SIZE);
         database.write(add.c_str() , DEFAULT_REGISTER_SIZE);
-        raid = intToChar(raidMode); //pos 8 and 9 to RM.
-        database << fillZString(&raid,2);
+        raid = intToChar(*raidMode); //pos 8 and 9 to RM.
+        fillZString(&raid,2);
+        database << raid;
     }
 
     //set column sizes on file
@@ -443,7 +444,7 @@ bool writefile::deleteRegister(string pFile, string pCName, string newData){
     return bowl;
 }
 
-void writeFile::createRaidFile(string* pFile){
+void writefile::createRaidFile(string* pFile){
     string raid = "RaidConfig";
     string path = DIRFILE;
     string file = *pFile;

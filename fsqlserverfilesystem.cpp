@@ -13,7 +13,7 @@ FSQLServerFileSystem::FSQLServerFileSystem()
 bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                                          array<int>* pColumnSizes ,
                                          array<char*>* pColumnNames ,
-                                         string* pFile, int raidMode){
+                                         string* pFile, int* raidMode){
     bool op;
     char confirm ;
     if (fileExists(*pFile)){
@@ -22,7 +22,7 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
             cin >> confirm;
             switch (confirm){
                 case _Y:
-                    WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
+                    WF->createTable(pColumnSizes, pColumnNames ,
                                    pFile, raidMode);
                 case _N:
                     cout << FILE_NOT_CREATED << endl;
