@@ -112,6 +112,8 @@ public:
      */
     bool updateColumn(string newData,string pToCompare, string pFile, string pCName);
 
+    void updateDatabaseStruct(string* pFile, string* ip, int pos);
+
 protected:
 //    array<char*> _FilesMetaData;
     bool fileExists(string pFile);

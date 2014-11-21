@@ -12,31 +12,26 @@ raidManager::raidManager()
 bool raidManager::createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
                    array<char*>* pColumnNames, string* pFile, int raidMode){
 
-    switch(raidMode){
-        case RAID0:
-            FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
-            net->client->link(PORTNO, ip1, DATAAAAAAA);
+    FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
 
+    if (raidMode >= 0){
+        net->client->link(PORTNO, ip1, DATAAAAAAA);
+    }
 
-        case RAID1:
-            FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
-            net->client->link(PORTNO, ip1, DATAAAAAAA);
+    if (raidMode >= 5){
+        net->client->link(PORTNO, ip2, DATAAAAAAA);
+    }
 
-        case RAID10:
-            FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile);
-            net->client->link(PORTNO, ip1, DATAAAAAAA);
-            net->client->link(PORTNO, ip2, DATAAAAAAA);
-            net->client->link(PORTNO, ip3, DATAAAAAAA);
-
-        default:
-
+    if (raidMode == 10){
+        net->client->link(PORTNO, ip3, DATAAAAAAA);
     }
 }
 
-bool raidManager::saveRegister(string* pFileName ,
+bool raidManager::storeRegister(string* pFileName ,
                                array<char*>* pWhatToWrite,
                                array<char*>* pColumnNam){
 
+    int netRegPosition;
     int raid = getRaidMode();
     char*[] location = getLatestRegistryLocation(pFileName);
 
@@ -48,30 +43,42 @@ bool raidManager::saveRegister(string* pFileName ,
         case RAID0:
             //loop de servers, min 2 servers
             if(location == LOCAL){
-                net->client->link(PORTNO, ip1, DATAAAAAAAA);
+                netRegPosition = net->client->link(PORTNO, ip1, DATAAAAAAAA);
+                FS->updateDatabaseStruct(string* pFileName, ip1,
+                                         netRegPosition);
             }
-            else if(location == (S1 || NI)){
-                FS->writeNewLineToFile(pFileName, pWhatToWrite,pColumnNam);
+            else if(location == (ip1 || NI)){
+                netRegPosition = FS->writeNewLineToFile(pFileName, pWhatToWrite,
+                                                        pColumnNam);
+                FS->updateDatabaseStruct(string* pFileName, LOCAL,
+                                         netRegPosition);
             }
 
         case RAID1:
             //todo local y copiado al S1, min 2 servers
-            FS->writeNewLineToFile(pFileName, pWhatToWrite,pColumnNam);
+            netRegPosition = FS->writeNewLineToFile(pFileName, pWhatToWrite,
+                                                    pColumnNam);
             net->client->link(PORTNO, ip1, DATAAAAAAAA);
+            FS->updateDatabaseStruct(string* pFileName, LOCAL, netRegPosition);
 
         case RAID10:
             //loop y copiado, min 4 servers
             if(location == LOCAL){
-                net->client->link(PORTNO, ip2, DATAAAAAAAA);
+                netRegPosition = net->client->link(PORTNO, ip2, DATAAAAAAAA);
                 net->client->link(PORTNO, ip3, DATAAAAAAAA);
+                FS->updateDatabaseStruct(string* pFileName, ip1, netRegPosition);
             }
-            else if(location == (S2 || NI)){
-                FS->writeNewLineToFile(pFileName, pWhatToWrite,pColumnNam);
+            else if(location == (ip2 || NI)){
+                netRegPosition = FS->writeNewLineToFile(pFileName, pWhatToWrite,
+                                                        pColumnNam);
                 net->client->link(PORTNO, ip1, DATAAAAAAAA);
+                FS->updateDatabaseStruct(string* pFileName, LOCAL,
+                                         netRegPosition);
             }
 
         default:
-            cout << "*** No monkeys allowed ***" << endl;
+            FS->writeNewLineToFile(pFileName , pWhatToWrite , pColumnNam);
+            FS->updateDatabaseStruct(string* pFileName, LOCAL, netRegPosition);
     }
 }
 
@@ -81,13 +88,13 @@ string raidManager::retrieveRegister(string pFileName , int pColumn, int pRow){
     if(location == LOCAL){
         FS->readFromFile(pFileName , pColumn, pRow);
     }
-    if (location == S1){
+    if (location == ip1){
         net->client->link(PORTNO, ip1, DATAAAAAAAA);
     }
-    if (location == S2){
+    if (location == ip2){
         net->client->link(PORTNO, ip2, DATAAAAAAAA);
     }
-    if (location == S3){
+    if (location == ip3){
         net->client->link(PORTNO, ip3, DATAAAAAAAA);
     }
 
