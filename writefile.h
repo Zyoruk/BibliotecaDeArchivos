@@ -22,7 +22,7 @@ public:
     void backUpFile(string fileTobackUp);
     void restoreFile(string fileToRestore);
     bool deleteRegister(string pFileName, string pColumnName, string pDato);
-    void writeRaidFile(string* pFile, string* ip, int pos);
+    void writeRaidFile(string* pFile, string ip, int pos);
 
 private:
     void writeColumnNames(string* fileName, array<char*>* columnNames);

@@ -41,9 +41,7 @@ static const char SINGLE_NULL = '0';
 
 //NETWORK
 static const int PORTNO = 21000;
-
 static const char SERVER_INSTANCE = 1;
-
 static const char* COLON = ":";
 static const char* NI = "ni";
 static const char* RAID_CNFG = "RaidConfig";
@@ -51,6 +49,7 @@ static const char* LOCAL = "127.0.0.1";
 static const char* SERVER_IP1 = "192.168.0.20";
 static const char* SERVER_IP2 = "192.168.0.40";
 static const char* SERVER_IP3 = "192.168.0.60";
+static const char* LAST_REG = "register";
 
 //Raids
 static const int RAID0 = 0;

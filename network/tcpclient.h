@@ -8,7 +8,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string>
 #include "konstants.h"
@@ -18,9 +17,13 @@ using namespace std;
 class TCPClient
 {
 public:
+    TCPClient(int* portno);
     TCPClient();
-    int link(string*  raidServ, string* data);
+    int link(string  raidServ, string data);
     void error(string *msg);
+
+private:
+    int connectPort;
 };
 
 #endif // TCPCLIENT_H

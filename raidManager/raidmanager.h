@@ -8,18 +8,20 @@ class raidManager
 {
 public:
     raidManager();
-    bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
-                       array<char*>* pColumnNames, string* pFile, int* raidMode);
-    string retrieveRegister(string* pFileName, int pRow);
-    bool storeRegister(string* pFileName ,array<char*>* pWhatToWrite,
-                       array<char*>* pColumnNam);
+
+    string retrieveRegister(string* pFileName , string* commandLine, int pRow);
     bool dataRecovery(string* database);
-    string getLatestRegistryLocation(string* pFile);
+
+    bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
+                       array<char*>* pColumnNames, string* pFile, int* raidMode,
+                       string* commandLine);
+
+    bool storeRegister(string* pFileName ,array<char*>* pWhatToWrite,
+                       array<char*>* pColumnNam , string* commandLine);
+
 private:
-    string SERVER_IP1;
-    string SERVER_IP2;
-    string SERVER_IP3;
-    string ip4;
+    string getLatestRegistryLocation(string* pFile);
+    string getOnRegFormat(string* pWhatToWrite);
     FSQLServerFileSystem* FS;
     networkAccess* net;
 };
