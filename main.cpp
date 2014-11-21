@@ -7,6 +7,8 @@
 #include <string.h>
 #include "fsqlserverfilesystem.h"
 #include "permissionslayer.h"
+#include "user.h"
+#include "decriptor.h"
 //#define STR(x) #x << '=' << x
 
 using namespace std;
@@ -123,11 +125,46 @@ void test11(){
 void test12(){
     permissionsLayer pL = permissionsLayer();
     pL.createUser("Luis" , "123123");
+    pL.grantPermission("Luis" , "read" , "Test9");
+//    pL.revokePermission("Luis" , "read" , "Test9");
+    pL.checkUser("Luis");
+//    pL.dropUser("Luis");
+//    cout << pL.checkUser("Luis") << endl;
+    user tester = pL.loadUser("Luis");
+    tester.CanRead("Test9");
 }
 
 int main()
 {
-    test0();
+    permissionsLayer* pL = new permissionsLayer();
+    cout << "Enter username : " <<endl;
+    string username = "";
+    cin >> username;
+    cout << "Enter password : " << endl;
+    string Password = "";
+    cin >> Password;
+    user currentUser = user() ;
+    bool admin;
+    if (username == "admin" && Password == "admin"){
+        admin= true;
+        string command;
+        cout << "Enter command:" <<endl;
+        cin >> command;
+        decriptor* dekrpt = new decriptor(command , &currentUser, admin);
+    }else{
+        admin = false;
+        if (pL->checkPass(username, Password)){
+            currentUser = pL->loadUser(username);
+            string command;
+            cout << "Enter command:" <<endl;
+            cin >> command;
+            decriptor* dekrpt = new decriptor(command , &currentUser, admin);
+        }else{
+            cout << INVALID_VALUES << endl;
+        }
+    }
+
+//    test0();
     test12();
     return 0;
 }

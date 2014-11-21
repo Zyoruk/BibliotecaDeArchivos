@@ -15,7 +15,6 @@ public:
                        array<char*>* pColumnNam);
     bool dataRecovery(string* database);
     string getLatestRegistryLocation(string* pFile);
-    int getRaidMode(string* pFile);
 private:
     string SERVER_IP1;
     string SERVER_IP2;

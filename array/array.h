@@ -62,7 +62,7 @@ void array<K>::setArrayBuffer(K *pArrayBuffer){
 template<typename K>
 void array<K>::insert(int pIndex, K pElement){
     //If the array is full ,then we will resize it.
-    if (_currentLenght +1 > this->_lenght) resize();
+    if (_currentLenght +1 > this->_lenght) this->resize();
     //Moving from the back of the array to the index where we want to add(Moving the elements).
     for (int counter = this->_currentLenght; counter >pIndex ; counter--){
         this->_arrayBuffer[counter] = this->_arrayBuffer[counter-1];
@@ -95,6 +95,15 @@ void array<K>::removeAllOcurrencesOf(K pElement){
             this->removeElementAt(counter);
         }
     }
+}
+
+template <typename K>
+void array<K>::resize(){
+    K* newBuffer = (K*)calloc((this->_lenght*2), sizeof(K));
+    for (int counter = 0 ; counter < this->_lenght - 1 ; counter++){
+        *(newBuffer + counter) = *(this->_arrayBuffer + counter);
+    }
+    this->_arrayBuffer = newBuffer;
 }
 
 /*###################################### OPERATOR OVERLOAD #################################################################**/

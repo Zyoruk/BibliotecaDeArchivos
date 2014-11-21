@@ -32,8 +32,7 @@ bool FSQLServerFileSystem::createNewFile(int* pRegisterSize,
                     op = false;
             }
         }else{
-            WF->createTable(pRegisterSize, pColumnSizes, pColumnNames ,
-                           pFile);
+            WF->createTable(pColumnSizes, pColumnNames, pFile, raidMode);
         }
     return op;
     }

@@ -449,7 +449,7 @@ void writefile::createRaidFile(string* pFile){
     string path = DIRFILE;
 
     path.append(*pFile);
-    path.append(RAID);
+    path.append(RAID_CNFG);
 
     ofstream whatever(path.c_str() , ios::trunc);
     //cout << whatever.is_open() <<endl;'d
@@ -460,7 +460,7 @@ void writefile::writeRaidFile(string* pFile, string* ip, int pos){
     string path = DIRFILE;
 
     path.append(*pFile);
-    path.append(RAID);
+    path.append(RAID_CNFG);
 
     file_lo.open(path.c_str());
     file_lo.seekg(ZE_ROW,ios::end);

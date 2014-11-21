@@ -13,14 +13,14 @@ bool permissionsLayer::checkUser(string pUserName){
     file.open(newFileDir.c_str());
     isOpen = file.is_open();
     if (!isOpen){
-        cout << NO_EXISTANT_FILE << endl;
+        cout << INVALID_USERNAME << endl;
         return isOpen;
     }
     file.close();
     return isOpen;
 }
 
-bool checkPass(string pUserName, string pPass){
+bool permissionsLayer::checkPass(string pUserName, string pPass){
     string newFileDir ;
     bool isOpen;
     fstream file;
@@ -29,7 +29,7 @@ bool checkPass(string pUserName, string pPass){
     file.open(newFileDir.c_str());
     isOpen = file.is_open();
     if (!isOpen){
-        cout << NO_EXISTANT_FILE << endl;
+        cout << INVALID_USERNAME << endl;
         return isOpen;
     }
     string pass ="";
@@ -50,7 +50,7 @@ user permissionsLayer::loadUser(string pUserName){
     user tempUser ;
     tempUser.setUserName(pUserName);
 
-    string toAdd;
+    string toAdd= "E";
     string path = " ";
     fstream file;
     //open file that stores read-only
@@ -59,7 +59,7 @@ user permissionsLayer::loadUser(string pUserName){
     path = createNewUser(RODBS);
     file.open(path.c_str());
     file.seekg(ios::beg);
-    while(toAdd != ""){
+    while(!file.eof()){
         getline(file , toAdd);
         tempUser.addToRead(toAdd);
     }
@@ -71,7 +71,7 @@ user permissionsLayer::loadUser(string pUserName){
     path = createNewUser(WDBS);
     file.open(path.c_str());
     file.seekg(ios::beg);
-    while(toAdd != ""){
+    while(!file.eof()){
         getline(file , toAdd);
         tempUser.addToWrite(toAdd);
     }
@@ -115,11 +115,13 @@ bool permissionsLayer::dropUser (string pUserName){
         unlink(temp.c_str());
 
         string temp2 = "write";
-        temp2.append(temp);
+        temp2.append(pUserName);
+        temp2 = createNewUser(temp2);
         unlink(temp2.c_str());
 
         temp2 = "read";
-        temp2.append(temp);
+        temp2.append(pUserName);
+        temp2 = createNewUser(temp2);
         unlink(temp2.c_str());
         return true;
     }else{
@@ -192,8 +194,15 @@ bool permissionsLayer::revokePermission(string pUserName, string pPermission,
 
             string toCompare = " ";
             while(toCompare != ""){
+                int saveSeek = file.tellg();
                 getline(file , toCompare);
                 if (toCompare == pFile){
+                    string temp = "";
+                    while (temp.length() != toCompare.length()){
+                        temp.push_back('*');
+                    }
+                    file.seekg(saveSeek);
+                    file << temp;
                     return toReturn;
                 }
             }
@@ -209,8 +218,15 @@ bool permissionsLayer::revokePermission(string pUserName, string pPermission,
 
             string toCompare = " ";
             while(toCompare != ""){
+                int saveSeek = file.tellg();
                 getline(file , toCompare);
                 if (toCompare == pFile){
+                    string temp = "";
+                    while (temp.length() != toCompare.length()){
+                        temp.push_back('*');
+                    }
+                    file.seekg(saveSeek);
+                    file << temp;
                     return toReturn;
                 }
             }
