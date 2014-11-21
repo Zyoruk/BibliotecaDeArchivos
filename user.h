@@ -12,6 +12,7 @@ public:
     void setUserName(string pNewName);
     void addToWrite(string pFileName);
     void addToRead(string pFileName);
+    bool isAdmin();
 
 private:
     bool _admin;

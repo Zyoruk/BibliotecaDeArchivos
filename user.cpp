@@ -33,6 +33,10 @@ bool user::CanWrite(string pFileName){
     }
 }
 
+bool user::isAdmin(){
+    return this->_admin;
+}
+
 string user::getUsername(){
     return this->_userName;
 }
