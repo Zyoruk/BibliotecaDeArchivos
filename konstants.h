@@ -38,6 +38,7 @@ static const char* SERVER_IP2 = "192.168.0.40";
 static const char* SERVER_IP3 = "192.168.0.60";
 static const char* LOCAL = "127.0.0.1";
 static const char SERVER_INSTANCE = 1;
+static const char LAST_REG = "register";
 static const int RAID0 = 0;
 static const int RAID1 = 1;
 static const int RAID5 = 5;

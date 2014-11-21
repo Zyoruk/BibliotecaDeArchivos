@@ -2,14 +2,14 @@
 
 networkAccess::networkAccess()
 {
-    this->client = new TCPClient();
-    this->server = new TCPServer();
 }
 
-bool networkAccess::networkWrite(std::string* raidServ, std::string* data){
+string networkAccess::networkRequest(std::string* raidServ, std::string* data){
+    this->client = new TCPClient(PORTNO);
     client->link(raidServ, data);
 }
 
-std::string networkAccess::networkRead(std::string* raidServ, std::string* data){
-    client->link(raidServ, data);
+string networkAccess::networkServer(std::string* raidServ, std::string* data){
+    this->server = new TCPServer(PORTNO);
+    server->receive();
 }

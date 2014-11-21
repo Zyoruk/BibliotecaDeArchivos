@@ -1,7 +1,8 @@
 #include "tcpclient.h"
 
-TCPClient::TCPClient()
+TCPClient::TCPClient(int *portno)
 {
+    this->connectPort = *portno;
 }
 
 void TCPClient::error(string* msg)
@@ -10,11 +11,11 @@ void TCPClient::error(string* msg)
     exit(0);
 }
 
-int TCPClient::link(string*  raidServ, string *data)
+int TCPClient::link(string raidServ, string data)
 {
     int sockfd, n;
     struct sockaddr_in serv_addr;
-    char* buffer = (char*) calloc(256 , 1);
+    char buffer[256];
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -27,7 +28,7 @@ int TCPClient::link(string*  raidServ, string *data)
     serv_addr.sin_family = AF_INET;
 
     serv_addr.sin_addr.s_addr = inet_addr(raidServ->c_str());
-    serv_addr.sin_port = htons(PORTNO);
+    serv_addr.sin_port = htons(this->connectPort);
 
     if ( connect(sockfd , (struct sockaddr*) &serv_addr , sizeof(serv_addr)) < 0 ){
         string temp = "ERROR connecting";

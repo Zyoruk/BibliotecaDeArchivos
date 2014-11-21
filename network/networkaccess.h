@@ -9,8 +9,10 @@ class networkAccess
 {
 public:
     networkAccess();
-    bool networkWrite(std::string* raidServ, std::string* data);
-    std::string networkRead(std::string* raidServ, std::string* data);
+    bool networkRequest(string* raidServ, std::string* data);
+    string networkServer(string* raidServ, std::string* data);
+
+private:
     TCPClient* client;
     TCPServer* server;
 };

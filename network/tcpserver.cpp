@@ -1,8 +1,9 @@
 #include "tcpserver.h"
 #include "konstants.h"
 
-TCPServer::TCPServer()
+TCPServer::TCPServer(int* portno)
 {
+    this->listenPort = *portno;
 }
 
 /* The port number is passed as an argument */
@@ -38,7 +39,7 @@ void TCPServer::receive()
 
      // convert short integer value for port must be converted into network
      // byte order
-     serv_addr.sin_port = htons(PORTNO);
+     serv_addr.sin_port = htons(this->listenPort);
 
      // bind(int fd, struct sockaddr *local_addr, socklen_t addr_length)
      // bind() passes file descriptor, the address structure, and the length of

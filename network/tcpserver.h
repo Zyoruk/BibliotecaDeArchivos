@@ -11,9 +11,12 @@
 class TCPServer
 {
 public:
-    TCPServer();
+    TCPServer(int *portno);
     void error(const char *msg);
     void receive();
+
+private:
+    int listenPort;
 };
 
 #endif // TCPSERVER_H
