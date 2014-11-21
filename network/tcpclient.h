@@ -10,14 +10,17 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string>
 #include "konstants.h"
+
+using namespace std;
 
 class TCPClient
 {
 public:
     TCPClient();
-    void link(const char* raidServ, char *buffer);
-    void error(const char *msg);
+    int link(string*  raidServ, string* data);
+    void error(string *msg);
 };
 
 #endif // TCPCLIENT_H

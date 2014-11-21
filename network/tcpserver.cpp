@@ -38,7 +38,7 @@ void TCPServer::receive()
 
      // convert short integer value for port must be converted into network
      // byte order
-     serv_addr.sin_port = htons(SERVER_PORTNO);
+     serv_addr.sin_port = htons(PORTNO);
 
      // bind(int fd, struct sockaddr *local_addr, socklen_t addr_length)
      // bind() passes file descriptor, the address structure, and the length of

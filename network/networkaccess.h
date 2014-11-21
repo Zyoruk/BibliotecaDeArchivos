@@ -3,15 +3,14 @@
 #include "network/tcpclient.h"
 #include "network/tcpserver.h"
 #include "konstants.h"
+#include <string>
 
 class networkAccess
 {
 public:
     networkAccess();
-    networkWrite();
-    networkRead();
-
-private:
+    bool networkWrite(std::string* raidServ, std::string* data);
+    std::string networkRead(std::string* raidServ, std::string* data);
     TCPClient* client;
     TCPServer* server;
 };

@@ -6,10 +6,10 @@ networkAccess::networkAccess()
     this->server = new TCPServer();
 }
 
-bool networkAccess::networkWrite(const char* raidServ[], char* data[]){
-    client->link(PORTNO, raidServ, data);
+bool networkAccess::networkWrite(std::string* raidServ, std::string* data){
+    client->link(raidServ, data);
 }
 
-string networkAccess::networkRead(const char* raidServ[], char* data[]){
-    client->link(PORTNO, raidServ, data);
+std::string networkAccess::networkRead(std::string* raidServ, std::string* data){
+    client->link(raidServ, data);
 }

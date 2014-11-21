@@ -114,6 +114,10 @@ public:
 
     void updateDatabaseStruct(string* pFile, string* ip, int pos);
 
+    int getRaidMode(string* pFile);
+
+    string readDataLocation(string* pFile);
+
 protected:
 //    array<char*> _FilesMetaData;
     bool fileExists(string pFile);

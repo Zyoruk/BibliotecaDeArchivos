@@ -18,7 +18,8 @@ class readfile : protected useFile
         string getColumnName(string* fileName ,int* columnNumber);
         array< array<char*> > getRegisters(string pFile, string pColumnName,
                                                      string valueToConsult);
-        string readDataLocation(string pFile , int pRow);
+        string readDataLocation(string pFile);
+        int getRaidMode(string *pFile);
 
 };
 

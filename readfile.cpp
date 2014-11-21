@@ -170,7 +170,7 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
     return select;
 }
 
-string readfile::readDataLocation(string pFile , int pRow){
+string readfile::readDataLocation(string pFile){
     int currSeek = file.tellg();
 
     //Relative route + the name of the file
@@ -187,15 +187,36 @@ string readfile::readDataLocation(string pFile , int pRow){
     //build the stringto return
     string stringToReturn = "";
 
-    int i = 0;
-    while (i != pRow)
+    while (!file_lo.eof())
     {
         getline(file_lo, stringToReturn);
-        i++;
-        if(file_lo.eof())
-            break;
     }
+
     file.seekg(currSeek);
     if (stringToReturn == "") stringToReturn = "404";
     return stringToReturn;
+}
+
+int readfile::getRaidMode(string* pFile){
+    int currSeek = file.tellg();
+
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = *pFile;
+        string standardDir = createNewFile(fileH.c_str());
+        file.open(standardDir.c_str());
+    }
+
+    if ( !(file.is_open()) ){
+        cout << NO_EXISTANT_FILE <<endl;
+        return -1;
+    }
+
+    string raid;
+    file.seekg(RAID_MODE_START);
+    for (short i = ZE_ROW; i < 2 ; i++){
+        raid.push_back(file.get());
+    }
+    int RD = stringToInt(&raid);
+    return RD;
 }
