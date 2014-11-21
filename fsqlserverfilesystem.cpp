@@ -189,7 +189,7 @@ bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare,
     }
 }
 
-void FSQLServerFileSystem::updateDatabaseStruct(string* pFile, string* ip,
+void FSQLServerFileSystem::updateDatabaseStruct(string* pFile, string ip,
                                                 int pos){
     WF->writeRaidFile(pFile, ip, pos);
 }

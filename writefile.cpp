@@ -456,7 +456,7 @@ void writefile::createRaidFile(string* pFile){
     whatever.close();
 }
 
-void writefile::writeRaidFile(string* pFile, string* ip, int pos){
+void writefile::writeRaidFile(string* pFile, string ip, int pos){
     string path = DIRFILE;
 
     path.append(*pFile);
@@ -465,7 +465,7 @@ void writefile::writeRaidFile(string* pFile, string* ip, int pos){
     file_lo.open(path.c_str());
     file_lo.seekg(ZE_ROW,ios::end);
     string temp = this->intToChar(pos);
-    string locali = *ip + ',' + temp;
+    string locali = ip + ',' + temp;
     file_lo << locali;
     file_lo << "\n";
     file_lo.close();

@@ -9,8 +9,8 @@ class networkAccess
 {
 public:
     networkAccess();
-    bool networkRequest(string* raidServ, std::string* data);
-    string networkServer(string* raidServ, std::string* data);
+    int networkRequest(string raidServ, std::string* data);
+    string networkServer(string raidServ, std::string* data);
 
 private:
     TCPClient* client;

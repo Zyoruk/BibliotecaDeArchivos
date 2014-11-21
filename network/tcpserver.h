@@ -12,6 +12,7 @@ class TCPServer
 {
 public:
     TCPServer(int *portno);
+    TCPServer();
     void error(const char *msg);
     void receive();
 

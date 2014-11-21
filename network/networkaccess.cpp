@@ -4,12 +4,12 @@ networkAccess::networkAccess()
 {
 }
 
-string networkAccess::networkRequest(std::string* raidServ, std::string* data){
-    this->client = new TCPClient(PORTNO);
-    client->link(raidServ, data);
+int networkAccess::networkRequest(std::string raidServ, std::string* data){
+    this->client = new TCPClient();
+    return client->link(raidServ, *data);
 }
 
-string networkAccess::networkServer(std::string* raidServ, std::string* data){
-    this->server = new TCPServer(PORTNO);
+string networkAccess::networkServer(std::string raidServ, std::string* data){
+    this->server = new TCPServer();
     server->receive();
 }

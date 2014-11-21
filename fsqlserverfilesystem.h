@@ -112,7 +112,7 @@ public:
      */
     bool updateColumn(string newData,string pToCompare, string pFile, string pCName);
 
-    void updateDatabaseStruct(string* pFile, string* ip, int pos);
+    void updateDatabaseStruct(string* pFile, string ip, int pos);
 
     int getRaidMode(string* pFile);
 

@@ -6,6 +6,11 @@ TCPServer::TCPServer(int* portno)
     this->listenPort = *portno;
 }
 
+TCPServer::TCPServer()
+{
+    this->listenPort = PORTNO;
+}
+
 /* The port number is passed as an argument */
 void TCPServer::error(const char *msg)
 {
