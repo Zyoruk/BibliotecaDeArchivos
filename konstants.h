@@ -35,6 +35,7 @@ static const char _N_ = 'N';
 static const char SERVER_IP1 = "192.168.0.20";
 static const char SERVER_IP2 = "192.168.0.40";
 static const char SERVER_IP3 = "192.168.0.60";
+static const char LOCAL = "172.0.0.1";
 static const char SERVER_INSTANCE = 1;
 static const int RAID0 = 0;
 static const int RAID1 = 1;

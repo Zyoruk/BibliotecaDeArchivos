@@ -3,6 +3,7 @@
 networkAccess::networkAccess()
 {
     this->client = new TCPClient();
+    this->server = new TCPServer();
 }
 
 bool networkAccess::networkWrite(const char* raidServ[], char* data[]){

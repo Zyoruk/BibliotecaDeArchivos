@@ -12,7 +12,7 @@ void TCPServer::error(const char *msg)
     exit(1);
 }
 
-void TCPServer::receive(int* portno)
+void TCPServer::receive()
 {
      int sockfd, newsockfd, n;
      socklen_t clilen;
@@ -38,7 +38,7 @@ void TCPServer::receive(int* portno)
 
      // convert short integer value for port must be converted into network
      // byte order
-     serv_addr.sin_port = htons(*portno);
+     serv_addr.sin_port = htons(SERVER_PORTNO);
 
      // bind(int fd, struct sockaddr *local_addr, socklen_t addr_length)
      // bind() passes file descriptor, the address structure, and the length of
