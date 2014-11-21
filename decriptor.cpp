@@ -28,6 +28,7 @@ string decriptor::NextWord() {
     int cut = this->line.find(' ');
     bhla = this->line.substr(ZE_ROW, cut);
     this->line =  this->line.substr(cut + ONE_BYTE, this->line.length());
+    cout <<bhla<<endl;
     return bhla;
 }
 

@@ -4,7 +4,6 @@ user::user()
 {
     this->_ReadOnlyDBS = new SimpleList < char* >();
     this->_WriteDBS = new SimpleList < char* >();
-    this->_admin = false;
     this->_userName = "";
 }
 
@@ -31,10 +30,6 @@ bool user::CanWrite(string pFileName){
     }else{
         return false;
     }
-}
-
-bool user::isAdmin(){
-    return this->_admin;
 }
 
 string user::getUsername(){

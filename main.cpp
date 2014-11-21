@@ -114,15 +114,12 @@ void test9 (int pColumnSize){
            }
 }
 
-void test10(string pWhatToWrite){
-//    char* turrait = (char*) calloc ()
-}
 
-void test11(){
+void test10(){
     filesystem->deleteData("Test9" , "Nombre" , "Luis");
 }
 
-void test12(){
+void test11(){
     permissionsLayer pL = permissionsLayer();
     pL.createUser("Luis" , "123123");
     pL.grantPermission("Luis" , "read" , "Test9");
@@ -134,38 +131,48 @@ void test12(){
     tester.CanRead("Test9");
 }
 
+void test12(){
+//    string command = "GRANT write ON Test9 TO Luis";
+    string command = "CREATE USER Daniel PASSWORD 12313";
+    user currentUser;
+    decriptor* dekrpt = new decriptor(command , &currentUser, true);
+}
+
 int main()
 {
-    permissionsLayer* pL = new permissionsLayer();
-    cout << "Enter username : " <<endl;
-    string username = "";
-    cin >> username;
-    cout << "Enter password : " << endl;
-    string Password = "";
-    cin >> Password;
-    user currentUser = user() ;
-    bool admin;
-    if (username == "admin" && Password == "admin"){
-        admin= true;
-        string command;
-        cout << "Enter command:" <<endl;
-        cin >> command;
-        decriptor* dekrpt = new decriptor(command , &currentUser, admin);
-    }else{
-        admin = false;
-        if (pL->checkPass(username, Password)){
-            currentUser = pL->loadUser(username);
-            string command;
-            cout << "Enter command:" <<endl;
-            cin >> command;
-            decriptor* dekrpt = new decriptor(command , &currentUser, admin);
-        }else{
-            cout << INVALID_VALUES << endl;
-        }
-    }
-
-//    test0();
     test12();
     return 0;
 }
+
+
+
+
+
+//    permissionsLayer* pL = new permissionsLayer();
+//    cout << "Enter username : " <<endl;
+//    string username = "";
+//    cin >> username;
+//    cout << "Enter password : " << endl;
+//    string Password = "";
+//    cin >> Password;
+//    user currentUser = user() ;
+//    bool admin;
+//    if (username == "admin" && Password == "admin"){
+//        admin= true;
+//        string command;
+//        cout << "Enter command:" <<endl;
+//        cin >> command;
+//        decriptor* dekrpt = new decriptor(command , &currentUser, admin);
+//    }else{
+//        admin = false;
+//        if (pL->checkPass(username, Password)){
+//            currentUser = pL->loadUser(username);
+//            string command;
+//            cout << "Enter command:" <<endl;
+//            cin >> command;
+//            decriptor* dekrpt = new decriptor(command , &currentUser, admin);
+//        }else{
+//            cout << INVALID_VALUES << endl;
+//        }
+//    }
 

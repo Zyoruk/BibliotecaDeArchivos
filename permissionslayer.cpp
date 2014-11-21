@@ -145,25 +145,18 @@ bool permissionsLayer::grantPermission(string pUserName , string pNewPermission,
     {
         string temp;
         string path;
-        if(pNewPermission =="read"){
+        if(pNewPermission =="read" || pNewPermission == "write"){
             temp = pNewPermission;
             temp.append(pUserName);
             path = createNewUser(temp);
-
-            std::ofstream ofs(path.c_str(), std::ios::binary);
-            ofs << pFile;
+            fstream file ;
+            file.open(path.c_str());
+            file.seekg(ZE_ROW , ios::end);
+            file << pFile;
+            file << "\n";
             return true;
-
-        }else if(pNewPermission == "write"){
-            temp = pNewPermission;
-            temp.append(pUserName);
-            path = createNewUser(temp);
-
-            std::ofstream ofs2(path.c_str(), std::ios::binary);
-            ofs2 << pFile;
-            return true;
-        }
         return false;
+        }
     }
 }
 

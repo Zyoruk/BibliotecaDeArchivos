@@ -12,10 +12,8 @@ public:
     void setUserName(string pNewName);
     void addToWrite(string pFileName);
     void addToRead(string pFileName);
-    bool isAdmin();
 
 private:
-    bool _admin;
     string _userName;
     SimpleList<char*>* _ReadOnlyDBS;
     SimpleList<char*>* _WriteDBS;
