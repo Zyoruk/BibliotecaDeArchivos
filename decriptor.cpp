@@ -16,8 +16,8 @@ decriptor::decriptor(string pline, user* pCurrentuser, bool pAdmin) {
     this->FS = new permissionsLayer();
     this->RM = new raidManager();
     this->line = pline;
-    this->cNames = array <char*>(BIG_A_SIZE);
-    this->cSais = array <int > (BIG_A_SIZE);
+    this->cNames = SimpleList <char*>();
+    this->cSais = SimpleList <int > ();
     this->RegSaiz = ZE_ROW;
     this->fileName = EMPTY_STRING;
     decript();
@@ -28,26 +28,49 @@ string decriptor::NextWord() {
     int cut = this->line.find(' ');
     bhla = this->line.substr(ZE_ROW, cut);
     this->line =  this->line.substr(cut + ONE_BYTE, this->line.length());
-    cout <<bhla<<endl;
     return bhla;
 }
 
 
-string charToStr(char* pChar){
+string decriptor::charToStr(char* pChar){
     string toReturn = EMPTY_STRING;
     toReturn.assign(pChar , sizeof(pChar));
     return toReturn;
 }
 
+array<char*> decriptor::arrayCharToSL(SimpleList<char*> toConvert){
+    array<char*> toReturn (toConvert.getLenght());
+    int i = 0;
+    while(toConvert.getLenght() != 0){
+        toReturn[i] = *toConvert.getHead()->getElement();
+        toConvert.deleteHead();
+        i++;
+    }
+    return toReturn;
+}
+
+array<int> decriptor::arrayCharToSL(SimpleList<int> toConvert){
+    array<int> toReturn (toConvert.getLenght());
+    int i = 0;
+    while(toConvert.getLenght() != 0){
+        toReturn[i] = *toConvert.getHead()->getElement();
+        toConvert.deleteHead();
+        i++;
+    }
+    return toReturn;
+}
 
 int decriptor::ColNameToIndex(string pName) {
     string ColName = EMPTY_STRING;
     int Index = MINUS_ONE;
+    SimpleList<char*>* temp = &this->cNames;
     for (int i = ZE_ROW; i < cNames.getLenght(); i++) {
-        ColName = charToStr(cNames[i]);
+        ColName = *(temp->getHead()->getElement());
         if (ColName.compare(pName)) {
             Index=i;
             break;
+        }else{
+            temp->deleteHead();
         }
     }
     return Index;
@@ -72,9 +95,9 @@ void decriptor::getCreationArguments () {
         this->line = this->line.substr(cut+ONE_BYTE, this->line.length());
 
         RegSaiz += saiz;
-        cNames.insert(ZE_ROW, const_cast<char*>( col.c_str()));
-        cSais.insert(ZE_ROW, saiz);
-        }
+        cNames.append(const_cast<char*>( col.c_str()));
+        cSais.append(saiz);
+    }
 }
 
 void decriptor::decript () {
@@ -86,28 +109,33 @@ void decriptor::decript () {
     string firstWord = NextWord();
     if (firstWord == CREATE) {
         if (this->admin){
-            if (NextWord() == TABLE) {
+            string toCompare = NextWord();
+            if (toCompare == TABLE) {
                 fileName = NextWord();
                 getCreationArguments(); //RegSize, cSais, cNames
                 if (NextWord()== USING){
                     if (NextWord()== RAID){
                         int  RAID = this->StrToInt(NextWord());
-                        FS->createNewFile(&RegSaiz ,&cSais, &cNames ,&fileName, &RAID);
+                        array<char*> aNames = this->arrayCharToSL(this->cNames);
+                        array<int> aSais = this->arrayCharToSL(this->cSais);
+                        FS->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID);
                     }else{
                         cout << INVALID_COMMAND << endl;
                     }
                 } else {
                     int RAID = NOT_RAID;
-                    FS->createNewFile(&RegSaiz ,&cSais, &cNames ,&fileName, &RAID);
+                    array<char*> aNames = this->arrayCharToSL(this->cNames);
+                    array<int> aSais = this->arrayCharToSL(this->cSais);
+                    FS->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID);
                 }
-            }else if (NextWord() == USER) {
+            }else if (toCompare == USER) {
                 uName = NextWord();
                 if (NextWord() == PASSWORD) {
                     FS->createUser(uName, NextWord());
                 }else{
                     cout << INVALID_COMMAND << endl;
                 }
-            }else if (NextWord() == INDEX){
+            }else if (toCompare == INDEX){
                 if (NextWord() == ON){
                     //                fName = NextWord();
                     //                cName = NextWord();
@@ -125,7 +153,7 @@ void decriptor::decript () {
         if (NextWord() == INTO){
             fName = NextWord();
             if(this->admin){
-             //            FS->writeNewLineToFile(&fName, &cData, &cPos);
+                //            FS->writeNewLineToFile(&fName, &cData, &cPos);
             }else if (this->currentUser->CanWrite(fName)){
                 //            FS->writeNewLineToFile(&fName, &cData, &cPos);
             }else{
@@ -183,7 +211,7 @@ void decriptor::decript () {
     }else if (firstWord == COMPRESS){
         if(this->admin){
             if (NextWord() == TABLE){
-    //            fName = NextWord();
+                //            fName = NextWord();
                 cout << NYI << endl;
             }else{
                 cout << INVALID_COMMAND <<endl;

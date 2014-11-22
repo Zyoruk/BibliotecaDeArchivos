@@ -1,10 +1,12 @@
 #ifndef DECRIPTOR_H
 #define DECRIPTOR_H
 #include <string>
+#include "SimpleList.h"
 #include "array/array.h"
 #include "permissionslayer.h"
 #include "raidManager/raidmanager.h"
 #include "user.h";
+
 using namespace std;
 
 class decriptor
@@ -25,15 +27,17 @@ private:
     //???
     int ColNameToIndex(string pName);
 
-
+    array<char*> arrayCharToSL(SimpleList<char*> toConvert);
+    array<int> arrayCharToSL(SimpleList<int> toConvert);
+    string charToStr(char* pChar);
     int StrToInt (string ToParse);
     void getCreationArguments ();
     void decript ();
 
     string line;
     string fileName;
-    array<char*> cNames;
-    array<int> cSais;
+    SimpleList<char*> cNames;
+    SimpleList<int> cSais;
     int RegSaiz;
 
 };
