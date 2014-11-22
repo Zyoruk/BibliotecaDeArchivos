@@ -17,7 +17,9 @@ decriptor::decriptor(string pline, user* pCurrentuser, bool pRoot, bool pServer)
     this->FS = new permissionsLayer();
     this->RM = new raidManager();
     this->line = pline;
+    this->pNames = SimpleList <char*>();
     this->cNames = SimpleList <char*>();
+    this->cValius = SimpleList <char*>();
     this->cSais = SimpleList <int > ();
     this->RegSaiz = ZE_ROW;
     this->fileName = EMPTY_STRING;
@@ -102,12 +104,46 @@ void decriptor::getCreationArguments () {
         cSais.append(saiz);
     }
 }
+
+void decriptor::getValuedArguments () {
+    string valiu = EMPTY_STRING;
+    string col = EMPTY_STRING;
+    int split = ZE_ROW;
+    int cut = ZE_ROW;
+
+    cut = this->line.find(SPACE_CHAR);
+    while (line != EMPTY_STRING) {
+        split = this->line.find(COLON);
+        col = this->line.substr(ZE_ROW, split);
+        valiu = this->line.substr(split+ONE_BYTE, cut-(split-ONE_BYTE)); //~ substr is not reliable
+        this->line = this->line.substr(cut+ONE_BYTE, this->line.length());
+
+        //RegSaiz += saiz;
+        cNames.append(const_cast<char*>( col.c_str()));
+        cValius.append(const_cast<char*>(valiu.c_str()));
+    }
+}
+
+void decriptor::getArguments() {
+    string col = EMPTY_STRING;
+    int cut = ZE_ROW;
+
+    cut = this->line.find(SPACE_CHAR);
+    while (line != FROM) {
+        col = this->line.substr(ZE_ROW, cut);
+        this->line = this->line.substr(cut+ONE_BYTE, this->line.length());
+
+        cNames.append(const_cast<char*>( col.c_str()));
+    }
+}
+
 void decriptor::askForValidCommand(){
     string command;
     std::getline(std::cin , command);
     this->line = command;
     decript();
 }
+
 void decriptor::decript () {
 
     string fName = EMPTY_STRING;
@@ -169,34 +205,35 @@ void decriptor::decript () {
                 cout << INVALID_COMMAND << endl;
                 askForValidCommand();
             }
+
         }else if (firstWord == INSERT) {
             if (NextWord() == INTO){
                 fName = NextWord();
-                if(this->root){
-                    //            FS->writeNewLineToFile(&fName, &cData, &cPos);
-                    askForValidCommand();
-                }else if (this->currentUser->CanWrite(fName)){
-                    //            FS->writeNewLineToFile(&fName, &cData, &cPos);
-                    askForValidCommand();
-                }else{
-                    cout << INVALID_COMMAND << endl;
-                    askForValidCommand();
-                }
-            }else{
+                getValuedArguments();
+                array<char*> aNames = this->arrayCharToSL(this->cNames);
+                array<char*> aValiuz = this->arrayCharToSL(this->cValius);
+                FS->writeNewLineToFile(fName, &aNames, &aValiuz);
+                askForValidCommand();
+            } else {
                 cout << INVALID_COMMAND << endl;
                 askForValidCommand();
             }
-        }else if (firstWord == SELECT) {
-            cName = NextWord();
-            if (NextWord()== FROM) {
+
+        } else if (firstWord == SELECT) {
+            getArguments();
+            if (NextWord() == FROM) {
                 fName = NextWord();
                 if (this->root || this->currentUser->CanWrite(fName)){
-                    if (cName == ASTERISC) {
-                        //filesystem->readFromFile(&NextWord(), &cNames());
+                    const char* firstElement;// = cNames.elementAt(0)->getElement();
+                    if (firstElement == ASTERISC) {
+                        FS->readFromFile(fileName , EMPTY_STRING, ZE_ROW);
                         askForValidCommand();
                     } else {
-                        //filesystem->readFromFile(&fileName , &ColNameToIndex(cName), &ONE_BYTE);
-                        askForValidCommand();
+                        for (int i = ZE_ROW; i<cNames.getLenght(); i++) {
+                            string toPass (const_cast<char*>(*(cNames.elementAt(i)->getElement())));
+                            FS->readFromFile(fileName, toPass, i);
+                            askForValidCommand();
+                        }
                     }
                 }else{
                     cout << INVALID_COMMAND << endl;
@@ -206,14 +243,19 @@ void decriptor::decript () {
                 cout << INVALID_COMMAND << endl;
                 askForValidCommand();
             }
+
         }else if (firstWord == UPDATE) {
             fName = NextWord();
             if (this->root || this->currentUser->CanWrite(fName)){
                 if (NextWord() == SET) {
-                    cName = NextWord();
-                    if (NextWord() == TO) {
-                        getCreationArguments();
-                        //filesystem->update("&Daniel", &fName, ONE_BYTE , ONE_BYTE);
+                    getValuedArguments();
+                    array<char*> arrToPass = this->arrayCharToSL(this->cValius);
+                    array<char*> arrColToPass = this->arrayCharToSL(this->cNames);
+                    for (int i = ZE_ROW; i <= cNames.getLenght(); i++) {
+                        string toPass (const_cast<char*>(arrToPass[i]));
+                        string ColToPass (const_cast<char*>(arrToPass[i]));
+                        FS->update(toPass, fName, ZE_ROW, ColToPass );
+                    }
                         askForValidCommand();
                     }else{
                         cout << INVALID_COMMAND << endl;
@@ -258,7 +300,7 @@ void decriptor::decript () {
                 askForValidCommand();
             }
         }else if (firstWord == BACKUP){
-            if ( this->root){
+            if (this->root){
                 if (NextWord() == TABLE){
                     fName = NextWord();
                     FS->backUpFile(NextWord());
@@ -275,7 +317,7 @@ void decriptor::decript () {
             if (this->root){
                 if (NextWord() == TABLE){
                     fName = NextWord();
-                    FS->restoreFile(NextWord());
+                    FS->restoreFile(fName);
                     askForValidCommand();
                 }else{
                     cout << INVALID_COMMAND <<endl;
@@ -303,7 +345,7 @@ void decriptor::decript () {
         }else if (firstWord == GRANT){
             if ( this->root){
                 string permit = NextWord();
-                cout << permit <<endl;
+                //cout << permit <<endl;
                 if (NextWord() == ON) {
                     fName = NextWord();
                     if (NextWord() == TO) {
@@ -349,147 +391,4 @@ void decriptor::decript () {
                 askForValidCommand();
             }
         }
-    }else{
-        if (firstWord == CREATE) {
-            string toCompare = NextWord();
-            if (toCompare == TABLE) {
-                fileName = NextWord();
-                getCreationArguments(); //RegSize, cSais, cNames
-                if (NextWord()== USING){
-                    if (NextWord()== RAID){
-                        int  RAID = this->StrToInt(NextWord());
-                        array<char*> aNames = this->arrayCharToSL(this->cNames);
-                        array<int> aSais = this->arrayCharToSL(this->cSais);
-                        RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
-                                          &RAID , &commandLine);
-                    }else{
-                        cout << INVALID_COMMAND << endl;
-                    }
-                } else {
-                    int RAID = NOT_RAID;
-                    array<char*> aNames = this->arrayCharToSL(this->cNames);
-                    array<int> aSais = this->arrayCharToSL(this->cSais);
-                    RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
-                                      &commandLine);
-                }
-            }else if (toCompare == USER) {
-                uName = NextWord();
-                if (NextWord() == PASSWORD) {
-                    FS->createUser(uName, NextWord());
-                }else{
-                    cout << INVALID_COMMAND << endl;
-                }
-            }else if (toCompare == INDEX){
-                if (NextWord() == ON){
-                    //                fName = NextWord();
-                    //                cName = NextWord();
-                    cout << NYI << endl;
-                }else{
-                    cout << INVALID_COMMAND << endl;
-                }
-            }else{
-                cout << INVALID_COMMAND << endl;
-            }
-        }else if (firstWord == INSERT) {
-            if (NextWord() == INTO){
-                fName = NextWord();
-                //            FS->writeNewLineToFile(&fName, &cData, &cPos);
-            }else{
-                cout << INVALID_COMMAND << endl;
-            }
-        }else if (firstWord == SELECT) {
-            cName = NextWord();
-            if (NextWord()== FROM) {
-                fName = NextWord();
-                if (cName == ASTERISC) {
-                    //filesystem->readFromFile(&NextWord(), &cNames());
-                } else {
-                    //filesystem->readFromFile(&fileName , &ColNameToIndex(cName), &ONE_BYTE);
-                }
-            }else{
-                cout << INVALID_COMMAND << endl;
-            }
-        }else if (firstWord == UPDATE) {
-            fName = NextWord();
-            if (NextWord() == SET) {
-                cName = NextWord();
-                if (NextWord() == TO) {
-                    getCreationArguments();
-                    //filesystem->update("&Daniel", &fName, ONE_BYTE , ONE_BYTE);
-                }else{
-                    cout << INVALID_COMMAND << endl;
-                }
-            } else{
-                cout << INVALID_COMMAND << endl;
-            }
-        }else if (firstWord == DELETE) {
-            if (NextWord() == FROM) {
-                fName = NextWord();
-                cName = NextWord();
-                uName = NextWord();
-                FS->deleteData(fName , cName , uName);
-            }else{
-                cout << INVALID_COMMAND << endl;
-            }
-        }else if (firstWord == COMPRESS){
-            if (NextWord() == TABLE){
-                //            fName = NextWord();
-                cout << NYI << endl;
-            }else{
-                cout << INVALID_COMMAND <<endl;
-            }
-        }else if (firstWord == BACKUP){
-            if (NextWord() == TABLE){
-                fName = NextWord();
-                FS->backUpFile(NextWord());
-            }else{
-                cout << INVALID_COMMAND <<endl;
-            }
-        }else if (firstWord == RESTORE){
-            if (NextWord() == TABLE){
-                fName = NextWord();
-                FS->restoreFile(NextWord());
-            }else{
-                cout << INVALID_COMMAND <<endl;
-            }
-
-        }else if (firstWord == DROP){
-            if (NextWord() == USER) {
-                uName = NextWord();
-                FS->dropUser(uName);
-            }else{
-                cout << INVALID_COMMAND <<endl;
-            }
-        }else if (firstWord == GRANT){
-            string permit = NextWord();
-            if (NextWord() == ON) {
-                fName = NextWord();
-                if (NextWord() == TO) {
-                    uName = NextWord();
-                    FS->grantPermission(uName, permit, fName);
-                }else{
-                    cout << INVALID_COMMAND << endl;
-                }
-            }else{
-                cout << INVALID_COMMAND <<endl;
-            }
-        }else if (firstWord == REVOKE){
-            string permit = NextWord();
-            if (NextWord() == ON) {
-                fName = NextWord();
-                if (NextWord() == TO) {
-                    uName = NextWord();
-                    FS->revokePermission(uName, permit, fName);
-                }else{
-                    cout << INVALID_COMMAND << endl;
-                }
-            }else{
-                cout << INVALID_COMMAND << endl;
-            }
-        }else{
-            cout << INVALID_COMMAND << endl;
-        }
     }
-
-}
-

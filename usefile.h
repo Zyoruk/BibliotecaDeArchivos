@@ -13,6 +13,9 @@ using namespace std;
 
 class useFile
 {
+public:
+    int getRegisterQuantity();
+    int getColumnNumber(string* fileName ,string* columnName);
 protected:
     useFile();
 
@@ -27,13 +30,12 @@ protected:
     string intToChar(int metadata);
     string createNewFile(string newFileName);
     string createNewBackUp(string newFileName);
+
     int stringToInt(string* pStr);
     int getRegisterSize();
     int getMetaDataSize();
-    int getRegisterQuantity();
     int columnSize(int pColumnInt);
     int sizeUntilColumn(int pColumn);
-    int getColumnNumber(string* fileName ,string* columnName);
     void fillString(string* pData, int pSize);
     void fillZString(string* pData, int pSize);
     void checkString(string* pStringToCheck);

@@ -63,17 +63,17 @@ void test1(){
 
 void test2(){
     string fileName = "Test9";
-    array<char*> field = filesystem->readFromFile(fileName , 1 , 1);
+    array<char*> field = filesystem->readFromFile(fileName , "Nombre" , 1);
     for (int i = 0 ; i < field.getLenght() ; i++){
         cout << field[i] << " ";
     }
 }
 
 void test3(){
-    filesystem->update("Daniel", "Test9" , 1 , 1);
-    filesystem->update("Jenkins", "Test9" , 1 , 2);;
-    filesystem->update("Josafat", "Test9" , 3 , 1);
-    filesystem->update("Vargas","Test9" , 3 , 2);
+    filesystem->update("Daniel", "Test9" , 1 , "Nombre");
+    filesystem->update("Jenkins", "Test9" , 1 , "Apellido");;
+    filesystem->update("Josafat", "Test9" , 3 , "Nombre");
+    filesystem->update("Vargas","Test9" , 3 , "Apellido");
 }
 
 void test4(){
@@ -88,7 +88,7 @@ void test5(){
 }
 
 void test6(){
-    array<char*> arrTmp = filesystem->readFromFile("Test9" , 2 , 0);
+    array<char*> arrTmp = filesystem->readFromFile("Test9" , "Apellido" , 0);
     for (int i = 0; i < arrTmp.getLenght();i++)cout << arrTmp[i] <<endl;
 }
 

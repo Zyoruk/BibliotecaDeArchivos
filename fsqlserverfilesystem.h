@@ -12,7 +12,7 @@ using namespace std;
  * \brief The FSQLServerFileSystem class This class provides the interface to
  * interact with the files.
  */
-class FSQLServerFileSystem
+class  FSQLServerFileSystem
 {
 public:
     /*!
@@ -59,7 +59,7 @@ public:
      * \param pColumn number of column to write the data.
      * \return
      */
-    bool update (string pData , string pFileName,  int pRow, int pColumn);
+    bool update (string pData , string pFileName,  int pRow, string pColumn);
 
     /*!
      * \brief readFromFile reads data specified by the parameters. If the column is zero
@@ -69,7 +69,7 @@ public:
      * \param pRow number of row to read|
      * \return an array containing the data.
      */
-    array<char*> readFromFile(string pFileName , int pColumn, int pRow);
+    array<char*> readFromFile(string pFileName , string pColumn, int pRow);
 
     /*!
      * \brief backUpFile back ups an existant file.
