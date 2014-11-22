@@ -12,9 +12,8 @@ public:
     string retrieveRegister(string* pFileName , string* commandLine, int pRow);
     bool dataRecovery(string* database);
 
-    bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
-                       array<char*>* pColumnNames, string* pFile, int* raidMode,
-                       string* commandLine);
+    bool createNewFile(array<int>* columnSizes, array<char*>* columnNames,
+                       string* pFile, int* raidMode, string* commandLine);
 
     bool storeRegister(string* pFileName ,array<char*>* pWhatToWrite,
                        array<char*>* pColumnNam , string* commandLine);

@@ -163,8 +163,8 @@ void decriptor::decript () {
                             int  RAID = this->StrToInt(NextWord());
                             array<char*> aNames = this->arrayCharToSL(this->cNames);
                             array<int> aSais = this->arrayCharToSL(this->cSais);
-                            RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
-                                              &RAID , &commandLine);
+                            //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
+                              //                &RAID , &commandLine);
                             askForValidCommand();
                         }else{
                             cout << INVALID_COMMAND << endl;
@@ -174,8 +174,8 @@ void decriptor::decript () {
                         int RAID = NOT_RAID;
                         array<char*> aNames = this->arrayCharToSL(this->cNames);
                         array<int> aSais = this->arrayCharToSL(this->cSais);
-                        RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
-                                          &commandLine);
+                        //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
+                          //                &commandLine);
                         askForValidCommand();
                     }
                 }else if (toCompare == USER) {
@@ -391,4 +391,147 @@ void decriptor::decript () {
                 askForValidCommand();
             }
         }
+<<<<<<< HEAD
+=======
+    }else{
+        if (firstWord == CREATE) {
+            string toCompare = NextWord();
+            if (toCompare == TABLE) {
+                fileName = NextWord();
+                getCreationArguments(); //RegSize, cSais, cNames
+                if (NextWord()== USING){
+                    if (NextWord()== RAID){
+                        int  RAID = this->StrToInt(NextWord());
+                        array<char*> aNames = this->arrayCharToSL(this->cNames);
+                        array<int> aSais = this->arrayCharToSL(this->cSais);
+                        //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
+                          //                &RAID , &commandLine);
+                    }else{
+                        cout << INVALID_COMMAND << endl;
+                    }
+                } else {
+                    int RAID = NOT_RAID;
+                    array<char*> aNames = this->arrayCharToSL(this->cNames);
+                    array<int> aSais = this->arrayCharToSL(this->cSais);
+                    //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
+                      //                &commandLine);
+                }
+            }else if (toCompare == USER) {
+                uName = NextWord();
+                if (NextWord() == PASSWORD) {
+                    FS->createUser(uName, NextWord());
+                }else{
+                    cout << INVALID_COMMAND << endl;
+                }
+            }else if (toCompare == INDEX){
+                if (NextWord() == ON){
+                    //                fName = NextWord();
+                    //                cName = NextWord();
+                    cout << NYI << endl;
+                }else{
+                    cout << INVALID_COMMAND << endl;
+                }
+            }else{
+                cout << INVALID_COMMAND << endl;
+            }
+        }else if (firstWord == INSERT) {
+            if (NextWord() == INTO){
+                fName = NextWord();
+                //            FS->writeNewLineToFile(&fName, &cData, &cPos);
+            }else{
+                cout << INVALID_COMMAND << endl;
+            }
+        }else if (firstWord == SELECT) {
+            cName = NextWord();
+            if (NextWord()== FROM) {
+                fName = NextWord();
+                if (cName == ASTERISC) {
+                    //filesystem->readFromFile(&NextWord(), &cNames());
+                } else {
+                    //filesystem->readFromFile(&fileName , &ColNameToIndex(cName), &ONE_BYTE);
+                }
+            }else{
+                cout << INVALID_COMMAND << endl;
+            }
+        }else if (firstWord == UPDATE) {
+            fName = NextWord();
+            if (NextWord() == SET) {
+                cName = NextWord();
+                if (NextWord() == TO) {
+                    getCreationArguments();
+                    //filesystem->update("&Daniel", &fName, ONE_BYTE , ONE_BYTE);
+                }else{
+                    cout << INVALID_COMMAND << endl;
+                }
+            } else{
+                cout << INVALID_COMMAND << endl;
+            }
+        }else if (firstWord == DELETE) {
+            if (NextWord() == FROM) {
+                fName = NextWord();
+                cName = NextWord();
+                uName = NextWord();
+                FS->deleteData(fName , cName , uName);
+            }else{
+                cout << INVALID_COMMAND << endl;
+            }
+        }else if (firstWord == COMPRESS){
+            if (NextWord() == TABLE){
+                //            fName = NextWord();
+                cout << NYI << endl;
+            }else{
+                cout << INVALID_COMMAND <<endl;
+            }
+        }else if (firstWord == BACKUP){
+            if (NextWord() == TABLE){
+                fName = NextWord();
+                FS->backUpFile(NextWord());
+            }else{
+                cout << INVALID_COMMAND <<endl;
+            }
+        }else if (firstWord == RESTORE){
+            if (NextWord() == TABLE){
+                fName = NextWord();
+                FS->restoreFile(NextWord());
+            }else{
+                cout << INVALID_COMMAND <<endl;
+            }
+
+        }else if (firstWord == DROP){
+            if (NextWord() == USER) {
+                uName = NextWord();
+                FS->dropUser(uName);
+            }else{
+                cout << INVALID_COMMAND <<endl;
+            }
+        }else if (firstWord == GRANT){
+            string permit = NextWord();
+            if (NextWord() == ON) {
+                fName = NextWord();
+                if (NextWord() == TO) {
+                    uName = NextWord();
+                    FS->grantPermission(uName, permit, fName);
+                }else{
+                    cout << INVALID_COMMAND << endl;
+                }
+            }else{
+                cout << INVALID_COMMAND <<endl;
+            }
+        }else if (firstWord == REVOKE){
+            string permit = NextWord();
+            if (NextWord() == ON) {
+                fName = NextWord();
+                if (NextWord() == TO) {
+                    uName = NextWord();
+                    FS->revokePermission(uName, permit, fName);
+                }else{
+                    cout << INVALID_COMMAND << endl;
+                }
+            }else{
+                cout << INVALID_COMMAND << endl;
+            }
+        }else{
+            cout << INVALID_COMMAND << endl;
+        }
+>>>>>>> c235767a0e803079e022edd44c5a4f752e846390
     }

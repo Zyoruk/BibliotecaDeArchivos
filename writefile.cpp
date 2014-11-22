@@ -36,15 +36,16 @@ void writefile::createTable(int* registerSize, array<int>* columnSizes ,
     int offset = 0;
     string add;
 
-    string theFileName = createNewFile(*pFile);
-    writefile::writeColumnNames(&theFileName, columnNames);
+    string theFileName = createNewFile(pFile);
+    writeColumnNames(&theFileName, columnNames);
     ofstream database (theFileName.c_str() , ios::trunc);
 
     //check if buffer = true
-    if(database.is_open())
+    if(database.is_open()){
         cout << "****Database succesfully created***" << endl;
-    else
+    }else{
         cout << "****Database could not be created***" << endl;
+    }
 
     //Register size valideichion.
     if(*registerSize >= MAX_REGISTER_SIZE)
@@ -94,32 +95,34 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
                             string* pFile, int* raidMode){
 
     int offset = 0;
-    string add;
-    int* registerSize = 0;
+    string add, raid;
+
+    int registerSize = 0;
     array<int> tempArr = *columnSizes;
-    string raid;
     for (int i = 0 ; i < tempArr.getLenght() ; i++){
         registerSize += tempArr[i];
     }
 
-    string theFileName = createNewFile(*pFile);
+    string theFileName = createNewFile(pFile);
     writeColumnNames(&theFileName, columnNames);
     ofstream database (theFileName.c_str() , ios::trunc);
-    createRaidFile(pFile);
+    if (*raidMode < 0){createRaidFile(pFile);}
 
     //check if buffer = true
-    if(database.is_open())
+    if(database.is_open()){
         cout << "****Database succesfully created***" << endl;
-    else
+    }else{
         cout << "****Database could not be created***" << endl;
+    }
 
-
-    if(*registerSize >= MAX_REGISTER_SIZE)
+    if(registerSize >= MAX_REGISTER_SIZE){
         cout << "Error: Register size beyond max size" << endl;
-    else
-    {
+    }else{
         database << TRIPLE_NULL;
-        add = toChar(*registerSize);
+        if (!database.is_open()){
+            cout << ":p" << endl;
+        }
+        add = toChar(registerSize);
         checkSize(&add, DEFAULT_REGISTER_SIZE);
         database.write(add.c_str() , DEFAULT_REGISTER_SIZE);
         raid = intToChar(*raidMode); //pos 8 and 9 to RM.
@@ -165,7 +168,7 @@ bool writefile::writeRegister(string pFileName, array<char*>* pColumnData ,
                               array<char*>* pColumnNam){
 
     int currSeek = file.tellg();
-    string standardDir = createNewFile(pFileName);
+    string standardDir = createNewFile(&pFileName);
     file.open(standardDir.c_str());
     bool isOpen = true;
 
@@ -232,7 +235,7 @@ bool writefile::updateField(string newData, string pFile , int pRow , int pColum
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
-        string standardDir = createNewFile(fileH.c_str());
+        string standardDir = createNewFile(&fileH);
         file.open(standardDir.c_str());
     }
 
@@ -275,7 +278,7 @@ bool writefile::updateColumn(string newData,string pToCompare, string pFile, str
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
-        standardDir = createNewFile(fileH.c_str());
+        standardDir = createNewFile(&fileH);
         file.open(standardDir.c_str());
     }
 
@@ -325,7 +328,7 @@ void writefile::backUpFile(string fileTobackUp){
     string backUp= "backup";
     backUp.append(fileTobackUp); //backupTest8
 
-    string pathFileToBackUp = createNewFile(fileTobackUp); //../FSQL/Test8
+    string pathFileToBackUp = createNewFile(&fileTobackUp); //../FSQL/Test8
     string pathbackUpFile = createNewBackUp(backUp);// ../FSQL/backupTest8
 
     ofstream newfile (pathbackUpFile.c_str() , ios::trunc);
@@ -363,7 +366,7 @@ void writefile::restoreFile(string fileToRestore){
     backUp.append(fileToRestore);
 
     string pathFileToRestore = createNewBackUp(backUp);
-    string pathRestoredFile = createNewFile(fileToRestore);
+    string pathRestoredFile = createNewFile(&fileToRestore);
 
     ofstream newfile (pathRestoredFile.c_str() , ios::trunc);
     newfile.close();
@@ -408,7 +411,7 @@ bool writefile::deleteRegister(string pFile, string pCName, string newData){
 
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        standardDir = createNewFile(pFile.c_str());
+        standardDir = createNewFile(&pFile);
         file.open(standardDir.c_str());
     }
 

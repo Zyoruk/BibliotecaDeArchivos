@@ -16,17 +16,19 @@ void TCPClient::error(string* msg)
     exit(0);
 }
 
-int TCPClient::link(string raidServ, string data)
-{
+bool TCPClient::link(string raidServ, string data){
+
     int sockfd, n;
     struct sockaddr_in serv_addr;
     char buffer[BUFFER_SIZE];
+    bool clean = true;
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sockfd < 0){
         string temp = "Invalid Socket";
         error(&temp);
+        clean = false;
     }
 
     bzero((char*) &serv_addr, sizeof(serv_addr));
@@ -38,6 +40,7 @@ int TCPClient::link(string raidServ, string data)
     if ( connect(sockfd , (struct sockaddr*) &serv_addr , sizeof(serv_addr)) < 0 ){
         string temp = "ERROR connecting";
         error(&temp);
+        clean = false;
     }
 
     int chuncks = 1;
@@ -68,16 +71,18 @@ int TCPClient::link(string raidServ, string data)
     if (n < 0){
          string temp  = "ERROR writing to socket";
          error(&temp);
+         clean = false;
     }
     bzero(buffer,256);
     n = read(sockfd, buffer, 255);
     if (n < 0){
          string temp  = "ERROR writing to socket";
          error(&temp);
+         clean = false;
     }
 
     //printf("%s\n", buffer);
 
     close(sockfd);
-    return n;
+    return clean;
 }

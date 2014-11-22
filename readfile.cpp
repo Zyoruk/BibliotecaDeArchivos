@@ -84,8 +84,7 @@ string readfile::readField(string pFile , int pRow , int pColumn){
     int cSize;
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        string fileH = pFile;
-        string standardDir = createNewFile(fileH.c_str());
+        string standardDir = createNewFile(&pFile);
         file.open(standardDir.c_str());
     }
 
@@ -121,8 +120,7 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
     array <char*> errorArray (ONE_BYTE);   //if !database, return null array
 
     if ( !(file.is_open()) ){
-        string fileH = pFile;
-        standardDir = createNewFile(fileH.c_str());
+        standardDir = createNewFile(&pFile);
         file.open(standardDir.c_str());
     }
 
@@ -156,8 +154,7 @@ array< char* > readfile::readRegistry(string pFile , int pRegister){
     array< char* > errorArray (1);
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        string fileH = pFile;
-        string standardDir = createNewFile(fileH.c_str());
+        string standardDir = createNewFile(&pFile);
         file.open(standardDir.c_str());
     }
 
@@ -191,8 +188,7 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
     int colNum;
 
     if ( !(file.is_open()) ){
-        string fileH = pFile;
-        standardDir = createNewFile(fileH.c_str());
+        standardDir = createNewFile(&pFile);
         file.open(standardDir.c_str());
     }
 
@@ -205,7 +201,6 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
             select [i] = readRegistry( pFile , colNum);
         }
     }
-
     return select;
 }
 
@@ -214,8 +209,7 @@ string readfile::readDataLocation(string* pFile){
 
     //Relative route + the name of the file
     if ( !(file_lo.is_open()) ){
-        string fileH = *pFile;
-        string standardDir = createNewFile(fileH.c_str());
+        string standardDir = createNewFile(pFile);
         file_lo.open(standardDir.c_str());
     }
 
@@ -241,8 +235,7 @@ int readfile::getRaidMode(string* pFile){
 
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        string fileH = *pFile;
-        string standardDir = createNewFile(fileH.c_str());
+        string standardDir = createNewFile(pFile);
         file.open(standardDir.c_str());
     }
 
@@ -257,5 +250,6 @@ int readfile::getRaidMode(string* pFile){
         raid.push_back(file.get());
     }
     int RD = stringToInt(&raid);
+    file.seekg(currSeek);
     return RD;
 }

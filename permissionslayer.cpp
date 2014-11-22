@@ -137,7 +137,7 @@ bool permissionsLayer::grantPermission(string pUserName , string pNewPermission,
     {
         cout << INVALID_USERNAME <<endl;
         return false;
-    }else if (!fileExists(pFile))
+    }else if (!fileExists(&pFile))
     {
         cout << NO_EXISTANT_FILE << endl;
         return false;
@@ -168,7 +168,7 @@ bool permissionsLayer::revokePermission(string pUserName, string pPermission,
     {
         cout << INVALID_USERNAME <<endl;
         return !toReturn;
-    }else if (!fileExists(pFile))
+    }else if (!fileExists(&pFile))
     {
         cout << NO_EXISTANT_FILE << endl;
         return !toReturn;

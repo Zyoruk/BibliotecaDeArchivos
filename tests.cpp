@@ -35,13 +35,12 @@ void test0(){
     int temp = 00 ;
     test = &temp;
     cout << test <<endl;
-    filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file, test);
+    //filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file, test);
 }
 
 void test1(){
 
     string fileName = "Test9";
-
     array<char*> cData(2);
     string nameToAdd = "Luis";
     string lastNameToAdd = "Simon Barrantes";
