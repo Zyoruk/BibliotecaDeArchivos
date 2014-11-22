@@ -13,7 +13,6 @@ bool permissionsLayer::checkUser(string pUserName){
     file.open(newFileDir.c_str());
     isOpen = file.is_open();
     if (!isOpen){
-        cout << INVALID_USERNAME << endl;
         return isOpen;
     }
     file.close();

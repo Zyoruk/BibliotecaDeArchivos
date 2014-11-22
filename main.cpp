@@ -133,7 +133,8 @@ void test11(){
 
 void test12(){
 //    string command = "GRANT write ON Test9 TO Luis";
-    string command = "CREATE USER Daniel PASSWORD 12313";
+//    string command = "CREATE USER Daniel PASSWORD 12313";
+    string command = "";
     user currentUser;
     decriptor* dekrpt = new decriptor(command , &currentUser, true);
 }
