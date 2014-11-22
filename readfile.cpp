@@ -45,7 +45,7 @@ string readfile::readField(string pFile , int pRow , string pColumn){
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string fileH = pFile;
-        string standardDir = createNewFile(fileH.c_str());
+        string standardDir = createNewFile(&fileH);
         file.open(standardDir.c_str());
     }
 

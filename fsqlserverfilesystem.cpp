@@ -161,15 +161,10 @@ bool FSQLServerFileSystem::fileExists(string* pFile){
     return file.is_open();
 }
 
-<<<<<<< HEAD
+
 bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, string pColumn){
-    if (fileExists(pFileName)){
-        bool toReturn = WF->updateField(pData , pFileName , pRow , RF->getColumnNumber(&pFileName , &pColumn));
-=======
-bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, int pColumn){
     if (fileExists(&pFileName)){
-        bool toReturn = WF->updateField(pData , pFileName , pRow , pColumn);
->>>>>>> c235767a0e803079e022edd44c5a4f752e846390
+        bool toReturn = WF->updateField(pData , pFileName , pRow , RF->getColumnNumber(&pFileName , &pColumn));
         return toReturn;
     }else{
         return false;

@@ -256,16 +256,12 @@ void decriptor::decript () {
                         string ColToPass (const_cast<char*>(arrToPass[i]));
                         FS->update(toPass, fName, ZE_ROW, ColToPass );
                     }
-                        askForValidCommand();
-                    }else{
-                        cout << INVALID_COMMAND << endl;
-                        askForValidCommand();
-                    }
-                } else{
+                    askForValidCommand();
+                }else{
                     cout << INVALID_COMMAND << endl;
                     askForValidCommand();
                 }
-            }else{
+            } else{
                 cout << INVALID_COMMAND << endl;
                 askForValidCommand();
             }
@@ -391,9 +387,7 @@ void decriptor::decript () {
                 askForValidCommand();
             }
         }
-<<<<<<< HEAD
-=======
-    }else{
+    } else {
         if (firstWord == CREATE) {
             string toCompare = NextWord();
             if (toCompare == TABLE) {
@@ -533,5 +527,5 @@ void decriptor::decript () {
         }else{
             cout << INVALID_COMMAND << endl;
         }
->>>>>>> c235767a0e803079e022edd44c5a4f752e846390
+    }
     }
