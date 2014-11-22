@@ -12,17 +12,16 @@ bool raidManager::createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
 
     FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile, raidMode);
 
-    /*
     if (*raidMode >= 0){
-        net->networkRequest(SERVER_IP1,*commandLine);
+        net->networkRequest(SERVER_IP1,commandLine);
     }
-
+    /*
     if (*raidMode >= 5){
-        net->networkRequest(SERVER_IP2, *commandLine);
+        net->networkRequest(SERVER_IP2, commandLine);
     }
 
     if (*raidMode == 10){
-        net->networkRequest(SERVER_IP3, *commandLine);
+        net->networkRequest(SERVER_IP3, commandLine);
     }*/
 }
 

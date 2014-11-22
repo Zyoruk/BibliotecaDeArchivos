@@ -85,7 +85,10 @@ void TCPServer::receive()
 
      n = read(newsockfd,buffer,255);
      if (n < 0) error("ERROR reading from socket");
-     printf("Here is the message: %s\n",buffer);
+
+     std::string data;
+     //printf("Here is the message: %s\n",buffer);
+     send(newsockfd, data, strlen(data.c_str()), 0);
 
      close(newsockfd);
      close(sockfd);

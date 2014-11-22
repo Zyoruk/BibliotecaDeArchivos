@@ -50,6 +50,7 @@ static const char* SERVER_IP1 = "192.168.0.20";
 static const char* SERVER_IP2 = "192.168.0.40";
 static const char* SERVER_IP3 = "192.168.0.60";
 static const char* LAST_REG = "register";
+static const int BUFFER_SIZE = 256;
 
 //Raids
 static const int RAID0 = 0;

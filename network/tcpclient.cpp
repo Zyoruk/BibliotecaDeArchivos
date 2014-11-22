@@ -20,7 +20,7 @@ int TCPClient::link(string raidServ, string data)
 {
     int sockfd, n;
     struct sockaddr_in serv_addr;
-    char buffer[256];
+    char buffer[BUFFER_SIZE];
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -40,8 +40,29 @@ int TCPClient::link(string raidServ, string data)
         error(&temp);
     }
 
-    memset(buffer,0,sizeof(256));
+    int chuncks = 1;
+    memset(buffer,0,sizeof(buffer));
+    if (strlen(data.c_str()) > BUFFER_SIZE ){
+        chuncks = (strlen(data.c_str()) / BUFFER_SIZE);
+        chuncks += 1;
+    }
     strcpy(buffer , data.c_str());
+
+    /*
+    for (int i = 0 ; i < chuncks ; i++){
+        n = write(sockfd, buffer, strlen(buffer));
+        if (n < 0){
+             string temp  = "ERROR writing to socket";
+             error(&temp);
+        }
+        bzero(buffer,256);
+        n = read(sockfd, buffer, 255);
+        if (n < 0){
+             string temp  = "ERROR writing to socket";
+             error(&temp);
+        }
+    }
+    */
 
     n = write(sockfd, buffer, strlen(buffer));
     if (n < 0){
