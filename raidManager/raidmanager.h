@@ -2,7 +2,7 @@
 #define RAIDMANAGER_H
 #include "konstants.h"
 #include "fsqlserverfilesystem.h"
-#include "network/networkaccess.h"
+#include "network/tcpclient.h"
 
 class raidManager
 {
@@ -23,7 +23,7 @@ private:
     string getLatestRegistryLocation(string* pFile);
     string getOnRegFormat(string* pWhatToWrite);
     FSQLServerFileSystem* FS;
-    networkAccess* net;
+    TCPClient* net;
 };
 
 #endif // RAIDMANAGER_H

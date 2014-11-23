@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string>
+#include "user.h"
+#include "decriptor.h"
 
 class TCPServer
 {

@@ -63,6 +63,7 @@ void TCPServer::receive()
      // The accept() call actually accepts an incoming connection
      clilen = sizeof(cli_addr);
 
+
      // This accept() function will write the connecting client's address info
      // into the the address structure and the size of that structure is clilen.
      // The accept() returns a new socket file descriptor for the accepted
@@ -86,9 +87,8 @@ void TCPServer::receive()
      n = read(newsockfd,buffer,255);
      if (n < 0) error("ERROR reading from socket");
 
-     std::string data;
-     //printf("Here is the message: %s\n",buffer);
-     send(newsockfd, data, strlen(data.c_str()), 0);
+     user currentUser;
+     decriptor* dekrpt = new decriptor(buffer , &currentUser, true , true);
 
      close(newsockfd);
      close(sockfd);

@@ -132,6 +132,7 @@ bool permissionsLayer::dropUser (string pUserName){
 bool permissionsLayer::grantPermission(string pUserName , string pNewPermission,
                                        string pFile)
 {
+    cout << "SDFDSFDSFDSF" << endl;
     if (!checkUser(pUserName))
     {
         cout << INVALID_USERNAME <<endl;

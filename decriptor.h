@@ -5,22 +5,29 @@
 #include "array/array.h"
 #include "permissionslayer.h"
 #include "raidManager/raidmanager.h"
-#include "user.h";
+#include "user.h"
 
 using namespace std;
 
 class decriptor
 {
 public:
-    decriptor(string pline, user* pCurrentuser, bool pAdmin );
+    decriptor(string pline, user* pCurrentuser, bool pRoot, bool pServer );
 
 private:
     //user
     user * currentUser;
-    bool admin ;
+    bool root ;
+    bool isServer;
     //file system
     permissionsLayer* FS;
     raidManager* RM;
+    string line;
+    string fileName;
+    SimpleList<char*> cNames;
+    SimpleList<int> cSais;
+    int RegSaiz;
+
     //Get the next word of the string??
     string NextWord();
 
@@ -33,13 +40,7 @@ private:
     int StrToInt (string ToParse);
     void getCreationArguments ();
     void decript ();
-
-    string line;
-    string fileName;
-    SimpleList<char*> cNames;
-    SimpleList<int> cSais;
-    int RegSaiz;
-
+    void askForValidCommand();
 };
 
 #endif // DECRIPTOR_H

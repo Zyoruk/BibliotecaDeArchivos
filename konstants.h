@@ -22,7 +22,8 @@ static const char* BACK_UPS_DIR = "../FSQL/backups/";
 
 static const int ZE_ROW = 0;
 static const int ONE_BYTE = 1;
-static const int NOT_RAID = 99;
+static const int TWO_BYTES = 2;
+static const int NOT_RAID = -1;
 static const int MINUS_ONE = -1;
 static const int BIG_A_SIZE = 256;
 static const int METADATA_SIZE = 3;
@@ -46,11 +47,12 @@ static const char* COLON = ":";
 static const char* NI = "ni";
 static const char* RAID_CNFG = "RaidConfig";
 static const char* LOCAL = "127.0.0.1";
-static const char* SERVER_IP1 = "192.168.0.20";
+static const char* SERVER_IP1 = "127.0.0.1";
 static const char* SERVER_IP2 = "192.168.0.40";
 static const char* SERVER_IP3 = "192.168.0.60";
 static const char* LAST_REG = "register";
 static const int BUFFER_SIZE = 256;
+static const int INSTANCE_MODE = 1;
 
 //Raids
 static const int RAID0 = 0;
@@ -83,6 +85,6 @@ static const char* RESTORE = "RESTORE";
 static const char* DROP = "DROP";
 static const char* GRANT = "GRANT";
 static const char* REVOKE = "REVOKE";
-
+static const char* EXIT = "EXIT";
 
 #endif

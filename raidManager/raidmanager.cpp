@@ -3,7 +3,8 @@
 raidManager::raidManager()
 {
     this->FS = new FSQLServerFileSystem();
-    this->net = new networkAccess();
+    this->net = new TCPClient();
+
 }
 
 bool raidManager::createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
@@ -13,15 +14,15 @@ bool raidManager::createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
     FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile, raidMode);
 
     if (*raidMode >= 0){
-        net->networkRequest(SERVER_IP1,commandLine);
+        net->link(SERVER_IP1, *commandLine);
     }
     /*
     if (*raidMode >= 5){
-        net->networkRequest(SERVER_IP2, commandLine);
+        net->link(SERVER_IP2, *commandLine);
     }
 
     if (*raidMode == 10){
-        net->networkRequest(SERVER_IP3, commandLine);
+        net->link(SERVER_IP3, *commandLine);
     }*/
 }
 
@@ -47,7 +48,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
         case RAID0:
             //loop de servers, min 2 servers
             if(location == LOCAL){
-                netRegPosition = net->networkRequest(SERVER_IP1, commandLine);
+                netRegPosition = net->link(SERVER_IP1, *commandLine);
                 FS->updateDatabaseStruct(pFileName, SERVER_IP1 , netRegPosition);
             }
             else if(location == SERVER_IP1 ||
@@ -65,7 +66,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
             //todo local y copiado al S1, min 2 servers
             netRegPosition = FS->writeNewLineToFile(*pFileName, pWhatToWrite,
                                                     pColumnNam);
-            net->networkRequest(SERVER_IP1, commandLine);
+            net->link(SERVER_IP1, commandLine);
             FS->updateDatabaseStruct(pFileName, (string*)LOCAL, netRegPosition);
             break;
 
@@ -74,11 +75,11 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
             //loop de servers, min 2 servers
             if(location == LOCAL){
                 //ask for last reg written
-                string last = net->networkRequest(location,&lst); //asking for last reg inserted
+                string last = net->link(location,&lst); //asking for last reg inserted
                 string XOR = last ^ getOnRegFormat(commandLine); //create xor string
-                netRegPosition = net->networkRequest(SERVER_IP1, commandLine); //write on net
+                netRegPosition = net->link(SERVER_IP1, commandLine); //write on net
                 FS->updateDatabaseStruct(pFileName, &SERVER_IP1 , netRegPosition); //write localy
-                netRegPosition = net->networkRequest(SERVER_IP2, XOR); //write xor (should overwrite)
+                netRegPosition = net->link(SERVER_IP2, XOR); //write xor (should overwrite)
             }
             else if(location == SERVER_IP1 ||
                     location == const_cast<char*> (NI)){
@@ -87,7 +88,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
                                                         pColumnNam);
                 FS->updateDatabaseStruct(pFileName, (string*)LOCAL,
                                          netRegPosition);
-                netRegPosition = net->networkRequest(SERVER_IP2,
+                netRegPosition = net->link(SERVER_IP2,
                                                      getOnRegFormat(commandLine)); //write xor
             }
             break;
@@ -95,8 +96,8 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
         case RAID10:
             //loop y copiado, min 4 servers
             if(location == LOCAL){
-                netRegPosition = net->networkRequest(SERVER_IP2, commandLine);
-                net->networkRequest(SERVER_IP3, commandLine);
+                netRegPosition = net->link(SERVER_IP2, commandLine);
+                net->link(SERVER_IP3, commandLine);
                 FS->updateDatabaseStruct(pFileName, &SERVER_IP1, netRegPosition);
             }
             else if(location == SERVER_IP2 ||
@@ -104,7 +105,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
 
                 netRegPosition = FS->writeNewLineToFile(*pFileName, pWhatToWrite,
                                                         pColumnNam);
-                net->networkRequest(SERVER_IP1, commandLine);
+                net->link(SERVER_IP1, commandLine);
                 FS->updateDatabaseStruct(pFileName, (string*) LOCAL,
                                          netRegPosition);
             }
@@ -127,13 +128,13 @@ string raidManager::retrieveRegister(string* pFileName , string* commandLine,
         FS->readFromFile(*pFileName , ZE_ROW, pRow);
     }
     if (location == SERVER_IP1){
-        data = net->networkRequest(SERVER_IP1, commandLine);
+        data = net->link(SERVER_IP1, *commandLine);
     }
     if (location == SERVER_IP2){
-        data = net->networkRequest(SERVER_IP2, commandLine);
+        data = net->link(SERVER_IP2, *commandLine);
     }
     if (location == SERVER_IP3){
-        data = net->networkRequest(SERVER_IP3, commandLine);
+        data = net->link(SERVER_IP3, *commandLine);
     }
 
 }
