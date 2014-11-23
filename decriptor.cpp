@@ -349,7 +349,7 @@ void decriptor::decript () {
                 askForValidCommand();
             }
         }
-    }/*else{
+    }else{
         if (firstWord == CREATE) {
             string toCompare = NextWord();
             if (toCompare == TABLE) {
@@ -489,7 +489,7 @@ void decriptor::decript () {
         }else{
             cout << INVALID_COMMAND << endl;
         }
-    }*/
+    }
 
 }
 
