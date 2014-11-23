@@ -460,6 +460,17 @@ void writefile::createRaidFile(string* pFile){
 }
 
 void writefile::writeRaidFile(string* pFile, string ip, int pos){
+    //Relative route + the name of the file
+    string standardDir;
+    if ( !(file.is_open()) ){
+        standardDir = createNewFile(pFile);
+        file.open(standardDir.c_str());
+    }
+
+    if ( !(file.is_open()) ){
+        cout << "NED " + *pFile << endl;
+    }
+
     string path = DIRFILE;
 
     path.append(*pFile);
@@ -468,6 +479,10 @@ void writefile::writeRaidFile(string* pFile, string ip, int pos){
     file_lo.open(path.c_str());
     file_lo.seekg(ZE_ROW,ios::end);
     string temp = this->intToChar(pos);
+    if(pos == '0'){
+        temp = getRegisterQuantity();
+    }
+    file.close();
     string locali = ip + ',' + temp;
     file_lo << locali;
     file_lo << "\n";

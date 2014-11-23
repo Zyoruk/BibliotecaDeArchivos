@@ -114,7 +114,7 @@ void writeREG(){
     cPos[0] = "Nombre";
     cPos[1] = "Apellido";
 
-//    raid->storeRegister(fileName , &cData, ,);
+    raid->storeRegister(&fileName , &cData, &cPos , &lastNameToAdd);
 }
 
 int main(int argc , char* argv[])
@@ -122,7 +122,7 @@ int main(int argc , char* argv[])
     if (argc < TWO_BYTES)
         exit(0);
     FSQL_plus(argv[1]);*/
-    FSQL_plus("1");
-//    writeAsRM();
+//    FSQL_plus("1");
+    writeREG();
     return 0;
 }

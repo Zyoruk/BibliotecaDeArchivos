@@ -56,21 +56,20 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
     if (location == ""){
         location = const_cast<char*> (NI);
     }
+    cout << location << endl;
 
     switch(raid){
         case RAID0:
             //loop de servers, min 2 servers
             if(location == LOCAL){
                 netRegPosition = net->linkIndex(SERVER_IP1, *commandLine);
-                FS->updateDatabaseStruct(pFileName, SERVER_IP1 , netRegPosition);
+                FS->updateDatabaseStruct(pFileName, SERVER_IP1, netRegPosition);
             }
             else if(location == SERVER_IP1 ||
                     location == const_cast<char*> (NI)){
 
-                netRegPosition = FS->writeNewLineToFile(*pFileName, pWhatToWrite,
-                                                        pColumnNam);
-                FS->updateDatabaseStruct(pFileName, LOCAL,
-                                         netRegPosition);
+                FS->writeNewLineToFile(*pFileName, pWhatToWrite, pColumnNam);
+                FS->updateDatabaseStruct(pFileName, LOCAL, ZE_ROW);
             }
             break;
 

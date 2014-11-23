@@ -144,8 +144,8 @@ int TCPClient::linkIndex(string raidServ, string data){
          error(&temp);
          clean = false;
     }
-    bzero(buffer,256);
-    n = read(sockfd, buffer, 255);
+    bzero(buffer,BUFFER_SIZE);
+    n = read(sockfd, buffer, BUFFER_SIZE - 1);
     if (n < 0){
          string temp  = "ERROR writing to socket";
          error(&temp);
@@ -153,8 +153,8 @@ int TCPClient::linkIndex(string raidServ, string data){
     }
 
     //printf("%s\n", buffer);
-    int index = atoi(buffer.c_str());
-
+    char* index = buffer;
+    int indexINT = atoi(index);
     close(sockfd);
-    return index;
+    return indexINT;
 }
