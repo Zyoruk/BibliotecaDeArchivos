@@ -37,11 +37,51 @@ string readfile::getColumnName(string* fileName ,int* columnNumber){
  * @param Column is the column of the desired data.
  * @return
  */
+string readfile::readField(string pFile , int pRow , string pColumn){
+    int currSeek =file.tellg();
+    int sizeToColumn;
+    int cSize;
+    int intpColumn = this->getColumnNumber(&pFile, &pColumn);
+    //Relative route + the name of the file
+    if ( !(file.is_open()) ){
+        string fileH = pFile;
+        string standardDir = createNewFile(&fileH);
+        file.open(standardDir.c_str());
+    }
+
+    if ( !(file.is_open()) ){
+        return "NED " + pFile;
+    }
+
+   placeSeekOn(&pRow , &intpColumn, &sizeToColumn, &cSize);
+
+    //build the stringto return
+    string stringToReturn = "";
+
+    for (int i  = 0 ; i < cSize ; i++){
+        char currChar = file.get();
+        if (currChar != '*'){
+            stringToReturn.push_back(currChar);
+        }else{
+            break;
+        }
+    }
+    file.seekg(currSeek);
+    if (stringToReturn == "") stringToReturn = "404";
+    return stringToReturn;
+}
+
+/**
+ * @brief readField returns the data readed on field of the database.
+ * @param pFile is the name of the file to be readed from.
+ * @param pRow is the row of the desired data.
+ * @param Column is the column of the desired data.
+ * @return
+ */
 string readfile::readField(string pFile , int pRow , int pColumn){
     int currSeek =file.tellg();
     int sizeToColumn;
     int cSize;
-
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
         string standardDir = createNewFile(&pFile);
@@ -69,7 +109,6 @@ string readfile::readField(string pFile , int pRow , int pColumn){
     if (stringToReturn == "") stringToReturn = "404";
     return stringToReturn;
 }
-
 /**
  * @brief readColumn return all the values on a named column
  * @param pFile is the database to be readed from.
@@ -97,7 +136,7 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
     array <char*> arrayToReturn (regQty);
 
     for (int rowCounter = ONE_BYTE ; rowCounter <= regQty ; rowCounter++){
-        strToConvert = readField(pFile , rowCounter , Column);
+        strToConvert = readField(pFile , rowCounter , pColumnName);
         toAdd = new char[strToConvert.size()+1];
         strcpy(toAdd, strToConvert.c_str());
         arrayToReturn[rowCounter - ONE_BYTE] = toAdd;

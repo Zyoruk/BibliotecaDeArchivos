@@ -60,12 +60,12 @@ bool FSQLServerFileSystem::removeFile(string pFileName){
     return true;
 }
 
-array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
+array<char*> FSQLServerFileSystem::readFromFile(string pFileName , string pColumn,
                                         int pRow){
 
     array<char*> columnData;
 
-    if (pRow < ZE_ROW || pColumn <ZE_ROW ){
+    if (pRow < ZE_ROW ){
         cout << " Eres un bolonio. Invalid values." << endl;
         return columnData;
     }
@@ -76,23 +76,25 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , int pColumn,
 
     if (fileExists(&pFileName)){
         //If column is zero then the user means to read a whole registry
-        if(pColumn == ZE_ROW){
+        if(pColumn == ""){
             columnData = RF->readRegistry(pFileName , pRow);
         //If the row is 0 then the user means to read a whole column
+        }else if (pColumn == "*"){
+            for ( int i = 0 ; i <= RF->getRegisterQuantity(); i++){
+                columnData = RF->readRegistry(pFileName , i);
+            }
         }else if(pRow == ZE_ROW){
 
             array<char*> columnData =
                     RF->readColumn(pFileName ,
-                                   RF->getColumnName(&newFileDir , &pColumn));
+                                  pColumn);
 
             for(int i = ZE_ROW ; i < columnData.getLenght();i++){
                 cout << RF->getColumnName(&newFileDir , &i);
                 cout << columnData[i] << endl;
             }
-        }else if (pRow < ZE_ROW ||pColumn <ZE_ROW){
+        }else if (pRow < ZE_ROW ){
             cout << INVALID_VALUES << endl;
-            columnData = RF->readColumn(pFileName, RF->getColumnName(&newFileDir,
-                                                                     &pColumn));
         }else{
             string field = RF->readField(pFileName, pRow, pColumn);
             cout << field << endl;
@@ -159,9 +161,10 @@ bool FSQLServerFileSystem::fileExists(string* pFile){
     return file.is_open();
 }
 
-bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, int pColumn){
+
+bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, string pColumn){
     if (fileExists(&pFileName)){
-        bool toReturn = WF->updateField(pData , pFileName , pRow , pColumn);
+        bool toReturn = WF->updateField(pData , pFileName , pRow , RF->getColumnNumber(&pFileName , &pColumn));
         return toReturn;
     }else{
         return false;

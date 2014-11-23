@@ -24,7 +24,9 @@ private:
     raidManager* RM;
     string line;
     string fileName;
+    SimpleList<char*> pNames;
     SimpleList<char*> cNames;
+    SimpleList<char*> cValius;
     SimpleList<int> cSais;
     int RegSaiz;
 
@@ -39,6 +41,8 @@ private:
     string charToStr(char* pChar);
     int StrToInt (string ToParse);
     void getCreationArguments ();
+    void getValuedArguments ();
+    void getArguments();
     void decript ();
     void askForValidCommand();
 };
