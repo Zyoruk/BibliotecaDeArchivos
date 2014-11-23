@@ -61,7 +61,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
         case RAID0:
             //loop de servers, min 2 servers
             if(location == LOCAL){
-                netRegPosition = net->link(SERVER_IP1, *commandLine);
+                netRegPosition = net->linkIndex(SERVER_IP1, *commandLine);
                 FS->updateDatabaseStruct(pFileName, SERVER_IP1 , netRegPosition);
             }
             else if(location == SERVER_IP1 ||
