@@ -97,6 +97,26 @@ void writeAsRM(){
     raid->createNewFile(&columnSais, &cNames, &file, &raidMode, &file);
 }
 
+void writeREG(){
+    raidManager* raid = new raidManager();
+    string fileName = "Agenda";
+    array<char*> cData(2);
+    string nameToAdd = "Luis";
+    string lastNameToAdd = "Simon Barrantes";
+    char *s2 = new char[nameToAdd.size()+1];
+    char *s3 = new char[lastNameToAdd.size()+1];
+    strcpy(s2, nameToAdd.c_str());
+    strcpy(s3, lastNameToAdd.c_str());
+    cData[0] = s2;
+    cData[1] = s3;
+
+    array<char*> cPos(2);
+    cPos[0] = "Nombre";
+    cPos[1] = "Apellido";
+
+    raid->storeRegister(fileName , &cData, ,);
+}
+
 int main(int argc , char* argv[])
 {/*
     if (argc < TWO_BYTES)

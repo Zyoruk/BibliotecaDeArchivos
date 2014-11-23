@@ -6,24 +6,36 @@ raidManager::raidManager()
     this->net = new TCPClient();
 }
 
+/**
+ * @brief raidManager::createNewFile creates the database (local or on network)
+ * according with the raid mode selected.
+ * @param columnSizes
+ * @param columnNames
+ * @param pFile
+ * @param raidMode
+ * @param commandLine
+ * @return
+ */
 bool raidManager::createNewFile(array<int>* columnSizes,
                                 array<char*>* columnNames,
                                 string* pFile, int *raidMode,
                                 string* commandLine){
 
     FS->createNewFile(columnSizes, columnNames, pFile, raidMode);
+    bool clean = true;
 
     if (*raidMode >= 0){
-        net->link(SERVER_IP1, *commandLine);
+        clean = net->link(SERVER_IP1, *commandLine);
     }
     /*
     if (*raidMode >= 5){
-        net->link(SERVER_IP2, *commandLine);
+        clean = net->link(SERVER_IP2, *commandLine);
     }
 
     if (*raidMode == 10){
-        net->link(SERVER_IP3, *commandLine);
+        clean = net->link(SERVER_IP3, *commandLine);
     }*/
+    return clean;
 }
 
 /**
@@ -39,6 +51,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
     int netRegPosition;
     int raid = FS->getRaidMode(pFileName);
     string location = getLatestRegistryLocation(pFileName);
+    cout << location << endl;
 
     if (location == ""){
         location = const_cast<char*> (NI);
@@ -118,6 +131,13 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
     }
 }
 
+/**
+ * @brief raidManager::retrieveRegister
+ * @param pFileName
+ * @param commandLine
+ * @param pRow
+ * @return
+ */
 string raidManager::retrieveRegister(string* pFileName , string* commandLine,
                                     int pRow){
 

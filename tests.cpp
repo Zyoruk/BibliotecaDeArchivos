@@ -41,7 +41,6 @@ void test0(){
 void test1(){
 
     string fileName = "Test9";
-
     array<char*> cData(2);
     string nameToAdd = "Luis";
     string lastNameToAdd = "Simon Barrantes";

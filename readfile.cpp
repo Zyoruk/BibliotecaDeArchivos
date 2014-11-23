@@ -196,7 +196,6 @@ int readfile::getRaidMode(string* pFile){
 
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        //string fileH = *pFile;
         string standardDir = createNewFile(pFile);
         file.open(standardDir.c_str());
     }
@@ -212,5 +211,6 @@ int readfile::getRaidMode(string* pFile){
         raid.push_back(file.get());
     }
     int RD = stringToInt(&raid);
+    file.seekg(currSeek);
     return RD;
 }

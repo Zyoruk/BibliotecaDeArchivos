@@ -119,7 +119,7 @@ void writefile::createTable(array<int>* columnSizes, array<char*>* columnNames,
         cout << "Error: Register size beyond max size" << endl;
     }else{
         database << TRIPLE_NULL;
-        if (database.is_open()){
+        if (!database.is_open()){
             cout << ":p" << endl;
         }
         add = toChar(registerSize);
