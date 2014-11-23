@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "konstants.h"
+#include "array/array.h"
 
 using namespace std;
 
@@ -25,8 +26,9 @@ protected:
 
     string toChar(int toChar);
     string intToChar(int metadata);
-    string createNewFile(string newFileName);
+    string createNewFile(string* newFileName);
     string createNewBackUp(string newFileName);
+    int getRegisterSize(array<int>* columnSizes);
     int stringToInt(string* pStr);
     int getRegisterSize();
     int getMetaDataSize();

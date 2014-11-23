@@ -11,6 +11,7 @@
 #include "decriptor.h"
 #include "network/tcpserver.h"
 #include "tests.h"
+#include "raidManager/raidmanager.h"
 
 //#define STR(x) #x << '=' << x
 
@@ -75,7 +76,25 @@ void FSQL_plus (string mode ){
     case ONE_BYTE:
         clientInstance();
     }
+}
 
+void writeAsRM(){
+    raidManager* raid = new raidManager();
+    array<int> columnSais (5);
+    columnSais[0] = 64;
+    columnSais[1] = 64;
+    columnSais[2] = 128;
+    columnSais[3] = 64;
+    columnSais[4] = 32;
+    array<char*> cNames(5);
+    cNames[0] = "Nombre";
+    cNames[1] = "Apellido";
+    cNames[2] = "Direccion";
+    cNames[3] = "Telefono";
+    cNames[4] = "Sexo";
+    string file ="Agenda";
+    int raidMode = -1;
+    raid->createNewFile(&columnSais, &cNames, &file, &raidMode, &file);
 }
 
 int main(int argc , char* argv[])
@@ -83,6 +102,7 @@ int main(int argc , char* argv[])
     if (argc < TWO_BYTES)
         exit(0);
     FSQL_plus(argv[1]);*/
-    FSQL_plus("1");
+    //FSQL_plus("1");
+    writeAsRM();
     return 0;
 }

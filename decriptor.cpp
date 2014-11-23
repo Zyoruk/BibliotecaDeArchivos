@@ -127,8 +127,8 @@ void decriptor::decript () {
                             int  RAID = this->StrToInt(NextWord());
                             array<char*> aNames = this->arrayCharToSL(this->cNames);
                             array<int> aSais = this->arrayCharToSL(this->cSais);
-                            RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
-                                              &RAID , &commandLine);
+                            //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
+                              //                &RAID , &commandLine);
                             askForValidCommand();
                         }else{
                             cout << INVALID_COMMAND << endl;
@@ -138,8 +138,8 @@ void decriptor::decript () {
                         int RAID = NOT_RAID;
                         array<char*> aNames = this->arrayCharToSL(this->cNames);
                         array<int> aSais = this->arrayCharToSL(this->cSais);
-                        RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
-                                          &commandLine);
+                        //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
+                          //                &commandLine);
                         askForValidCommand();
                     }
                 }else if (toCompare == USER) {
@@ -360,8 +360,8 @@ void decriptor::decript () {
                         int  RAID = this->StrToInt(NextWord());
                         array<char*> aNames = this->arrayCharToSL(this->cNames);
                         array<int> aSais = this->arrayCharToSL(this->cSais);
-                        RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
-                                          &RAID , &commandLine);
+                        //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName,
+                          //                &RAID , &commandLine);
                     }else{
                         cout << INVALID_COMMAND << endl;
                     }
@@ -369,8 +369,8 @@ void decriptor::decript () {
                     int RAID = NOT_RAID;
                     array<char*> aNames = this->arrayCharToSL(this->cNames);
                     array<int> aSais = this->arrayCharToSL(this->cSais);
-                    RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
-                                      &commandLine);
+                    //RM->createNewFile(&RegSaiz ,&aSais, &aNames ,&fileName, &RAID,
+                      //                &commandLine);
                 }
             }else if (toCompare == USER) {
                 uName = NextWord();

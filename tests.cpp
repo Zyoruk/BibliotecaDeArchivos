@@ -35,7 +35,7 @@ void test0(){
     int temp = 00 ;
     test = &temp;
     cout << test <<endl;
-    filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file, test);
+    //filesystem->createNewFile(&regSize ,&columnSais, &cNames ,&file, test);
 }
 
 void test1(){

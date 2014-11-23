@@ -29,8 +29,8 @@ public:
      * \param pFile is the name of the new file.
      * \return  boolean if the operation succeded.
      */
-    bool createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
-                       array<char*>* pColumnNames, string* pFile, int* raidMode);
+    bool createNewFile(array<int>* pColumnSizes, array<char*>* pColumnNames,
+                       string* pFile, int* raidMode);
 
     /*!
      * \brief writeNewLineToFile demands that a new register must be created into the
@@ -120,7 +120,7 @@ public:
 
 protected:
 //    array<char*> _FilesMetaData;
-    bool fileExists(string pFile);
+    bool fileExists(string *pFile);
     readfile* RF;
     writefile* WF;
 };

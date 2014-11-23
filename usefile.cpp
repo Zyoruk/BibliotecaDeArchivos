@@ -70,10 +70,10 @@ string useFile::intToChar(int metadata){
     return tmp;
 }
 
-string useFile::createNewFile(string newFileName){
+string useFile::createNewFile(string* newFileName){
     string newFileDir ;
     newFileDir = DIRFILE;
-    newFileDir.append(newFileName);
+    newFileDir.append(*newFileName);
     return newFileDir;
 }
 
@@ -111,6 +111,15 @@ int useFile::getRegisterSize(){
     int regSize;
     regSize = stringToInt(&regSizeString);
     file.seekg(currSeek);
+    return regSize;
+}
+
+int useFile::getRegisterSize(array<int>* columnSizes){
+    int regSize = 0;
+    array<int> sizes = *columnSizes;
+    for (int i = 0 ; i < sizes.getLenght() ; i++){
+        regSize += sizes[i];
+    }
     return regSize;
 }
 

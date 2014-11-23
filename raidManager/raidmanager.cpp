@@ -4,14 +4,14 @@ raidManager::raidManager()
 {
     this->FS = new FSQLServerFileSystem();
     this->net = new TCPClient();
-
 }
 
-bool raidManager::createNewFile(int* pRegisterSize, array<int>* pColumnSizes,
-                                array<char*>* pColumnNames, string* pFile,
-                                int* raidMode, string* commandLine){
+bool raidManager::createNewFile(array<int>* columnSizes,
+                                array<char*>* columnNames,
+                                string* pFile, int *raidMode,
+                                string* commandLine){
 
-    FS->createNewFile(pRegisterSize, pColumnSizes, pColumnNames, pFile, raidMode);
+    FS->createNewFile(columnSizes, columnNames, pFile, raidMode);
 
     if (*raidMode >= 0){
         net->link(SERVER_IP1, *commandLine);
