@@ -51,12 +51,10 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
     int netRegPosition;
     int raid = FS->getRaidMode(pFileName);
     string location = getLatestRegistryLocation(pFileName);
-    cout << location << endl;
 
     if (location == ""){
         location = const_cast<char*> (NI);
     }
-    cout << location << endl;
 
     switch(raid){
         case RAID0:
@@ -68,7 +66,7 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
             else if(location == SERVER_IP1 ||
                     location == const_cast<char*> (NI)){
 
-                FS->writeNewLineToFile(*pFileName, pWhatToWrite, pColumnNam);
+                FS->writeNewLineToFile(pFileName, pWhatToWrite, pColumnNam);
                 FS->updateDatabaseStruct(pFileName, LOCAL, ZE_ROW);
             }
             break;
@@ -125,8 +123,8 @@ bool raidManager::storeRegister(string* pFileName , array<char*>* pWhatToWrite,
         */
 
         default:
-            FS->writeNewLineToFile(*pFileName , pWhatToWrite , pColumnNam);
-            FS->updateDatabaseStruct(pFileName, "127.0.0.1", netRegPosition);
+            FS->writeNewLineToFile(pFileName , pWhatToWrite , pColumnNam);
+            FS->updateDatabaseStruct(pFileName, "127.0.0.1", ZE_ROW);
     }
 }
 
@@ -141,7 +139,12 @@ string raidManager::retrieveRegister(string* pFileName , string* commandLine,
                                     int pRow){
 
     string location = getLatestRegistryLocation(pFileName);
-    string data;
+    string addr, pos, data;
+
+    const char *p = location.c_str();
+    while (*p != ','){
+        addr.push_back(*p++);
+    }
 
     if(location == LOCAL){
         FS->readFromFile(*pFileName , ZE_ROW, pRow);

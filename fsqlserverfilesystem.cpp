@@ -36,14 +36,15 @@ bool FSQLServerFileSystem::createNewFile(array<int>* pColumnSizes ,
     return op;
 }
 
-bool FSQLServerFileSystem::writeNewLineToFile(string pFileName ,
+bool FSQLServerFileSystem::writeNewLineToFile(string* pFileName ,
                                               array<char*>* pWhatToWrite,
                                               array<char*>* pColumnNam){
 
-    if (fileExists(&pFileName)){
-       bool toReturn =  WF->writeRegister(pFileName, pWhatToWrite , pColumnNam);
+    if (fileExists(pFileName)){
+       bool toReturn =  WF->writeRegister(*pFileName, pWhatToWrite , pColumnNam);
        return toReturn;
     }else{
+        cout << "here";
         return false;
     }
 }
@@ -148,17 +149,17 @@ bool FSQLServerFileSystem::backupExists(string pBackUp){
 bool FSQLServerFileSystem::fileExists(string* pFile){
     string newFileDir ;
     fstream file;
+    bool exist = false;
     newFileDir = DIRFILE;
     newFileDir.append(*pFile);
     file.open(newFileDir.c_str());
-    if (!file.is_open()){
+    if (file.is_open()){
+        exist = true;
+    }else{
         cout << NO_EXISTANT_FILE << endl;
     }
     file.close();
-    if(file.is_open()){
-        cout << "ME LLEVA!!!" << endl;
-    }
-    return file.is_open();
+    return exist;
 }
 
 

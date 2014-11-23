@@ -19,7 +19,7 @@ class TCPClient
 public:
     TCPClient(int* portno);
     TCPClient();
-    bool link(string  raidServ, string data);
+    bool link(string raidServ, string data);
     int linkIndex(string raidServ, string data);
     void error(string *msg);
 

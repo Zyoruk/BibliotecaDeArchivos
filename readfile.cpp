@@ -152,11 +152,13 @@ array<char*> readfile::readColumn(string pFile , string pColumnName){
  */
 array< char* > readfile::readRegistry(string pFile , int pRegister){
     array< char* > errorArray (1);
+    string standardDir = "open";
     //Relative route + the name of the file
     if ( !(file.is_open()) ){
-        string standardDir = createNewFile(&pFile);
+        standardDir = createNewFile(&pFile);
         file.open(standardDir.c_str());
     }
+    //cout << standardDir << endl;
 
     if ( !(file.is_open()) ){
         cout << NO_EXISTANT_DATA + pFile << endl;
@@ -207,22 +209,32 @@ array< array<char*> > readfile::getRegisters(string pFile, string pColumnName,
 string readfile::readDataLocation(string* pFile){
     int currSeek = file.tellg();
 
+    string path = DIRFILE;
+    path.append(*pFile);
+    path.append(RAID_CNFG);
+
     //Relative route + the name of the file
     if ( !(file_lo.is_open()) ){
-        string standardDir = createNewFile(pFile);
-        file_lo.open(standardDir.c_str());
+        file_lo.open(path.c_str());
     }
 
     if ( !(file_lo.is_open()) ){
-        return "NED " + *pFile;
+        return " NED " + *pFile;
     }
 
     //build the stringto return
+    string stringToReturn00 = "";
     string stringToReturn = "";
 
-    while (!file_lo.eof())
-    {
-        getline(file_lo, stringToReturn);
+    for (int i = 0; i < 100 ; i++){
+        if(!file_lo.eof()){
+            stringToReturn = stringToReturn00;
+        }
+        if(!file_lo.eof()){
+            getline(file_lo, stringToReturn00);
+        } else {
+            break;
+        }
     }
 
     file.seekg(currSeek);

@@ -212,7 +212,7 @@ void decriptor::decript () {
                 getValuedArguments();
                 array<char*> aNames = this->arrayCharToSL(this->cNames);
                 array<char*> aValiuz = this->arrayCharToSL(this->cValius);
-                FS->writeNewLineToFile(fName, &aNames, &aValiuz);
+                FS->writeNewLineToFile(&fName, &aNames, &aValiuz);
                 askForValidCommand();
             } else {
                 cout << INVALID_COMMAND << endl;

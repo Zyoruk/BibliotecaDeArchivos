@@ -55,8 +55,8 @@ void test1(){
     cPos[0] = "Nombre";
     cPos[1] = "Apellido";
 
-    filesystem->writeNewLineToFile(fileName , &cData, &cPos);
-    filesystem->writeNewLineToFile(fileName , &cData, &cPos);
+    filesystem->writeNewLineToFile(&fileName , &cData, &cPos);
+    filesystem->writeNewLineToFile(&fileName , &cData, &cPos);
 //    filesystem->writeNewLineToFile(fileName , &cData, &cPos);
 }
 

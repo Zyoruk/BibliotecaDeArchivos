@@ -41,7 +41,7 @@ public:
      * columns where the pWhatToWrite data is going to be placed.
      * \return  true if writing the line was succesful.
      */
-    bool writeNewLineToFile(string pFileName , array<char*>* pWhatToWrite,
+    bool writeNewLineToFile(string* pFileName , array<char*>* pWhatToWrite,
                             array<char*>* pColumnNam);
 
     /*!
