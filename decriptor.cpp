@@ -103,10 +103,10 @@ void decriptor::getCreationArguments () {
     }
 }
 void decriptor::askForValidCommand(){
-//    string command;
-//    cin >> command;
-//    this->line = command;
-//    decript();
+    string command;
+    std::getline(std::cin , command);
+    this->line = command;
+    decript();
 }
 void decriptor::decript () {
 
