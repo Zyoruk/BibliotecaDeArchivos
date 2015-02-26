@@ -15,10 +15,8 @@ biblioteca bib ;
 //done
 int crear_bib (const char *pathname, mode pmode);
 int abrir_bib (const char *pathname, int flags);
-
-//TODO
 int cerrar_bib (int bib_fd);
-
+//TODO
 int posseekAlPrinc (int bib_fd, const char *compname);
 
 size print_data (int bib_fd, int comp_id, void *buf, size count);
