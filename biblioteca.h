@@ -1,25 +1,22 @@
 #ifndef BIBLIOTECA_H
 #define BIBLIOTECA_H
-<<<<<<< HEAD
 #include <stdio.h>
 
-typedef struct {
-    char* F_Path;
-}biblioteca;
-=======
-typedef int mode , offset , size;
+typedef int  offset , size;
+typedef const char* mode;
 
 typedef struct {
-    const char* pPathname;
+    const char* F_Path;
     int pFileHandle;
-
-
 }biblioteca;
 
+biblioteca bib ;
+
+//done
+int crear_bib (const char *pathname, mode pmode);
 int abrir_bib (const char *pathname, int flags);
 
-int crear_bib (const char *pathname, mode_t mode);
-
+//TODO
 int cerrar_bib (int bib_fd);
 
 int posseekAlPrinc (int bib_fd, const char *compname);
@@ -37,10 +34,8 @@ int extraer_comp (int bib_fd, int comp_id, const char *pathcomp);
 int cargar_dir(int bib_fd, const char *pathdir);
 
 int eliminar_comp (int bib_fd, int comp_id, const char *pathcomp);
->>>>>>> a71d6d81a09df1d54699bf522d64cd2b7416e7b8
 
-biblioteca bib ;
-extern int crear_bib(char *pathname , char *mode);
-extern int abrir_bib();
-extern int cerrar_bib();
+//aux
+
+
 #endif // BIBLIOTECA_H
