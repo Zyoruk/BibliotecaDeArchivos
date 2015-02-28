@@ -5,34 +5,43 @@
 #define ERROR -1
 #define SUCCESS 0
 #define WRONG_FLAG "wf"
-#define LIB_ERROR "404: Lib not found."
+#define N_F "404: Not found."
 
 #include <stdio.h>
 
-typedef int boolean;
+typedef char boolean;
 typedef const char* mode;
 typedef struct componente_struct* componente;
 
  struct componente_struct {
     const char* comp_nom;
+    int comp_id;
     int rango[2];
     boolean _lleno : 1;
-//    int (*crear_bibptr)(const void* miInstancia, const char*pathname , mode pmode);
+    boolean _abierto: 1;
+    char permit: 3;
+    int seek_pos;
 };
 
 componente ptr_comp_list[10];
+int comp_count ;
+int file_handle;
+FILE *newBib;
+const char* _pathname;
+
+
+
 //done
-//int crear_bib (const void* miInstancia ,const char *pathname, mode pmode);
 int crear_bib (const char *pathname, mode pmode);
 int abrir_bib (const char *pathname, int flags);
 int cerrar_bib (int bib_fd);
 
-//TODO
 int abrir_comp (int bib_fd, const char *compname);
-
 size_t print_data (int bib_fd, int comp_id, void *buf, size_t count);
 
-off_t repos_seek_aleatorio(int bib_fd, int comp_id, void *buf, size_t count);
+//TODO
+
+off_t repos_seek_aleatorio(int bib_fd, int comp_id, size_t count);
 
 size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count);
 
@@ -43,9 +52,5 @@ int extraer_comp (int bib_fd, int comp_id, const char *pathcomp);
 int cargar_dir(int bib_fd, const char *pathdir);
 
 int eliminar_comp (int bib_fd, int comp_id, const char *pathcomp);
-
-//aux
-
-//componente newComponente();
 
 #endif // BIBLIOTECA_H

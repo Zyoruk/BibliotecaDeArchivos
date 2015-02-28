@@ -6,14 +6,9 @@ int main(void)
 //    int FH = abrir_bib("Test2.bin" , 0);
 
 //    cerrar_bib(FH);
-    FILE* file = fopen("Test3.txt" , "w+");
-    struct componente_struct ptr;
-    ptr.comp_nom = "Hola";
-    ptr.rango[0] = 1 ;
-    ptr.rango[1] = 2;
-    ptr._lleno = TRUE;
-
-    fwrite(&(ptr.comp_nom) , sizeof(ptr),1,file);
+    FILE* file = fopen("Test3.txt" , "wb+");
+    int ptr = 999;
+    fwrite(&ptr , sizeof(ptr),1,file);
 //    c_1->crear_bibptr("Test1.bin","rb");
     return 0;
 }
