@@ -20,7 +20,7 @@ typedef struct componente_struct* componente;
 //    int (*crear_bibptr)(const void* miInstancia, const char*pathname , mode pmode);
 };
 
-componente comp_list[10];
+componente ptr_comp_list[10];
 //done
 //int crear_bib (const void* miInstancia ,const char *pathname, mode pmode);
 int crear_bib (const char *pathname, mode pmode);
@@ -46,6 +46,6 @@ int eliminar_comp (int bib_fd, int comp_id, const char *pathcomp);
 
 //aux
 
-componente newComponente();
+//componente newComponente();
 
 #endif // BIBLIOTECA_H
