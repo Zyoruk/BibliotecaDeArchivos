@@ -1,18 +1,7 @@
-#include "fsqlserverfilesystem.h"
+#include "filesystem.h"
 
-//Switch case doesn't allow the use of "".
-const char _Y = 'Y';
-const char _N = 'N';
-
-FSQLServerFileSystem::FSQLServerFileSystem()
-{
-    this->RF = new readfile();
-    this->WF = new writefile();
-}
-
-bool FSQLServerFileSystem::createNewFile(array<int>* pColumnSizes ,
-                                         array<char*>* pColumnNames ,
-                                         string* pFile, int* raidMode){
+bool createNewFile(array<int>* pColumnSizes, array<char*>* pColumnNames,
+                   string* pFile, int* raidMode){
     bool op;
     char confirm ;
     if (fileExists(pFile)){
@@ -36,9 +25,8 @@ bool FSQLServerFileSystem::createNewFile(array<int>* pColumnSizes ,
     return op;
 }
 
-bool FSQLServerFileSystem::writeNewLineToFile(string* pFileName ,
-                                              array<char*>* pWhatToWrite,
-                                              array<char*>* pColumnNam){
+bool writeNewLineToFile(string* pFileName , array<char*>* pWhatToWrite,
+                        array<char*>* pColumnNam){
 
     if (fileExists(pFileName)){
        bool toReturn =  WF->writeRegister(*pFileName, pWhatToWrite , pColumnNam);
@@ -49,7 +37,7 @@ bool FSQLServerFileSystem::writeNewLineToFile(string* pFileName ,
     }
 }
 
-bool FSQLServerFileSystem::removeFile(string pFileName){
+bool removeFile(string pFileName){
     if (fileExists(&pFileName)){
         string newFileDir ;
         newFileDir = DIRFILE;
@@ -61,8 +49,7 @@ bool FSQLServerFileSystem::removeFile(string pFileName){
     return true;
 }
 
-array<char*> FSQLServerFileSystem::readFromFile(string pFileName , string pColumn,
-                                        int pRow){
+array<char*> readFromFile(string pFileName , string pColumn, int pRow){
 
     array<char*> columnData;
 
@@ -106,7 +93,7 @@ array<char*> FSQLServerFileSystem::readFromFile(string pFileName , string pColum
     return columnData;
 }
 
-bool FSQLServerFileSystem::backUpFile (string pFileName){
+bool backUpFile (string pFileName){
     if (fileExists(&pFileName)){
         WF->backUpFile(pFileName);
         if (backupExists(pFileName)){
@@ -119,7 +106,7 @@ bool FSQLServerFileSystem::backUpFile (string pFileName){
     }
 }
 
-bool FSQLServerFileSystem::restoreFile(string pFileName){
+bool restoreFile(string pFileName){
     string backUp = BACKUP_STRING;
     backUp.append(pFileName);
     if (backupExists(backUp)){
@@ -135,7 +122,7 @@ bool FSQLServerFileSystem::restoreFile(string pFileName){
     }
 }
 
-bool FSQLServerFileSystem::backupExists(string pBackUp){
+bool backupExists(string pBackUp){
     string newFileDir ;
     fstream file;
     newFileDir = BACK_UPS_DIR;
@@ -146,7 +133,7 @@ bool FSQLServerFileSystem::backupExists(string pBackUp){
     return op;
 }
 
-bool FSQLServerFileSystem::fileExists(string* pFile){
+bool fileExists(string* pFile){
     string newFileDir ;
     fstream file;
     bool exist = false;
@@ -162,8 +149,7 @@ bool FSQLServerFileSystem::fileExists(string* pFile){
     return exist;
 }
 
-
-bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, string pColumn){
+bool update(string pData, string pFileName,int pRow, string pColumn){
     if (fileExists(&pFileName)){
         bool toReturn = WF->updateField(pData , pFileName , pRow , RF->getColumnNumber(&pFileName , &pColumn));
         return toReturn;
@@ -172,7 +158,7 @@ bool FSQLServerFileSystem::update(string pData, string pFileName,int pRow, strin
     }
 }
 
-bool FSQLServerFileSystem::deleteData(string pFileName, string pColumnName, string pData){
+bool deleteData(string pFileName, string pColumnName, string pData){
     if (fileExists(&pFileName)){
         bool toReturn = WF->deleteRegister(pFileName , pColumnName , pData);
         return toReturn;
@@ -181,8 +167,8 @@ bool FSQLServerFileSystem::deleteData(string pFileName, string pColumnName, stri
     }
 }
 
-bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare,
-                                        string pFile, string pCName){
+bool updateColumn(string newData, string pToCompare, string pFile,
+                  string pCName){
     if (fileExists(&pFile)){
         bool toReturn = WF->updateColumn(newData,pToCompare,pFile,pCName);
         return toReturn;
@@ -191,17 +177,16 @@ bool FSQLServerFileSystem::updateColumn(string newData,string pToCompare,
     }
 }
 
-void FSQLServerFileSystem::updateDatabaseStruct(string* pFile, string ip,
-                                                int pos){
+void updateDatabaseStruct(string* pFile, string ip, int pos){
     WF->writeRaidFile(pFile, ip, pos);
 }
 
-int FSQLServerFileSystem::getRaidMode(string* pFile){
+int getRaidMode(string* pFile){
     int tmp = RF->getRaidMode(pFile);
     return tmp;
 }
 
-string FSQLServerFileSystem::readDataLocation(string* pFile){
+string readDataLocation(string* pFile){
     string tmp = RF->readDataLocation(pFile);
     return tmp;
 }

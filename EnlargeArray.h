@@ -1,6 +1,12 @@
-#ifndef WRITEFILE_H
-#define WRITEFILE_H
+#ifndef ENLARGEARRAY_H
+#define ENLARGEARRAY_H
 
-void* elargeArray(void* arraytoElarge);
+struct indexElem {
+    int beginning;
+    int end;
+};
 
-#endif // WRITEFILE_H
+void* elargeArray(void* arraytoElarge, int var);
+void* elargeIndex(void *arraytoElarge, int var);
+
+#endif // ENLARGEARRAY_H
