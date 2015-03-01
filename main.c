@@ -19,6 +19,7 @@ void test1 (){
 
 int main(void)
 {
+    printf("algo");
     return 0;
 }
 

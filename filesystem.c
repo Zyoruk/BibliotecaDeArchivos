@@ -48,13 +48,22 @@ int abrir_comp(int bib_fd, const char *compname){
         componente current = (componente)ptr_comp_list[i];
         //if found
         if ( current->comp_nom == compname){
-            current->_abierto = TRUE;
+            //If the comp count is bigger than the array size
+            //it will mean that the array is already full.
+            //So enlarge is needed
+
+            if (comp_count >= ((sizeof(*open_comp_list)/
+                                   sizeof(*open_comp_list[0])))){
+                //enlarge
+            }else{
+                open_comp_list[comp_count] = current;
+            }
             comp_count+=1;
             current->comp_id = comp_count;
+            return SUCCESS;
         }else{
             printf(N_F);
         }
-
     }
     //Si se sale del for significa que no lo encontró.
     return ERROR;
@@ -137,6 +146,31 @@ size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count){
 
 int incluir_comp(int bib_fd, const char *pathcomp){
     if ( file_handle != bib_fd){ return ERROR;}
+
+    FILE* comp = fopen(pathcomp , "rb");
+    if  (comp == NULL) {
+        printf ( N_F);
+        return ERROR;
+    }
+
+    //Copiamos todo a un buffer.
+    fseek (pathcomp ,0,SEEK_END);
+    int size  = ftell(comp);
+    void* _buffer =  malloc (size);
+
+    fread (_buffer , 1 , size , comp);
+    //Tenemos que buscar que la bib tenga algun espacio en donde quepa.
+
+    int i;
+
+    for (i = 0 ; i <= (sizeof(*ptr_comp_list)/ sizeof(*ptr_comp_list[0])); i++){
+        if (ptr_comp_list[i]->_lleno = FALSE){
+            if ((ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0]) == ){
+
+            }
+        }
+    }
+
     return 0;
 
 }

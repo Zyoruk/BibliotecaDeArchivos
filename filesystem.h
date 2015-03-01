@@ -18,14 +18,14 @@ typedef struct componente_struct* componente;
     int comp_id;
     int rango[2];
     boolean _lleno : 1;
-    boolean _abierto: 1;
     char permit: 3;
     int seek_pos;
 };
 
-int comp_qtt;
+componente open_comp_list[5];
 componente ptr_comp_list[10];
 int comp_count ;
+
 int file_handle;
 int index_size;
 FILE *newBib;
