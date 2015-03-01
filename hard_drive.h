@@ -1,5 +1,5 @@
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
+#ifndef HARD_DRIVE_H
+#define HARD_DRIVE_H
 
 bool createNewFile(array<int>* pColumnSizes, array<char*>* pColumnNames,
 				   string* pFile, int* raidMode);
@@ -22,5 +22,4 @@ bool deleteData(string pFileName, string pColumnName, string pData);
 bool updateColumn(string newData, string pToCompare, string pFile,
                   string pCName);
 
-
-#endif // FILESYSTEM_H
+#endif // HARD_DRIVE_H
