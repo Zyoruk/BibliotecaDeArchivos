@@ -1,10 +1,15 @@
 #include "EnlargeArray.h"
 
-void elargeArray(void *arraytoElarge){
-    int arraySais = sizeof(&arraytoElarge);
-    int newSais = arraySais + (arraySais * (0.5));
-    void *newArray = malloc(newSais);
-    arraytoElarge = newArray;
-    return arraytoElarge;
+void* elargeIndex(void *arraytoElarge, int var){
+    void *newArray = malloc(var * sizeof(struct indexElem));
+    *newArray = *arraytoElarge;
+    free(arraytoElarge);
+    return newArray;
 }
 
+void* elargeArray(void *arraytoElarge, int var){
+    void *newArray = malloc(var);
+    *newArray = *arraytoElarge;
+    free(arraytoElarge);
+    return newArray;
+}
