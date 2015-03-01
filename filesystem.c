@@ -1,7 +1,7 @@
 #include "filesystem.h"
 
-bool createNewFile(array<int>* pColumnSizes, array<char*>* pColumnNames,
-                   string* pFile, int* raidMode){
+bool createNewFile(array<int>* pColumnSizes, array<char*>* pColumnNames ,
+                                         string* pFile, int* raidMode){
     bool op;
     char confirm ;
     if (fileExists(pFile)){
@@ -93,7 +93,7 @@ array<char*> readFromFile(string pFileName , string pColumn, int pRow){
     return columnData;
 }
 
-bool backUpFile (string pFileName){
+bool exportComponent (string pFileName){
     if (fileExists(&pFileName)){
         WF->backUpFile(pFileName);
         if (backupExists(pFileName)){
@@ -101,6 +101,15 @@ bool backUpFile (string pFileName){
         }else{
             return false;
         }
+    }else{
+        return false;
+    }
+}
+
+bool update(string pData, string pFileName,int pRow, string pColumn){
+    if (fileExists(&pFileName)){
+        bool toReturn = WF->updateField(pData , pFileName , pRow , RF->getColumnNumber(&pFileName , &pColumn));
+        return toReturn;
     }else{
         return false;
     }
@@ -122,17 +131,6 @@ bool restoreFile(string pFileName){
     }
 }
 
-bool backupExists(string pBackUp){
-    string newFileDir ;
-    fstream file;
-    newFileDir = BACK_UPS_DIR;
-    newFileDir.append(pBackUp);
-    file.open(newFileDir.c_str());
-    bool op = file.is_open();
-    file.close();
-    return op;
-}
-
 bool fileExists(string* pFile){
     string newFileDir ;
     fstream file;
@@ -147,15 +145,6 @@ bool fileExists(string* pFile){
     }
     file.close();
     return exist;
-}
-
-bool update(string pData, string pFileName,int pRow, string pColumn){
-    if (fileExists(&pFileName)){
-        bool toReturn = WF->updateField(pData , pFileName , pRow , RF->getColumnNumber(&pFileName , &pColumn));
-        return toReturn;
-    }else{
-        return false;
-    }
 }
 
 bool deleteData(string pFileName, string pColumnName, string pData){
@@ -175,18 +164,4 @@ bool updateColumn(string newData, string pToCompare, string pFile,
     }else{
         return false;
     }
-}
-
-void updateDatabaseStruct(string* pFile, string ip, int pos){
-    WF->writeRaidFile(pFile, ip, pos);
-}
-
-int getRaidMode(string* pFile){
-    int tmp = RF->getRaidMode(pFile);
-    return tmp;
-}
-
-string readDataLocation(string* pFile){
-    string tmp = RF->readDataLocation(pFile);
-    return tmp;
 }
