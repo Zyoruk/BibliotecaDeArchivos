@@ -26,6 +26,7 @@ typedef struct componente_struct* componente;
 componente ptr_comp_list[10];
 int comp_count ;
 int file_handle;
+int index_size;
 FILE *newBib;
 const char* _pathname;
 
@@ -35,14 +36,11 @@ const char* _pathname;
 int crear_bib (const char *pathname, mode pmode);
 int abrir_bib (const char *pathname, int flags);
 int cerrar_bib (int bib_fd);
-
 int abrir_comp (int bib_fd, const char *compname);
 size_t print_data (int bib_fd, int comp_id, void *buf, size_t count);
-
-//TODO
-
 off_t repos_seek_aleatorio(int bib_fd, int comp_id, size_t count);
 
+//TODO
 size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count);
 
 int incluir_comp(int bib_fd, const char *pathcomp);
