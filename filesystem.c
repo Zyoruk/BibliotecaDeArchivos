@@ -1,6 +1,7 @@
-#include "biblioteca.h"
+#include "filesystem.h"
 #include <fcntl.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 int index_size = 32;
 int crear_bib(const char *pathname ,mode pmode){
@@ -135,5 +136,7 @@ size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count){
 
 
 int incluir_comp(int bib_fd, const char *pathcomp){
+    if ( file_handle != bib_fd){ return ERROR;}
+    return 0;
 
 }
