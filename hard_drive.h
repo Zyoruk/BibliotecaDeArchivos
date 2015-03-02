@@ -1,25 +1,23 @@
 #ifndef HARD_DRIVE_H
 #define HARD_DRIVE_H
 
-bool createNewFile(array<int>* pColumnSizes, array<char*>* pColumnNames,
-				   string* pFile, int* raidMode);
-bool writeNewLineToFile(string* pFileName , array<char*>* pWhatToWrite,
-						array<char*>* pColumnNam);
-bool removeFile(string pFileName);
+int abrir_bib (const char *pathname, int flags);
 
-array<char*> readFromFile(string pFileName , string pColumn, int pRow);
+int crear_bib (const char *pathname, mode_t mode);
 
-bool exportComponent(string pFileName);
+int cerrar_bib (int bib_fd);
 
-bool update (string pData , string pFileName,  int pRow, string pColumn);
+int abrir_comp (int bib_fd, const char *compname);
 
-bool restoreFile(string pFileName);
+ssize_t read_comp (int bib_fd, int comp_id, void *buf, size_t count);
 
-bool fileExists(string *pFile);
+off_t repos_comp();
 
-bool deleteData(string pFileName, string pColumnName, string pData);
+ssize_t write_comp ();
 
-bool updateColumn(string newData, string pToCompare, string pFile,
-                  string pCName);
+int eliminar_comp (int bib_fd, const char *pathcomp);
+
+int file_transfer(int bib_fd, const char *pathcomp);
+
 
 #endif // HARD_DRIVE_H
