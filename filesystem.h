@@ -46,10 +46,9 @@ off_t repos_seek_aleatorio(int bib_fd, int comp_id, size_t count);
 size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count);
 int incluir_comp(int bib_fd, const char *pathcomp);
 int extraer_comp (int bib_fd, const char *pathcomp);
+int eliminar_comp (int bib_fd, const char *pathcomp);
 
 //TODO
-int cargar_dir(int bib_fd, const char *pathdir);
-
-int eliminar_comp (int bib_fd, const char *pathcomp);
+int incluir_dir(int bib_fd, const char *pathdir);
 
 #endif // FILESYSTEM_H

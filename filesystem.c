@@ -410,3 +410,5 @@ int eliminar_comp (int bib_fd, const char *pathcomp){
     return ERROR;
 }
 
+
+
