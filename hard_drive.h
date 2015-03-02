@@ -17,7 +17,8 @@ ssize_t write_comp ();
 
 int eliminar_comp (int bib_fd, const char *pathcomp);
 
-int file_transfer(int bib_fd, const char *pathcomp);
+int import(int bib_fd, const char *path);
 
+int exportFile(int bib_fd, int comp_id, const char *pathcomp);
 
 #endif // HARD_DRIVE_H
