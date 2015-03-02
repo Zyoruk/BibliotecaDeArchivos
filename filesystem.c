@@ -1,4 +1,4 @@
-#include "filesystem.h"
+﻿#include "filesystem.h"
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -52,9 +52,11 @@ int abrir_comp(int bib_fd, const char *compname){
             //it will mean that the array is already full.
             //So enlarge is needed
 
-            if (comp_count >= ((sizeof(*open_comp_list)/
-                                   sizeof(*open_comp_list[0])))){
+            if (comp_count >= ((sizeof(open_comp_list)/
+                                   sizeof(open_comp_list[0])))){
                 //enlarge
+               open_comp_list = elargeArray(open_comp_list , (sizeof(open_comp_list)/
+                                             sizeof(open_comp_list[0])));
             }else{
                 open_comp_list[comp_count] = current;
             }
@@ -156,16 +158,56 @@ int incluir_comp(int bib_fd, const char *pathcomp){
     //Copiamos todo a un buffer.
     fseek (pathcomp ,0,SEEK_END);
     int size  = ftell(comp);
-    void* _buffer =  malloc (size);
+    //CAMBIAR
+//    void* _buffer =  malloc (size);
 
-    fread (_buffer , 1 , size , comp);
-    //Tenemos que buscar que la bib tenga algun espacio en donde quepa.
+//    fread (_buffer , 1 , size , comp);
+
+
+    //Tenemos que buscar que la bib tenga algun espacio vacío en donde quepa.
 
     int i;
 
-    for (i = 0 ; i <= (sizeof(*ptr_comp_list)/ sizeof(*ptr_comp_list[0])); i++){
+    for (i = 0 ; i <= (sizeof(ptr_comp_list)/ sizeof(ptr_comp_list[0])); i++){
         if (ptr_comp_list[i]->_lleno = FALSE){
-            if ((ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0]) == ){
+            //Si encuentra un espacio exacto
+            if ((ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0]) == size ){
+                ptr_comp_list[i]->comp_nom = pathcomp;
+                ptr_comp_list[i]->_lleno = TRUE;
+                ptr_comp_list[i]->seek_pos = 0;
+                ptr_comp_list[i]->comp_id = 0;
+                ptr_comp_list[i]->permit = 0;
+
+            //Si encuentra un espacio mayor. Divide.
+            }else if((ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0]) < size){
+                int nuevo_limite = ptr_comp_list[i]->rango[1] - size;
+
+                ptr_comp_list[i]->comp_nom = pathcomp;
+                ptr_comp_list[i]->_lleno = TRUE;
+                ptr_comp_list[i]->seek_pos = 0;
+                ptr_comp_list[i]->comp_id = 0;
+                ptr_comp_list[i]->permit = 0;
+
+                componente newComp;
+                newComp->comp_id = 0 ;
+                newComp->comp_nom = "EMPTY";
+                newComp->permit = 0;
+                newComp->rango[0] = nuevo_limite;
+                newComp->rango[1] = ptr_comp_list[i]->rango[1];
+                newComp->seek_pos = 0;
+                newComp->_lleno = FALSE;
+
+                ptr_comp_list[i]->rango[1] = nuevo_limite;
+
+                if (( comp_qtt ) == ( sizeof(ptr_comp_list)
+                                      / sizeof(ptr_comp_list[0]))){
+                    //enlarge
+                    ptr_comp_list = elargeArray(ptr_comp_list , (sizeof(ptr_comp_list)/
+                                                  sizeof(ptr_comp_list[0])));
+                }else{
+
+                }
+
 
             }
         }

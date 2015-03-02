@@ -8,6 +8,7 @@
 #define N_F "404: Not found."
 
 #include <stdio.h>
+#include "EnlargeArray.h"
 
 typedef char boolean;
 typedef const char* mode;
@@ -18,14 +19,14 @@ typedef struct componente_struct* componente;
     int comp_id;
     int rango[2];
     boolean _lleno : 1;
-    char permit: 3;
+    char permit: 1;
     int seek_pos;
 };
 
 componente open_comp_list[5];
 componente ptr_comp_list[10];
 int comp_count ;
-
+int comp_qtt;
 int file_handle;
 int index_size;
 FILE *newBib;

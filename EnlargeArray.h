@@ -1,6 +1,8 @@
 #ifndef ENLARGEARRAY_H
 #define ENLARGEARRAY_H
 
+#include <stdlib.h>
+
 struct indexElem {
     int beginning;
     int end;
