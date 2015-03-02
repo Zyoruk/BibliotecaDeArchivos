@@ -37,9 +37,6 @@ const char* _pathname;
 
 
 //done
-int crear_bib (const char *pathname, mode pmode);
-int abrir_bib (const char *pathname, int flags);
-int cerrar_bib (int bib_fd);
 int abrir_comp (int bib_fd, const char *compname);
 size_t print_data (int bib_fd, int comp_id, void *buf, size_t count);
 off_t repos_seek_aleatorio(int bib_fd, int comp_id, size_t count);

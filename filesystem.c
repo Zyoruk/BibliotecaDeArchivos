@@ -4,38 +4,6 @@
 #include <stdio.h>
 
 int index_size = 32;
-int crear_bib(const char *pathname ,mode pmode){
-    _pathname = pathname;
-    newBib = fopen(pathname , pmode);
-
-    if (newBib == NULL){
-        printf ( "Failure.\n");
-        return ERROR;
-    }else{
-        printf ( "Succesful.\n");
-        return  SUCCESS;
-    }
-
-}
-
-int abrir_bib(const char *pathname, int flags){
-
-    file_handle = open(pathname ,flags);
-    if (file_handle == ERROR){ printf (N_F);}
-
-    return file_handle;
-}
-
-int cerrar_bib(int bib_fd){
-    if ( bib_fd == file_handle){
-        fclose (newBib);
-        printf ( "Succesful.\n");
-        return SUCCESS;
-    }else{
-        printf("Failure. \n");
-        return ERROR;
-    }
-}
 
 int abrir_comp(int bib_fd, const char *compname){
     if(file_handle != bib_fd){
