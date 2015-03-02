@@ -2,28 +2,22 @@
 
 void* elargeIndex(void *arraytoElarge, int var){
     void *newArray = malloc(var * sizeof(struct indexElem));
-<<<<<<< HEAD
     newArray = arraytoElarge;
-=======
     for(int i = 0 ; i < (var * sizeof(struct indexElem) ; i++){
         *newArray[i] = *arraytoElarge[i];
     }
     //*newArray = *arraytoElarge;
->>>>>>> e271190a795432802f55188b56460c0683de238f
     free(arraytoElarge);
     return newArray;
 }
 
 void* elargeArray(void *arraytoElarge, int var){
     void *newArray = malloc(var);
-<<<<<<< HEAD
     newArray = arraytoElarge;
-=======
     for(int i = 0 ; i < (var * sizeof(struct indexElem) ; i++){
         *newArray[i] = *arraytoElarge[i];
     }
     //*newArray = *arraytoElarge;
->>>>>>> e271190a795432802f55188b56460c0683de238f
     free(arraytoElarge);
     return newArray;
 }
