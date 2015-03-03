@@ -2,8 +2,6 @@
 #include "filesystem.h"
 #include <dirent.h>
 
-
-
 int create(const char *pathname, mode pmode){
     _pathname = pathname;
     newBib = fopen(_pathname , pmode);

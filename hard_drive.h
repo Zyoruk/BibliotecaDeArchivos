@@ -11,7 +11,7 @@ struct FS {
 int create(const char *pathname, mode pmode);
 
 int umount(int bib_fd);
-z
+
 int mount(const char *pathname, int flags);
 
 //----------FILE SYSTEM PERTINENT----------//

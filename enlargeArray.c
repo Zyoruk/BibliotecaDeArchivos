@@ -1,4 +1,4 @@
-#include "EnlargeArray.h"
+#include "enlargeArray.h"
 
 void reallocSarray(IndexElemC* sarray, long* sarray_len){
     sarray = (IndexElemC*) realloc(sarray, (*sarray_len + (*sarray_len * offset)) * sizeof(IndexElemC*));

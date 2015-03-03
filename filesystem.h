@@ -9,7 +9,7 @@
 #define MET_SIZE 7 ;
 
 #include <stdio.h>
-#include "EnlargeArray.h"
+#include "enlargeArray.h"
 
 typedef char boolean;
 typedef const char* mode;
