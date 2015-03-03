@@ -1,24 +1,37 @@
 #ifndef HARD_DRIVE_H
 #define HARD_DRIVE_H
 
-int abrir_bib (const char *pathname, int flags);
+struct FS {
+    int id;
+    char* filename;
+};
 
-int crear_bib (const char *pathname, mode_t mode);
+//----------HARD DRIVE PERTINENT----------//
 
-int cerrar_bib (int bib_fd);
+int create(const char *pathname, mode pmode);
 
-int abrir_comp (int bib_fd, const char *compname);
+int umount(int bib_fd);
+z
+int mount(const char *pathname, int flags);
 
-ssize_t read_comp (int bib_fd, int comp_id, void *buf, size_t count);
-
-off_t repos_comp();
-
-ssize_t write_comp ();
-
-int eliminar_comp (int bib_fd, const char *pathcomp);
+//----------FILE SYSTEM PERTINENT----------//
 
 int import(int bib_fd, const char *path);
 
 int exportFile(int bib_fd, int comp_id, const char *pathcomp);
+
+int openc(int bib_fd, const char *compname);
+
+int listc (int bib_fd);
+
+ssize_t print(int bib_fd, int comp_id, void *buf, size_t count);
+
+int del(int bib_fd, const char *pathcomp);
+
+//----------------------------No UI Connection--------------------------------//
+
+off_t repos_comp();
+
+ssize_t write_comp ();
 
 #endif // HARD_DRIVE_H

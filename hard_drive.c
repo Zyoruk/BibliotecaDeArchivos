@@ -2,9 +2,11 @@
 #include "filesystem.h"
 #include <dirent.h>
 
-int crear_bib(const char *pathname ,mode pmode){
+
+
+int create(const char *pathname, mode pmode){
     _pathname = pathname;
-    newBib = fopen(pathname , pmode);
+    newBib = fopen(_pathname , pmode);
 
     if (newBib == NULL){
         printf ( "Failure.\n");
@@ -13,19 +15,16 @@ int crear_bib(const char *pathname ,mode pmode){
         printf ( "Succesful.\n");
         return  SUCCESS;
     }
-
 }
 
-int abrir_bib(const char *pathname, int flags){
-
+int mount(const char *pathname, int flags){
     file_handle = open(pathname ,flags);
     if (file_handle == ERROR){ printf (N_F);}
-
     return file_handle;
 }
 
-int cerrar_bib(int bib_fd){
-    if ( bib_fd == file_handle){
+int umount(int bib_fd){
+    if (bib_fd == file_handle){
         fclose (newBib);
         printf ( "Succesful.\n");
         return SUCCESS;
@@ -65,19 +64,24 @@ int exportFile(int bib_fd, int comp_id, const char *pathcomp){
 
 //----------------------------------------------------------------------------//
 
-int abrir_comp (int bib_fd, const char *compname){
+int openc (int bib_fd, const char *compname){
     abrir_comp (bib_fd, *compname);
 }
 
-ssize_t read_comp (int bib_fd, int comp_id, void *buf, size_t count){
+int listc (int bib_fd){
+    listar_comp(bib_fd);
+}
+
+ssize_t print(int bib_fd, int comp_id, void *buf, size_t count){
     read_comp (bib_fd, comp_id, *buf, count);
 }
 
-int eliminar_comp (int bib_fd, const char *pathcomp){
+int del(int bib_fd, const char *pathcomp){
     eliminar_comp (bib_fd, *pathcomp);
 }
 
-//No UI Connection
+//----------------------------No UI Connection--------------------------------//
+
 off_t repos_comp(){
     repos_comp(bib_fd, comp_id, count);
 }
