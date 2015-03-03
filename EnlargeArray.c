@@ -1,47 +1,20 @@
 #include "EnlargeArray.h"
 
-void* elargeIndex(void *arraytoElarge, int var){
-    void *newArray = malloc(var * sizeof(struct indexElem));
-//    newArray = arraytoElarge;
-    unsigned int i;
-//    for( i = 0 ; i < (var * sizeof(struct indexElem)) ; i++){
-//        (newArray + i ) = (arraytoElarge + i );
-//    }
-    //*newArray = *arraytoElarge;
-    free(arraytoElarge);
-    return newArray;
+void reallocSarray(IndexElemC* sarray, long* sarray_len){
+    sarray = (IndexElemC*) realloc(sarray, (*sarray_len + (*sarray_len * offset)) * sizeof(IndexElemC*));
+    *sarray_len += (*sarray_len * offset);
 }
 
-void* elargeArray(void *arraytoElarge, int var){
-//    void *newArray = malloc(var);
-//    newArray = arraytoElarge;
-//    int i ;
-//    for( i = 0 ; i < (var * sizeof(struct indexElem) ; i++){
-//        *newArray[i] = *arraytoElarge[i];
-//    }
-//    //*newArray = *arraytoElarge;
-//    free(arraytoElarge);
-//    return newArray;
-}
-
-void updateIndex(void *arraytoElarge){
-//    var = var++;
-//    arraytoElarge = elargeIndex(arraytoElarge, var);
-}
-
-void* reallocateMem(){
-//    void* indexList;
-//    if(var == 0){
-//        indexList = (struct indexElem*) malloc (sizeof(struct indexElem));
-//        //printf("pointer address = %p\n", indexList);
-//        indexList = updateArray(indexList);
-//        //printf("pointer address = %p\n", indexList);
-//    }else if (var > 0){
-//        indexList = (struct indexElem*) malloc (var * sizeof(struct indexElem));
-//        //printf("pointer address = %p\n", indexList);
-//        indexList = updateArray(indexList);
-//        //printf("pointer address = %p\n", indexList);
-//    }else{
-//        return -1;
-//    }
+void reallocFileIndex(IndexElemC* sarray, long* sarray_len, int _id){
+    int i;
+    char c = 'n';
+    long var = *sarray_len + (*sarray_len * offset);
+    for(i = 0; i < *sarray_len; i++){
+        if(sarray[i].id == _id){
+            sarray[i].fileIndexArray = (IndexElem*) realloc(sarray, var * sizeof(IndexElem*));
+            sarray[i].fileIndexArray_len += (sarray[i].fileIndexArray_len * offset);
+            c = 'y';
+        }
+    }
+    printf("%c\n", c);
 }
