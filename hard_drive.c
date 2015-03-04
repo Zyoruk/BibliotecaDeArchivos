@@ -1,7 +1,3 @@
-#include "hard_drive.h"
-#include "filesystem.h"
-#include <dirent.h>
-
 //----------------------------------------------------------------------------//
 // HARD DRIVE RELATED
 //----------------------------------------------------------------------------//
@@ -79,8 +75,9 @@ int listc (int bib_fd){
     listar_comp(bib_fd);
 }
 
-ssize_t print(int bib_fd, int comp_id, void *buf, size_t count){
-    read_comp (bib_fd, comp_id, *buf, count);
+ssize_t print(int bib_fd, int comp_id, size_t count){
+    void *buf;
+    return print_data(bib_fd, comp_id, *buf, count);
 }
 
 int del(int bib_fd, const char *pathcomp){

@@ -1,6 +1,7 @@
 #ifndef ENLARGEARRAY_H
 #define ENLARGEARRAY_H
 #include <stdlib.h>
+#include "indexManager.h"
 #define INITIAL_SIZE 5
 #define NONE *****
 #define offset 0.5
