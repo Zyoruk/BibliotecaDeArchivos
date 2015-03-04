@@ -17,8 +17,8 @@ void test1 (){
     //    c_1->crear_bibptr("Test1.bin","rb");
 }
 
-int main(void)
-{
+void test2(){
+
     FILE* bib ;
     bib = fopen("Test14.bin" , "wb+");
 //    char ptr[] = "Luis";
@@ -43,6 +43,11 @@ int main(void)
     fclose(bib);
 
     printf ( "%d\n" , ptr4[1]);
+    return 0;
+}
+
+int main(void)
+{
     return 0;
 }
 
