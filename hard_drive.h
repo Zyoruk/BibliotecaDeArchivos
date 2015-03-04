@@ -1,10 +1,10 @@
 #ifndef HARD_DRIVE_H
 #define HARD_DRIVE_H
 
-struct FS {
+typedef struct{
     int id;
     char* filename;
-};
+}FS;
 
 //----------HARD DRIVE PERTINENT----------//
 
