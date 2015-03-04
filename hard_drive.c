@@ -2,6 +2,10 @@
 #include "filesystem.h"
 #include <dirent.h>
 
+//----------------------------------------------------------------------------//
+// HARD DRIVE RELATED
+//----------------------------------------------------------------------------//
+
 int create(const char *pathname, mode pmode){
     _pathname = pathname;
     newBib = fopen(_pathname , pmode);
@@ -31,28 +35,31 @@ int umount(int bib_fd){
         return ERROR;
     }
 }
-
+//----------------------------------------------------------------------------//
+// IMPORT- EXPORT
 //----------------------------------------------------------------------------//
 
-int import(int bib_fd, const char *path){
+int import(int bib_fd, const char *path, char *opt){
 
-    DIR *dir;
-    FILE *file;
-    struct dirent *ent;
-    if ((dir = opendir (pathcomp)) != NULL) {
-        //print all the files and directories within directory
-        while ((ent = readdir(dir)) != NULL) {
-            printf ("%s\n", ent->d_name);
+    if (*opt == 'd'){
+        DIR *dir;
+        struct dirent *ent;
+        if ((dir = opendir (path)) != NULL) {
+            while ((ent = readdir(dir)) != NULL) {
+                //printf ("%s\n", ent->d_name);
+                incluir_dir(bib_fd, *path);
+            }
+            closedir(dir);
+        }else {
+            /* could not open directory */
+            perror ("");
         }
-        closedir(dir);
-    }else {
-        /* could not open directory */
-        perror ("");
-    }
-    if(){
+    } else if (*opt == 'f') {
         incluir_comp(bib_fd, *path);
     }else{
-        incluir_dir(bib_fd, *path);
+        /* NO available option */
+        //printf ("%d\n", opt);
+        perror ("");
     }
 }
 
@@ -60,6 +67,8 @@ int exportFile(int bib_fd, int comp_id, const char *pathcomp){
     extraer_comp (bib_fd, comp_id, *pathcomp);
 }
 
+//----------------------------------------------------------------------------//
+// FILE SYSTEM RELATED
 //----------------------------------------------------------------------------//
 
 int openc (int bib_fd, const char *compname){
