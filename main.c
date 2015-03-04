@@ -48,6 +48,21 @@ void test2(){
 
 int main(void)
 {
+    crear_bib("Test_Meth2.bin" , "wb+");
+
+    int hand1 = abrir_bib("Test_Meth2.bin",3);
+//    fwrite ("buffer", sizeof(char) , 40 , newBib );
+    incluir_comp(hand1 ,"/home/testdummie/BibliotecaDeArchivos/LICENSE");
+    incluir_comp(hand1 ,"/home/testdummie/BibliotecaDeArchivos/README.md");
+    incluir_comp(hand1 ,"/home/testdummie/BibliotecaDeArchivos/konstants.h");
+    int c_ID = abrir_comp(hand1 , "/home/testdummie/BibliotecaDeArchivos/LICENSE");
+    char* buff = malloc(100);
+    print_data(hand1 , c_ID , buff , 100);
+    repos_seek_aleatorio(hand1 , c_ID , 40);
+    eliminar_comp(hand1  , "/home/testdummie/BibliotecaDeArchivos/LICENSE");
+    extraer_comp(hand1 , "/home/testdummie/BibliotecaDeArchivos/LICENSE");
+////    cerrar_bib(hand1);
+//    printf("\n");
     return 0;
 }
 

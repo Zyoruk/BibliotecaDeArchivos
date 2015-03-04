@@ -29,12 +29,14 @@ typedef struct  {
 int bib_size;
 componente_struct* open_comp_list[5];
 componente_struct* ptr_comp_list[10];
+
 unsigned int comp_count ;
 int comp_qtt;
+
 int file_handle;
 int index_size;
 FILE *newBib;
-const char* _pathname;
+char* _pathname;
 
 
 
@@ -49,7 +51,7 @@ int abrir_comp (int bib_fd, const char *compname);
 size_t print_data (int bib_fd, int comp_id, void *buf, size_t count);
 off_t repos_seek_aleatorio(int bib_fd, int comp_id, size_t count);
 size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count);
-int incluir_comp(int bib_fd, const char *pathcomp);
+int incluir_comp(int bib_fd, char *pathcomp);
 int extraer_comp (int bib_fd, const char *pathcomp);
 int eliminar_comp (int bib_fd, const char *pathcomp);
 
