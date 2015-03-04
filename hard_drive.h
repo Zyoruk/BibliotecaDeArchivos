@@ -2,33 +2,42 @@
 #define HARD_DRIVE_H
 #include "filesystem.h"
 #include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define INITIAL_SIZE 5
+#define offset 0.5
 
-struct FS {
+//----------INDEX RELATED---------------//
+typedef struct{
     int id;
     char* filename;
-};
+}FS;
+
+struct FS *sarray[INITIAL_SIZE];
+
+void initializeStructs(FS* sarray);
 
 //----------HARD DRIVE RELATED----------//
 
-int create(const char *pathname, mode pmode);
+void create(const char *pathname, mode_t pmode);
 
-int umount(int bib_fd);
+void umount(int bib_fd);
 
-int mount(const char *pathname, int flags);
+void mount(const char *pathname, int flags);
 
 //----------FILE SYSTEM RELATED----------//
 
-int import(int bib_fd, const char *path, char *opt);
+void import(char* bib_fd, const char *path, char *opt);
 
-int exportFile(int bib_fd, int comp_id, const char *pathcomp);
+void exportFile(char* bib_fd, int comp_id, const char *pathcomp);
 
-int openc(int bib_fd, const char *compname);
+void openc(char* bib_fd, const char *compname);
 
-int listc (int bib_fd);
+int listComp (char* bib_fd);
 
-ssize_t print(int bib_fd, int comp_id, size_t count);
+void print(char* bib_fd, int comp_id, size_t count);
 
-int del(int bib_fd, const char *pathcomp);
+void del(char* bib_fd, const char *pathcomp);
 
 //----------------------------No UI Connection--------------------------------//
 

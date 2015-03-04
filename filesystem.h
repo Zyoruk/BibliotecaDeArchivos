@@ -7,6 +7,7 @@
 #define WRONG_FLAG "wf"
 #define N_F "404: Not found."
 #define MET_SIZE 7
+#include "enlargeArray.h"
 
 #include <fcntl.h>
 #include <stdlib.h>
