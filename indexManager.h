@@ -8,7 +8,7 @@
 typedef struct {
     int beginning;
     int end;
-    char used = 'n';
+    char used;
 }IndexElem;
 
 //Element of Indexes list

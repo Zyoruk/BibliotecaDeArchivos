@@ -1,5 +1,7 @@
 #ifndef HARD_DRIVE_H
 #define HARD_DRIVE_H
+#include "filesystem.h"
+#include <dirent.h>
 
 struct FS {
     int id;
@@ -24,7 +26,7 @@ int openc(int bib_fd, const char *compname);
 
 int listc (int bib_fd);
 
-ssize_t print(int bib_fd, int comp_id, void *buf, size_t count);
+ssize_t print(int bib_fd, int comp_id, size_t count);
 
 int del(int bib_fd, const char *pathcomp);
 
