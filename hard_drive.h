@@ -1,12 +1,12 @@
 #ifndef HARD_DRIVE_H
 #define HARD_DRIVE_H
 
-typedef struct{
+struct FS {
     int id;
     char* filename;
-}FS;
+};
 
-//----------HARD DRIVE PERTINENT----------//
+//----------HARD DRIVE RELATED----------//
 
 int create(const char *pathname, mode pmode);
 
@@ -14,9 +14,9 @@ int umount(int bib_fd);
 
 int mount(const char *pathname, int flags);
 
-//----------FILE SYSTEM PERTINENT----------//
+//----------FILE SYSTEM RELATED----------//
 
-int import(int bib_fd, const char *path);
+int import(int bib_fd, const char *path, char *opt);
 
 int exportFile(int bib_fd, int comp_id, const char *pathcomp);
 

@@ -20,3 +20,5 @@ void closeProgram(IndexElemC* sarray, int* sarray_len){
     }
     free(sarray);
 }
+
+
