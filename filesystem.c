@@ -1,12 +1,9 @@
 ﻿#include "filesystem.h"
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 int index_size = 32;
+bib_size = 0;
 
-
-int crear_bib(const char *pathname ,mode pmode){
+int crear_bib(const char *pathname ,mode_t pmode){
     _pathname = pathname;
     newBib = fopen(pathname , pmode);
     //init
@@ -14,6 +11,15 @@ int crear_bib(const char *pathname ,mode pmode){
     componente_struct* nuevo;
     for (i = 0 ;i <= 10 ; i++){
         nuevo = malloc ( sizeof(componente_struct));
+
+        nuevo->comp_nom = "EMPTY";
+        nuevo->_lleno = FALSE;
+        nuevo->seek_pos = 0;
+        nuevo->comp_id = 0;
+        nuevo->permit = 0;
+        nuevo->rango[0] = 0 ;
+        nuevo->rango[1] = 0 ;
+
         ptr_comp_list[i]= nuevo;
     }
     if (newBib == NULL){
@@ -53,9 +59,9 @@ int abrir_comp(int bib_fd, const char *compname){
     //Search the compname
     unsigned int i;
     for ( i = 0; i < (sizeof(ptr_comp_list)/sizeof(ptr_comp_list[0])) ; i++){
-        componente_struct* current = ptr_comp_list[i];
+        componente_struct current = *ptr_comp_list[i];
         //if found
-        if ( current->comp_nom == compname){
+        if ( current.comp_nom == compname){
             //If the comp count is bigger than the array size
             //it will mean that the array is already full.
             //So enlarge is needed
@@ -63,18 +69,17 @@ int abrir_comp(int bib_fd, const char *compname){
             if (comp_count >= ((sizeof(open_comp_list)/
                                    sizeof(open_comp_list[0])))){
                 //enlarge
-               *open_comp_list = (componente_struct*)elargeArray(open_comp_list , (sizeof(open_comp_list)/
-                                             sizeof(open_comp_list[0])));
+//               *open_comp_list = (componente_struct*)elargeArray(open_comp_list , (sizeof(open_comp_list)/
+                                             //sizeof(open_comp_list[0])));
             }else{
-                open_comp_list[comp_count] = current;
+                open_comp_list[comp_count] = &current;
             }
             comp_count+=1;
-            current->comp_id = comp_count;
-            return SUCCESS;
-        }else{
-            printf(N_F);
+            current.comp_id = comp_count;
+            return comp_count;
         }
     }
+    printf(N_F);
     //Si se sale del for significa que no lo encontró.
     return ERROR;
 }
@@ -139,11 +144,10 @@ size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count){
         //if found
         if ( current->comp_id == comp_id){
             //Pos seek at the beginning of the component
-            fseek( newBib , current->rango[0] + current->seek_pos, SEEK_SET);
+            fseek( newBib , current->rango[0] + ((i + 1) * MET_SIZE) , SEEK_SET);
 
             //"Read" the component.
-            fwrite(buf , 1 ,  count - (current->rango[1] - (current->rango[0] +
-                  current->seek_pos)), newBib);
+            fwrite(buf , 1 ,  count, newBib);
             return count;
         }
     }
@@ -172,7 +176,7 @@ int incluir_comp(int bib_fd, const char *pathcomp){
     for (i = 0 ; i <= (sizeof(ptr_comp_list)/ sizeof(ptr_comp_list[0])); i++){
     //SI ENTRA
         componente_struct newComp = *ptr_comp_list[i];
-        if (ptr_comp_list[i]->_lleno == FALSE){
+        if (newComp._lleno == FALSE){
             //Si encuentra un espacio exacto
             if ((newComp.rango[1] - newComp.rango[0])
                     == size ){
@@ -182,7 +186,7 @@ int incluir_comp(int bib_fd, const char *pathcomp){
                 newComp.comp_id = 0;
                 newComp.permit = 0;
                 ptr_comp_list[i] = &newComp;
-//                copiar_contenido ( comp, size , ptr_comp_list[i]->rango[0]);
+                copiar_contenido ( comp, size , ptr_comp_list[i]->rango[0]);
                 return SUCCESS;
             //Si encuentra un espacio mayor. Divide.
             }else if(((newComp.rango[1] - newComp.rango[0])
@@ -212,9 +216,9 @@ int incluir_comp(int bib_fd, const char *pathcomp){
                 if (( comp_qtt ) == ( sizeof(ptr_comp_list)
                                       / sizeof(ptr_comp_list[0]))){
                     //enlarge
-                    *ptr_comp_list = elargeArray(ptr_comp_list ,
-                                               (sizeof(ptr_comp_list)/
-                                                sizeof(ptr_comp_list[0])));
+                    //*ptr_comp_list = elargeArray(ptr_comp_list ,
+//                                               (sizeof(ptr_comp_list)/
+//                                                sizeof(ptr_comp_list[0])));
                 }
                 comp_qtt++;
                 ptr_comp_list[comp_qtt] = &newComp2;
@@ -230,30 +234,30 @@ int incluir_comp(int bib_fd, const char *pathcomp){
 
     componente_struct newComp;
 
-    printf("%p\n" , &newComp);
     newComp.comp_id = 0 ;
     newComp.comp_nom = pathcomp;
     newComp.permit = 0;
+    printf("bib_size %d\n", bib_size);
     newComp.rango[0] = bib_size + MET_SIZE;
     newComp.rango[1] = size;
     newComp.seek_pos = 0;
-    newComp._lleno = FALSE;
-    printf("%d\n",newComp.rango[0]);
+    newComp._lleno = TRUE;
+    printf("Rango[0]%d\n",newComp.rango[0]);
     //Si esta lleno
     int size_arr=( sizeof(ptr_comp_list)
                    / sizeof(ptr_comp_list[0]));
     if (( comp_qtt ) == size_arr){
         //enlarge
-        *ptr_comp_list = elargeArray(ptr_comp_list ,size_arr);
+        //*ptr_comp_list = elargeArray(ptr_comp_list ,size_arr);
     }
-    comp_qtt++;
     ptr_comp_list[comp_qtt] = &newComp;
+    comp_qtt++;
 
 
 
 
-    copiar_contenido ( comp, size , ptr_comp_list[comp_qtt]->rango[0]);
-
+    copiar_contenido ( comp, size , ptr_comp_list[comp_qtt - 1]->rango[0]);
+    bib_size = bib_size + size+7;
     return SUCCESS;
 }
 
@@ -261,7 +265,6 @@ void copiar_contenido(FILE* comp ,int size , int PDC){
 
     //abrir bib y comp en binario.
 
-    printf("sdfsadfs\n");
     fseek (newBib, PDC , SEEK_SET);
     fseek( comp , 0 , SEEK_SET);
 

@@ -6,17 +6,19 @@
 #define SUCCESS 0
 #define WRONG_FLAG "wf"
 #define N_F "404: Not found."
-#define MET_SIZE 7 ;
+#define MET_SIZE 7
 
+#include <fcntl.h>
+#include <stdlib.h>
 #include <stdio.h>
-#include "enlargeArray.h"
+
+//#include "enlargeArray.h
 
 typedef int boolean;
-typedef const char* mode;
 //typedef struct componente_struct* componente;
 
 typedef struct  {
-    char comp_nom;
+    char* comp_nom;
     int comp_id;
     int rango[2];
     boolean _lleno;
@@ -39,7 +41,7 @@ const char* _pathname;
 //done
 int abrir_bib (const char *pathname, int flags);
 
-int crear_bib (const char *pathname, mode mode);
+int crear_bib (const char *pathname, mode_t mode);
 
 int cerrar_bib (int bib_fd);
 
