@@ -20,17 +20,22 @@ void create(const char *pathname, mode_t pmode){
 void mount(const char *pathname, int flags){
     file_handle = open(pathname ,flags);
     if (file_handle == ERROR){ printf (N_F);}
-    return file_handle;
+    insertOnIndex(file_handle);
 }
 
 void umount(int bib_fd){
     if (bib_fd == file_handle){
         fclose (newBib);
-        printf ( "Succesful.\n");
-        return SUCCESS;
+        int o = deletoFromIndex(file_handle);
+        if (o = 0){
+            printf ( "Succesful.\n");
+        }else{
+            printf ( "File Not Found\n");
+        }
+        //return SUCCESS;
     }else{
         printf("Failure. \n");
-        return ERROR;
+        //return ERROR;
     }
 }
 //----------------------------------------------------------------------------//
@@ -97,10 +102,43 @@ void del(char *bib_fd, const char *pathcomp){
 // INDEX RELATED
 //----------------------------------------------------------------------------//
 
-void initializeStructs(FS *sarray){
-//    int i;
-//    for (i = 0; i < *sarray_len; i++){
-//        sarray[i].fileIndexArray = (IndexElem **) malloc(INITIAL_SIZE * sizeof(IndexElem *));
-//        sarray[i].fileIndexArray_len = INITIAL_SIZE;
-//    }
+void initializeStructs(){
+    int i;
+    for (i = 0; i < strlen(sarray); i++){
+        sarray[i].id = ERROR;
+    }
+}
+
+void insertOnIndex(int id){
+    int i;
+    for (i = 0; i < strlen(sarray); i++){
+        if(sarray[i]->id = ERROR){
+            sarray[i]->id = id;
+        }
+    }
+}
+
+int deletoFromIndex(int id){
+    int i = 0;
+    //get index for desired file
+    while(!sarray[i]->id = id){
+        i++;
+        if(sarray[i]->id == 0){
+            //if not present return 0
+            return ERROR;
+        }
+    }
+    //if element + 1 is not null
+    if(!sarray[i+1] = 0){
+        //on remaining array, reorganize elements
+        for (i; i < strlen; i++){
+            if (!sarray[i+1] = 0){
+                sarray[i+1]->id = sarray[i]->id;
+                sarray[i+1]->filename = sarray[i]->filename;
+            }
+        }
+    }else{
+        sarray[i]->id = ERROR;
+    }
+    return 0;
 }

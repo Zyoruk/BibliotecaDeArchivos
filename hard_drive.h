@@ -1,9 +1,10 @@
 #ifndef HARD_DRIVE_H
 #define HARD_DRIVE_H
-#include "filesystem.h"
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "filesystem.h"
 #define INITIAL_SIZE 5
 #define offset 0.5
 
@@ -15,7 +16,7 @@ typedef struct{
 
 struct FS *sarray[INITIAL_SIZE];
 
-void initializeStructs(FS* sarray);
+void initializeStructs();
 
 //----------HARD DRIVE RELATED----------//
 
