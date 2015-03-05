@@ -9,35 +9,33 @@ int crear_bib(const char *pathname ,mode_t pmode){
     newBib = fopen(pathname , pmode);
     //init
     int i ;
-    componente_struct* nuevo;
+    componente_struct nuevo;
 
     for (i = 0 ;i <= 10 ; i++){
 
-        nuevo = malloc ( sizeof(componente_struct));
-        nuevo->comp_nom = "EMPTY";
-        nuevo->_lleno = FALSE;
-        nuevo->seek_pos = 0;
-        nuevo->comp_id = 0;
-        nuevo->permit = 0;
-        nuevo->rango[0] = 0 ;
-        nuevo->rango[1] = 0 ;
-        ptr_comp_list[i]= nuevo;
+//        nuevo = malloc ( sizeof(componente_struct));
+        nuevo.comp_nom = "EMPTY";
+        nuevo._lleno = FALSE;
+        nuevo.seek_pos = 0;
+        nuevo.comp_id = 0;
+        nuevo.permit = 'x';
+        nuevo.rango[0] = 0 ;
+        nuevo.rango[1] = 0 ;
+        ptr_comp_list[i]= &nuevo;
     }
 
 
-//        componente_struct* nuevo2;
+//        componente_struct nuevo2;
 //    int j;
 //    for (j = 0 ;j <= 5 ; j++){
-//        nuevo2 = malloc ( sizeof(componente_struct));
-//        nuevo2->comp_nom = "EMPTY";
-////        nuevo2->_lleno = FALSE;
-////        nuevo2->seek_pos = 0;
-////        nuevo2->comp_id = 0;
-////        nuevo2->permit = 0;
-////        nuevo2->rango[0] = 0 ;
-////        nuevo2->rango[1] = 0 ;
-//        open_comp_list[j]= nuevo2;
-//        printf("%p\n" , *(open_comp_list[j]));
+//        nuevo2.comp_nom = "EMPTY";
+//        nuevo2._lleno = FALSE;
+//        nuevo2.seek_pos = 0;
+//        nuevo2.comp_id = 0;
+//        nuevo2.permit = 0;
+//        nuevo2.rango[0] = 0 ;
+//        nuevo2.rango[1] = 0 ;
+//        open_comp_list[j]= &nuevo2;
 //    }
 
     if (newBib == NULL){
@@ -98,21 +96,22 @@ int abrir_comp(int bib_fd, const char *compname){
     //Search the compname
     unsigned int i;
     for ( i = 0; i < (sizeof(ptr_comp_list)/sizeof(ptr_comp_list[0])) ; i++){
-        componente_struct current = *ptr_comp_list[i];
         //if found
+        printf("%s\n" , ptr_comp_list[i]->comp_nom);
         if ( ptr_comp_list[i]->comp_nom == compname){
+
             //If the comp count is bigger than the array size
             //it will mean that the array is already full.
             //So enlarge is needed
-
-            if (comp_count >= ((sizeof(open_comp_list)/
+            if (comp_qtt >= ((sizeof(open_comp_list)/
                                    sizeof(open_comp_list[0])))){
+
                 //enlarge
 //               *open_comp_list = (componente_struct*)elargeArray(open_comp_list , (sizeof(open_comp_list)/
                                              //sizeof(open_comp_list[0])));
-                open_comp_list[comp_count] = &current;
+                open_comp_list[comp_qtt] = ptr_comp_list[i];
             }else{
-                open_comp_list[comp_count] = &current;
+                open_comp_list[comp_qtt] = ptr_comp_list[i];
             }
             return ptr_comp_list[i]->comp_id;
         }
@@ -159,12 +158,13 @@ off_t repos_seek_aleatorio(int bib_fd, int comp_id, size_t count){
         //we need to create a new component
         //if found
         if ( ptr_comp_list[i]->comp_id == comp_id){
-            if ((ptr_comp_list[i]->seek_pos + count + ptr_comp_list[i]->rango[0]) >
-                    (unsigned int ) ptr_comp_list[i]->rango[1]){
-                return ERROR;
-            }
-            ptr_comp_list[i]->seek_pos += count;
-            return ptr_comp_list[i]->seek_pos;
+//            if ((ptr_comp_list[i]->seek_pos + count + ptr_comp_list[i]->rango[0]) >
+//                    (unsigned int ) ptr_comp_list[i]->rango[1]){
+//                return ERROR;
+//            }
+            ptr_comp_list[i]->seek_pos = ptr_comp_list[i]->seek_pos + count;
+            int toRet = ptr_comp_list[i]->seek_pos;
+            return toRet;
         }
     }
     return ERROR;
@@ -196,7 +196,7 @@ int incluir_comp(int bib_fd,  char *pathcomp){
 
     FILE* comp = fopen(pathcomp , "rb");
     if  (comp == NULL) {
-        printf ( N_F);
+        printf ( "%s\n", N_F);
         return ERROR;
     }
 
@@ -218,7 +218,7 @@ int incluir_comp(int bib_fd,  char *pathcomp){
                 ptr_comp_list[i]->comp_nom = pathcomp;
                 ptr_comp_list[i]->_lleno = TRUE;
                 ptr_comp_list[i]->seek_pos = 0;
-                ptr_comp_list[i]->permit = 0;
+                ptr_comp_list[i]->permit = 'x';
                 copiar_contenido ( comp, size , ptr_comp_list[i]->rango[0]);
                 comp_count+=1;
                 ptr_comp_list[i]->comp_id = comp_count;
@@ -227,7 +227,6 @@ int incluir_comp(int bib_fd,  char *pathcomp){
             //Si encuentra un espacio mayor. Divide.
             }else if(((ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0])
                      > size)){
-
                 int nuevo_limite = ptr_comp_list[i]->rango[1] - size;
 
                 ptr_comp_list[i]->comp_nom = pathcomp;
@@ -235,12 +234,12 @@ int incluir_comp(int bib_fd,  char *pathcomp){
                 ptr_comp_list[i]->seek_pos = 0;
                 comp_count+=1;
                 ptr_comp_list[i]->comp_id = comp_count;
-                ptr_comp_list[i]->permit = 0;
+                ptr_comp_list[i]->permit = 'x';
 
                 componente_struct newComp2;
                 newComp2.comp_id = 0 ;
                 newComp2.comp_nom = "EMPTY";
-                newComp2.permit = 0;
+                newComp2.permit = 'x';
                 newComp2.rango[0] = nuevo_limite;
                 newComp2.rango[1] = ptr_comp_list[i]->rango[1];
                 newComp2.seek_pos = 0;
@@ -266,7 +265,6 @@ int incluir_comp(int bib_fd,  char *pathcomp){
         }
     }
 
-
     //Si esta lleno
     int size_arr=( sizeof(ptr_comp_list)
                    / sizeof(ptr_comp_list[0]));
@@ -274,19 +272,21 @@ int incluir_comp(int bib_fd,  char *pathcomp){
         //enlarge
         //*ptr_comp_list = elargeArray(ptr_comp_list ,size_arr);
     }
-
-    comp_count+=1;
     ptr_comp_list[comp_qtt]->comp_id = comp_count;
     ptr_comp_list[comp_qtt]->comp_nom = pathcomp;
-    ptr_comp_list[comp_qtt]->permit = 0;
+    ptr_comp_list[comp_qtt]->permit = 'x';
     ptr_comp_list[comp_qtt]->rango[0] = bib_size + MET_SIZE;
     ptr_comp_list[comp_qtt]->rango[1] = size;
     ptr_comp_list[comp_qtt]->seek_pos = 0;
     ptr_comp_list[comp_qtt]->_lleno = TRUE;
-
     comp_qtt++;
 
-
+    printf("%s\n" ,ptr_comp_list[comp_qtt]->comp_nom);
+    printf("%d\n" ,ptr_comp_list[comp_qtt]->comp_id);
+    printf("%c\n" ,ptr_comp_list[comp_qtt]->permit);
+    printf("%d\n" ,ptr_comp_list[comp_qtt]->rango[0]);
+    printf("%d\n" ,ptr_comp_list[comp_qtt]->rango[1]);
+    printf("%d\n" ,ptr_comp_list[comp_qtt]->seek_pos);
 
 
     copiar_contenido ( comp, size , ptr_comp_list[comp_qtt - 1]->rango[0]);
@@ -316,16 +316,35 @@ void copiar_contenido(FILE* comp ,int size , int PDC){
     fwrite(buffer , sizeof(char) , count , newBib);
     free(buffer);
 }
+char* cortarPath (char* path){
+    size_t pathlen = strlen(path);
+    int count = 0;
+    while (path[pathlen] != '/'){
+//        strcat(name , path[pathlen]);
+
+        pathlen--;
+        count++;
+    }
+    char name [count] ;
+    int count2= 0;
+    while(count2 != count){
+        name[count2] = path[pathlen + count2 +1];
+        count2 ++;
+    }
+    return name;
+
+}
 
 int extraer_comp (int bib_fd, const char *pathcomp){
     if ( file_handle != bib_fd){return ERROR;}
     //Buscamos que exista el compo
-
+    char* newName = cortarPath(pathcomp);
     int i;
     for (i = 0 ; i <= comp_qtt ; i++){
 //        if(ptr_comp_list[i] == NULL) { return ERROR;}
-
+        printf("%s\n" , ptr_comp_list[i]->comp_nom);
         if (ptr_comp_list[i]->comp_nom == pathcomp){
+            printf("caca\n");
             //Chequear si esta abierto
             if (ptr_comp_list[i]->comp_id != 0){
                 //Si lo encuentra abierto, se cierra.
@@ -333,11 +352,8 @@ int extraer_comp (int bib_fd, const char *pathcomp){
                 //Esto hará que todos los elementos hacia la derecha se muevan
                 //Así,  se elimina y queda el espacio vacío al final del arreglo
 
-                printf("\ncaca\n");
+                FILE* newComp_file = fopen (newName, "wb+");
 
-                FILE* newComp_file = fopen (pathcomp, "wb+");
-
-                printf("\ncaca\n");
                 fseek (newBib, ptr_comp_list[i]->rango[0] , SEEK_SET);
                 fseek( newComp_file , 0 , SEEK_SET);
 
@@ -345,7 +361,6 @@ int extraer_comp (int bib_fd, const char *pathcomp){
                 int count = ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0];
 
                 while ( count >= 40 ){
-                    printf("\ncaca\n");
                     fread(buffer , sizeof(char) , 40 , newBib);
                     fwrite (buffer, sizeof(char) , 40 , newComp_file );
 
@@ -356,8 +371,8 @@ int extraer_comp (int bib_fd, const char *pathcomp){
                 fwrite(buffer , sizeof(char) , count , newComp_file);
                 return ptr_comp_list[i]->rango[1] - ptr_comp_list[i]->rango[0];
             }else{
-
-                FILE* newComp_file = fopen (pathcomp, "wb+");
+                printf("caca\n");
+                FILE* newComp_file = fopen (newName, "wb+");
 
                 fseek (newBib, ptr_comp_list[i]->rango[0] , SEEK_SET);
                 fseek( newComp_file , 0 , SEEK_SET);

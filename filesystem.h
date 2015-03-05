@@ -15,14 +15,13 @@
 
 //#include "enlargeArray.h
 
-typedef int boolean;
 //typedef struct componente_struct* componente;
 
 typedef struct  {
     char* comp_nom;
     int comp_id;
     int rango[2];
-    boolean _lleno;
+    int _lleno;
     char permit;
     int seek_pos;
 }componente_struct;
@@ -55,7 +54,7 @@ size_t escribir_comp (int bib_fd, int comp_id, void *buf, size_t count);
 int incluir_comp(int bib_fd, char *pathcomp);
 int extraer_comp (int bib_fd, const char *pathcomp);
 int eliminar_comp (int bib_fd, const char *pathcomp);
-
+char* cortarPath(char* path);
 //TODO
 int incluir_dir(int bib_fd, const char *pathdir);
 
