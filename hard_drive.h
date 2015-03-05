@@ -34,7 +34,7 @@ void exportFile(char* bib_fd, int comp_id, const char *pathcomp);
 
 void openc(char* bib_fd, const char *compname);
 
-int listComp (char* bib_fd);
+int listComp (int bib_fd);
 
 void print(char* bib_fd, int comp_id, size_t count);
 
